@@ -20,21 +20,23 @@ Einstiegspunkt ist [`index.html`](index.html) — eine Startseite, die alle sieb
 
 ## Auf dem Handy
 
-Jedes Programm ist zusätzlich als private Seite veröffentlicht. Im mobilen Browser öffnen,
-dann «Zum Home-Bildschirm» — damit startet es wie eine App im Vollbild.
+Alle Programme laufen unter **https://joenupower.github.io/lernprogramme/** — ohne Anmeldung,
+in jedem Browser. Im mobilen Browser öffnen, dann «Zum Home-Bildschirm»: Damit startet die
+Sammlung wie eine App im Vollbild.
 
-| Programm | Link |
+Direktlinks:
+
+| Programm | Adresse |
 |---|---|
-| Verwaltungsrecht I | https://claude.ai/code/artifact/439a30cf-7780-43e4-9545-3f67b4ac4ff2 |
-| Erbrecht | https://claude.ai/code/artifact/fbb6690f-fdc0-4cb7-83cb-9d2425504f9b |
-| Erwachsenenschutzrecht | https://claude.ai/code/artifact/9f95f9fd-e099-46f9-9d80-3284e0406f90 |
-| Güterrecht | https://claude.ai/code/artifact/60f9e1a9-e023-44a4-9c27-f3bb06c8bb5f |
-| Mietrecht | https://claude.ai/code/artifact/e73dcdb5-b10f-499d-b088-8744354a8704 |
-| SchKG — Fristenberechnung | https://claude.ai/code/artifact/73c912a2-537f-48b9-9539-6bb34fbb2486 |
-| SchKG — Fristarten | https://claude.ai/code/artifact/b688e725-ee8e-4f7e-9a41-c4ee0cc6c064 |
+| Güterrecht | https://joenupower.github.io/lernprogramme/programme/gueterrecht.html |
+| Erbrecht | https://joenupower.github.io/lernprogramme/programme/erbrecht.html |
+| Erwachsenenschutzrecht | https://joenupower.github.io/lernprogramme/programme/erwachsenenschutzrecht.html |
+| Mietrecht | https://joenupower.github.io/lernprogramme/programme/mietrecht-falltrainer.html |
+| SchKG — Fristenberechnung | https://joenupower.github.io/lernprogramme/programme/schkg-fristenberechnung.html |
+| SchKG — Fristarten | https://joenupower.github.io/lernprogramme/programme/schkg-fristarten.html |
+| Verwaltungsrecht I | https://joenupower.github.io/lernprogramme/programme/verwaltungsrecht-i.html |
 
-Die Seiten sind privat und nur im angemeldeten Zustand sichtbar. Der Fortschritt wird pro
-Gerät und Browser gespeichert; Handy und Computer zählen also getrennt.
+Der Fortschritt wird pro Gerät und Browser gespeichert; Handy und Computer zählen getrennt.
 
 ## Aufbau der Programme
 
@@ -59,6 +61,7 @@ Anzeige beim Antippen).
 
 ## Hinweis zu den Inhalten
 
-Die Aufgaben stützen sich auf Kursunterlagen (Dozenten-Scripts, Übungsblätter mit
-Musterlösungen). Dieses Repository ist deshalb privat
-und ausschliesslich für den persönlichen Gebrauch bestimmt.
+Die Aufgaben sind für das eigene Lernen entstanden und stützen sich auf Kursunterlagen und
+Übungsblätter mit Musterlösungen. Wer sie nutzt, sollte die Lösungen an der eigenen
+Vorlesung und am geltenden Gesetzestext gegenprüfen — Stand und Methodik richten sich nach
+dem jeweiligen Kurs.
