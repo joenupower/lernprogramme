@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SchKG-Fristentrainer</title>
+<style>
+html{-webkit-text-size-adjust:100%}
+:root{
+  --navy:#1F3864; --navy2:#2a4a80; --blue:#2E75B6; --bg:#f4f6fa; --card:#ffffff;
+  --ferien:#fff3d6; --ferienB:#e8b84b; --still:#efe3f7; --stillB:#9b59b6;
+  --ok:#1e8e3e; --okBg:#e6f4ea; --err:#c5221f; --errBg:#fdecea;
+  --sel-b:#1e8e3e; --sel-e:#2E75B6; --grey:#6b7280;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:#1f2937}
+header{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:18px 24px}
+.hwrap{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+header h1{margin:0;font-size:1.45rem}
+header .sub{margin:2px 0 0;font-size:.85rem;opacity:.85}
+.hgrow{flex:1}
+.scorebox{background:rgba(255,255,255,.15);border-radius:10px;padding:8px 14px;font-size:.85rem;white-space:nowrap}
+.scorebox b{font-size:1.05rem}
+button{font-family:inherit;cursor:pointer}
+.btn{border:none;border-radius:8px;padding:10px 18px;font-size:.95rem;font-weight:600}
+.btn-primary{background:var(--navy);color:#fff}
+.btn-primary:disabled{background:#9aa7bd;cursor:not-allowed}
+.btn-ghost{background:#fff;color:var(--navy);border:1px solid #cbd5e1}
+.btn-head{background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:8px 14px;font-weight:600}
+.layout{max-width:1280px;margin:20px auto;display:grid;grid-template-columns:250px 1fr;gap:20px;padding:0 20px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+aside{background:var(--card);border-radius:14px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.08);align-self:start}
+aside h3{margin:4px 0 10px;font-size:.9rem;color:var(--navy)}
+.filters{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap}
+.filters button{border:1px solid #cbd5e1;background:#fff;border-radius:20px;padding:4px 10px;font-size:.75rem}
+.filters button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+#navGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.navBtn{border:none;border-radius:8px;padding:7px 0;font-size:.8rem;font-weight:600;color:#fff;position:relative;opacity:.92}
+.navBtn.l1{background:#4f9e63}.navBtn.l2{background:#d99a2b}.navBtn.l3{background:#c05555}
+.navBtn.hidden{display:none}
+@media(max-width:640px){.navBtn{padding:11px 0;font-size:.85rem}.filters button{padding:7px 14px;font-size:.8rem}}
+.navBtn.current{outline:3px solid var(--navy);opacity:1}
+.navBtn .st{position:absolute;top:-5px;right:-4px;font-size:.68rem;background:#fff;border-radius:50%;width:15px;height:15px;line-height:15px;box-shadow:0 0 2px rgba(0,0,0,.4)}
+.progressWrap{margin-top:12px;background:#e5e7eb;border-radius:8px;height:10px;overflow:hidden}
+#progBar{height:100%;background:var(--ok);width:0%}
+.progTxt{font-size:.75rem;color:var(--grey);margin-top:5px}
+#resetAll{margin-top:10px;width:100%;font-size:.75rem;background:none;border:none;color:var(--grey);text-decoration:underline}
+main{min-width:0}
+.card{background:var(--card);border-radius:14px;padding:20px 24px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:16px}
+.badges{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.lvl{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:20px;color:#fff;text-transform:uppercase;letter-spacing:.04em}
+.lvl.l1{background:#4f9e63}.lvl.l2{background:#d99a2b}.lvl.l3{background:#c05555}
+.fristTag{font-size:.72rem;font-weight:600;padding:3px 10px;border-radius:20px;background:#e8eef7;color:var(--navy)}
+.card h2{margin:2px 0 10px;font-size:1.15rem;color:var(--navy)}
+.szenario{font-size:.98rem;line-height:1.55}
+.frage{margin-top:12px;padding:10px 14px;background:#e8eef7;border-left:4px solid var(--navy);border-radius:0 8px 8px 0;font-size:.92rem}
+.chips{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.chip{display:flex;align-items:center;gap:8px;border:2px solid #cbd5e1;border-radius:10px;padding:8px 14px;font-size:.9rem;background:#fff}
+.chip .dot{width:13px;height:13px;border-radius:50%}
+.chip.b .dot{background:var(--sel-b)}.chip.e .dot{background:var(--sel-e)}
+.chip.active{border-color:var(--navy);box-shadow:0 0 0 3px rgba(31,56,100,.15)}
+.chip b{min-width:110px;display:inline-block}
+.chipHint{font-size:.8rem;color:var(--grey)}
+.months{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.month{width:314px;max-width:100%}
+.month h4{margin:0 0 6px;text-align:center;color:var(--navy);font-size:.95rem}
+.mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.dow{font-size:.68rem;text-align:center;color:var(--grey);font-weight:700;padding:2px 0}
+.day{position:relative;height:42px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;font-size:.85rem;font-weight:600;color:#374151;display:flex;align-items:flex-start;justify-content:flex-end;padding:3px 6px}
+.day.clickable{cursor:pointer}
+.day.clickable:hover{border-color:var(--navy);box-shadow:0 0 0 2px rgba(31,56,100,.18)}
+.day.empty{border:none;background:none}
+.day.wknd{background:#f1f3f6;color:#8a93a3}
+.day.ferien{background:var(--ferien)}
+.day.ferien.wknd{background:#f7e9c4}
+.day.still{background:var(--still)}
+.day.still.wknd{background:#e4d2f0}
+.day.hol{color:#c5221f}
+.day.hol::after{content:"";position:absolute;bottom:4px;left:6px;width:6px;height:6px;border-radius:50%;background:#c5221f}
+.day.zust::before{content:"📨";position:absolute;bottom:1px;right:4px;font-size:.72rem}
+.day.zust{outline:2px dashed var(--navy);outline-offset:-2px}
+.day.selB{background:var(--sel-b)!important;color:#fff;border-color:var(--sel-b)}
+.day.selE{background:var(--sel-e)!important;color:#fff;border-color:var(--sel-e)}
+.day.solB{outline:3px solid var(--sel-b);outline-offset:-3px}
+.day.solE{outline:3px solid var(--sel-e);outline-offset:-3px}
+.day.wrongPick{background:var(--errBg)!important;color:var(--err);border-color:var(--err);text-decoration:line-through}
+.day.selB.hol,.day.selE.hol{color:#fff}
+.gap{display:flex;flex-direction:column;justify-content:center;align-items:center;color:var(--grey);font-size:.78rem;padding:20px 6px;border:1px dashed #cbd5e1;border-radius:10px;align-self:center}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:.76rem;color:#4b5563}
+.legend span{display:flex;align-items:center;gap:5px}
+.lg{width:14px;height:14px;border-radius:4px;border:1px solid #d1d5db;display:inline-block}
+.actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.resultBanner{padding:12px 18px;border-radius:10px;font-weight:700;margin-bottom:14px}
+.resultBanner.ok{background:var(--okBg);color:var(--ok)}
+.resultBanner.teils{background:#fff4d6;color:#9a6b00}
+.resultBanner.err{background:var(--errBg);color:var(--err)}
+.sol h3{color:var(--navy);margin:0 0 12px}
+.steps{list-style:none;margin:0;padding:0}
+.steps li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #eef1f5;font-size:.92rem;line-height:1.5}
+.steps li:last-child{border-bottom:none}
+.stepIcon{flex:0 0 30px;height:30px;border-radius:50%;background:#e8eef7;color:var(--navy);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.answerLine{display:flex;gap:18px;flex-wrap:wrap;margin:10px 0 16px}
+.answerLine div{padding:8px 14px;border-radius:8px;font-size:.9rem}
+.answerLine .ab{background:var(--okBg);border-left:4px solid var(--sel-b)}
+.answerLine .ae{background:#e5eff9;border-left:4px solid var(--sel-e)}
+.note{margin-top:14px;padding:12px 16px;background:#fffbe8;border-left:4px solid var(--ferienB);border-radius:0 8px 8px 0;font-size:.88rem;line-height:1.5}
+.note b:first-child{color:#8a6100}
+dialog{border:none;border-radius:16px;max-width:880px;width:92vw;padding:0;box-shadow:0 8px 40px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(15,23,42,.55)}
+.thWrap{padding:26px 30px;max-height:80vh;overflow:auto}
+.thWrap h2{color:var(--navy);margin-top:0}
+.thWrap h3{color:var(--navy);margin:22px 0 8px;font-size:1rem;border-bottom:2px solid #e8eef7;padding-bottom:4px}
+.thWrap table{border-collapse:collapse;width:100%;font-size:.84rem;margin:8px 0}
+.thWrap th{background:var(--navy);color:#fff;text-align:left;padding:6px 9px}
+.thWrap td{border:1px solid #dbe2ec;padding:6px 9px;vertical-align:top}
+.thWrap tr:nth-child(even) td{background:#f4f7fb}
+.thClose{position:sticky;top:0;float:right;background:var(--navy);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-weight:600}
+footer{max-width:1280px;margin:10px auto 30px;padding:0 20px;font-size:.74rem;color:var(--grey);line-height:1.5}
+.selftest table{border-collapse:collapse;font-size:.8rem}
+.selftest td,.selftest th{border:1px solid #ccc;padding:3px 8px}
+.selftest .pass{background:#e6f4ea}.selftest .fail{background:#fdecea;font-weight:700}
+</style>
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <div>
+      <h1>⚖️ SchKG-Fristentrainer</h1>
+      <p class="sub">Fristen, Betreibungsferien &amp; Rechtsstillstand — 50 Übungen nach Art. 31/56–63 SchKG und Art. 142 ff. ZPO</p>
+    </div>
+    <div class="hgrow"></div>
+    <div class="scorebox" id="scoreBox"></div>
+    <button class="btn-head" id="theoryBtn">📖 Regeln nachschlagen</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside>
+    <h3>Aufgaben</h3>
+    <div class="filters" id="filters">
+      <button data-f="0" class="active">Alle</button>
+      <button data-f="1">Leicht</button>
+      <button data-f="2">Mittel</button>
+      <button data-f="3">Schwer</button>
+    </div>
+    <div id="navGrid"></div>
+    <div class="progressWrap"><div id="progBar"></div></div>
+    <div class="progTxt" id="progTxt"></div>
+    <button id="resetAll">Fortschritt zurücksetzen</button>
+  </aside>
+
+  <main>
+    <section class="card" id="scenarioCard"></section>
+    <section class="card">
+      <div class="chips">
+        <button class="chip b" id="chipB"><span class="dot"></span><span><b>Fristbeginn:</b> <span id="valB">–</span></span></button>
+        <button class="chip e" id="chipE"><span class="dot"></span><span><b>Fristende:</b> <span id="valE">–</span></span></button>
+        <span class="chipHint" id="chipHint"></span>
+      </div>
+    </section>
+    <section class="card">
+      <div class="months" id="calendar"></div>
+      <div class="legend">
+        <span><span class="lg" style="background:#f1f3f6"></span>Wochenende</span>
+        <span><span class="lg" style="background:#fff;position:relative"><span style="position:absolute;bottom:2px;left:3px;width:6px;height:6px;border-radius:50%;background:#c5221f"></span></span>Feiertag (Kt. ZH)</span>
+        <span><span class="lg" style="background:var(--ferien)"></span>Betreibungsferien</span>
+        <span><span class="lg" style="background:var(--still)"></span>Rechtsstillstand (individuell)</span>
+        <span>📨 Zustellung / Ereignis</span>
+        <span><span class="lg" style="background:var(--sel-b)"></span>deine Wahl: Beginn</span>
+        <span><span class="lg" style="background:var(--sel-e)"></span>deine Wahl: Ende</span>
+      </div>
+    </section>
+    <section class="card actions">
+      <button class="btn btn-primary" id="checkBtn" disabled>Antwort prüfen</button>
+      <button class="btn btn-ghost" id="clearBtn">Auswahl löschen</button>
+      <button class="btn btn-ghost" id="nextBtn" style="display:none">Nächste Aufgabe →</button>
+    </section>
+    <section class="card sol" id="solution" style="display:none"></section>
+  </main>
+</div>
+
+<footer>
+  <b>Annahmen:</b> Massgebend sind die staatlich anerkannten Feiertage im <b>Kanton Zürich</b> (inkl. Berchtoldstag und Stephanstag; halbtägige Feste wie Sechseläuten/Knabenschiessen bleiben unberücksichtigt). Betreibungsferien: 7 Tage vor und nach Ostern, 15.–31. Juli, 18. Dezember – 1. Januar (Art. 56 Ziff. 2 SchKG). Rechtsstand: revidiertes SchKG/ZPO, in Kraft seit 1.1.2025 (inkl. Art. 142 Abs. 1bis ZPO). Dieses Tool dient ausschliesslich Lernzwecken und ersetzt keine Rechtsberatung.
+</footer>
+
+<dialog id="theory">
+  <div class="thWrap">
+    <button class="thClose" onclick="document.getElementById('theory').close()">Schliessen ✕</button>
+    <h2>📖 Die Fristenregeln im Überblick</h2>
+
+    <h3>1. Fristberechnung (Art. 31 SchKG i.V.m. Art. 142 ff. ZPO)</h3>
+    <table>
+      <tr><th>Regel</th><th>Inhalt</th><th>Norm</th></tr>
+      <tr><td><b>Fristbeginn</b></td><td>Die Frist beginnt am <b>Tag nach</b> der Zustellung/dem Ereignis zu laufen. Fristbeginn an Samstag oder Sonntag ist <b>unproblematisch</b>.</td><td>Art. 142 Abs. 1 ZPO</td></tr>
+      <tr><td><b>Gewöhnliche Post an Sa/So/Feiertag</b></td><td>Neu seit 1.1.2025: Zustellung durch gewöhnliche Post (z.B. A-Post Plus) an Sa/So/Feiertag gilt erst am <b>nächsten Werktag</b> als erfolgt. Gilt NICHT für persönliche/eingeschriebene Zustellung von Betreibungsurkunden.</td><td>Art. 142 Abs. 1bis ZPO</td></tr>
+      <tr><td><b>Monatsfristen</b></td><td>Ende im letzten Monat an dem Tag mit derselben Zahl wie der Tag des Fristbeginns; fehlt dieser Tag, am letzten Tag des Monats.</td><td>Art. 142 Abs. 2 ZPO</td></tr>
+      <tr><td><b>Fristende an Sa/So/Feiertag</b></td><td>Die Frist endet am <b>nächsten Werktag</b>.</td><td>Art. 142 Abs. 3 ZPO</td></tr>
+      <tr><td><b>Einhaltung</b></td><td>Handlung spätestens am letzten Tag; Übergabe an die Schweizerische Post genügt.</td><td>Art. 143 ZPO</td></tr>
+    </table>
+
+    <h3>2. Schonzeiten (Art. 56 SchKG)</h3>
+    <table>
+      <tr><th>Schonzeit</th><th>Wann?</th><th>Für wen?</th></tr>
+      <tr><td><b>Geschlossene Zeiten</b><br>(Art. 56 Ziff. 1)</td><td>20–7 Uhr, Sonntage, staatlich anerkannte Feiertage (1. August = den Sonntagen gleichgestellt). <b>Samstag ist KEIN geschützter Tag</b> (BGE 114 III 55) — Zustellung am Samstag ist gültig und sofort wirksam.</td><td>alle</td></tr>
+      <tr><td><b>Betreibungsferien</b><br>(Art. 56 Ziff. 2)</td><td>7 Tage vor + nach Ostern · 15.–31. Juli · 18.12.–1.1.</td><td>alle Schuldner (genereller Schutz)</td></tr>
+      <tr><td><b>Rechtsstillstand</b><br>(Art. 57–62)</td><td>Militär-/Zivil-/Schutzdienst (bei ≥ 30 Tagen Dienst: + 2 Wochen nach Entlassung, Art. 57); Todesfall in der Familie (2 Wochen ab Todestag, Art. 58); Tod des Schuldners (Art. 59); Verhaftung (Art. 60); schwere Erkrankung (Art. 61); Notstand (Art. 62)</td><td>einzelner Schuldner (individueller Schutz)</td></tr>
+    </table>
+    <p style="font-size:.85rem"><b>Ausnahmen vom Handlungsverbot:</b> Arrestverfahren, Wechselbetreibung, unaufschiebbare Massnahmen (Art. 56 SchKG).</p>
+
+    <h3>3. Wirkung der Schonzeiten auf Fristen (Art. 63 SchKG)</h3>
+    <table>
+      <tr><th>Konstellation</th><th>Rechtsfolge</th></tr>
+      <tr><td><b>K1 — Frist läuft und ENDET in der Schonzeit</b></td><td>Betreibungsferien/Rechtsstillstand <b>hemmen nicht</b> — die Frist läuft weiter. Fällt aber das <b>Fristende</b> in die Schonzeit, wird die Frist bis zum <b>3. Werktag</b> nach deren Ende verlängert. Bei der Zählung der 3 Tage zählen <b>Samstag, Sonntag und Feiertage NICHT</b> mit.</td></tr>
+      <tr><td><b>K2 — Die ZUSTELLUNG fällt in die Schonzeit</b></td><td>Die Betreibungshandlung ist <b>nicht nichtig</b> (BGE 121 III 284), entfaltet ihre <b>Wirkung aber erst nach dem Ende</b> der Schonzeit (frühester Tag, der kein Sonntag/Feiertag ist; Samstag zulässig). Die Frist beginnt am Tag danach normal zu laufen.</td></tr>
+    </table>
+
+    <h3>4. Gerichtsferien (ZPO) ≠ Betreibungsferien (SchKG)</h3>
+    <table>
+      <tr><th></th><th>Gerichtsferien (Art. 145 ZPO)</th><th>Betreibungsferien (Art. 56 SchKG)</th></tr>
+      <tr><td>Sommer</td><td>15.7.–15.8.</td><td>15.7.–31.7.</td></tr>
+      <tr><td>Wirkung</td><td>Fristen stehen <b>STILL</b></td><td>Fristen <b>laufen weiter</b>; nur Verlängerung bei Fristende in den Ferien</td></tr>
+      <tr><td>SchKG-Sachen</td><td colspan="2">Für SchKG-Angelegenheiten gehen die SchKG-Regeln vor (Art. 145 Abs. 4 ZPO); im Summarverfahren gelten ohnehin keine Gerichtsferien (Art. 145 Abs. 2 lit. b ZPO). Die Rechtsöffnung folgt deshalb den <b>Betreibungsferien</b>.</td></tr>
+    </table>
+
+    <h3>5. Die wichtigsten SchKG-Fristen</h3>
+    <table>
+      <tr><th>Frist</th><th>Dauer</th><th>Beginn</th><th>Norm</th></tr>
+      <tr><td>Rechtsvorschlag</td><td>10 Tage</td><td>ab Zustellung Zahlungsbefehl</td><td>Art. 74 Abs. 1 SchKG</td></tr>
+      <tr><td>Zahlungsfrist</td><td>20 Tage</td><td>ab Zustellung Zahlungsbefehl</td><td>Art. 69 Abs. 2 Ziff. 2 SchKG</td></tr>
+      <tr><td>Fortsetzungsbegehren (frühestens/spätestens)</td><td>20 Tage / 1 Jahr</td><td>ab Zustellung Zahlungsbefehl</td><td>Art. 88 Abs. 1 und 2 SchKG</td></tr>
+      <tr><td>Aberkennungsklage</td><td>20 Tage</td><td>ab Erteilung der prov. Rechtsöffnung</td><td>Art. 83 Abs. 2 SchKG</td></tr>
+      <tr><td>Beschwerde an Aufsichtsbehörde</td><td>10 Tage</td><td>ab Kenntnis der Verfügung</td><td>Art. 17 Abs. 2 SchKG</td></tr>
+      <tr><td>Weiterzug an obere Aufsichtsbehörde</td><td>10 Tage</td><td>ab Eröffnung des Entscheids</td><td>Art. 18 SchKG</td></tr>
+      <tr><td>Konkursbegehren (frühestens / Verwirkung)</td><td>20 Tage / 15 Monate</td><td>ab Konkursandrohung / ab Zahlungsbefehl</td><td>Art. 166 SchKG</td></tr>
+    </table>
+  </div>
+</dialog>
+
+<script>
+"use strict";
+/* ============================================================
+   DATEN: Feiertage (Kanton Zürich) und Betreibungsferien
+   ============================================================ */
+const HOLIDAYS = {
+  "2024-12-25":"Weihnachten","2024-12-26":"Stephanstag",
+  "2025-01-01":"Neujahr","2025-01-02":"Berchtoldstag","2025-04-18":"Karfreitag","2025-04-20":"Ostersonntag",
+  "2025-04-21":"Ostermontag","2025-05-01":"Tag der Arbeit","2025-05-29":"Auffahrt","2025-06-08":"Pfingstsonntag",
+  "2025-06-09":"Pfingstmontag","2025-08-01":"Bundesfeiertag","2025-12-25":"Weihnachten","2025-12-26":"Stephanstag",
+  "2026-01-01":"Neujahr","2026-01-02":"Berchtoldstag","2026-04-03":"Karfreitag","2026-04-05":"Ostersonntag",
+  "2026-04-06":"Ostermontag","2026-05-01":"Tag der Arbeit","2026-05-14":"Auffahrt","2026-05-24":"Pfingstsonntag",
+  "2026-05-25":"Pfingstmontag","2026-08-01":"Bundesfeiertag","2026-12-25":"Weihnachten","2026-12-26":"Stephanstag",
+  "2027-01-01":"Neujahr","2027-01-02":"Berchtoldstag"
+};
+const FERIEN = [
+  {from:"2024-12-18",to:"2025-01-01",label:"Weihnachts-Betreibungsferien (18.12.–1.1.)"},
+  {from:"2025-04-13",to:"2025-04-27",label:"Oster-Betreibungsferien (7 Tage vor/nach Ostern: 13.–27.4.2025)"},
+  {from:"2025-07-15",to:"2025-07-31",label:"Sommer-Betreibungsferien (15.–31.7.)"},
+  {from:"2025-12-18",to:"2026-01-01",label:"Weihnachts-Betreibungsferien (18.12.–1.1.)"},
+  {from:"2026-03-29",to:"2026-04-12",label:"Oster-Betreibungsferien (7 Tage vor/nach Ostern: 29.3.–12.4.2026)"},
+  {from:"2026-07-15",to:"2026-07-31",label:"Sommer-Betreibungsferien (15.–31.7.)"},
+  {from:"2026-12-18",to:"2027-01-01",label:"Weihnachts-Betreibungsferien (18.12.–1.1.)"}
+];
+
+/* ============================================================
+   DATUMS-HELFER
+   ============================================================ */
+const WD = ["So","Mo","Di","Mi","Do","Fr","Sa"];
+const WDL = ["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
+const MON = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+function P(s){const a=s.split("-").map(Number);return new Date(a[0],a[1]-1,a[2],12);}
+function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x;}
+function addMonths(d,n){
+  const y=d.getFullYear(),m=d.getMonth()+n,day=d.getDate();
+  const dim=new Date(y,m+1,0,12).getDate();
+  return new Date(y,m,Math.min(day,dim),12);
+}
+function fmt(d){return WD[d.getDay()]+", "+d.getDate()+". "+MON[d.getMonth()]+" "+d.getFullYear();}
+function fmtS(d){return d.getDate()+"."+(d.getMonth()+1)+".";}
+function isSat(d){return d.getDay()===6;}
+function isSun(d){return d.getDay()===0;}
+function holName(d){return HOLIDAYS[iso(d)]&&d.getDay()!==0?HOLIDAYS[iso(d)]:(HOLIDAYS[iso(d)]||null);}
+function isHol(d){return !!HOLIDAYS[iso(d)];}
+function isWerktag(d){return !isSat(d)&&!isSun(d)&&!isHol(d);}
+function nextWerktag(d){let x=addDays(d,1);while(!isWerktag(x))x=addDays(x,1);return x;}
+function dayBlockReason(d){ // warum ist dieser Tag kein Werktag?
+  if(isHol(d)) return HOLIDAYS[iso(d)]+(isSat(d)?" (zugleich Samstag)":(isSun(d)?" (zugleich Sonntag)":""));
+  if(isSat(d)) return "Samstag";
+  if(isSun(d)) return "Sonntag";
+  return null;
+}
+
+/* ============================================================
+   FRISTEN-ENGINE
+   ============================================================ */
+function schonzeiten(ex){
+  const list=FERIEN.map(f=>({from:P(f.from),to:P(f.to),label:f.label,art:"ferien"}));
+  (ex.still||[]).forEach(s=>list.push({from:P(s.from),to:P(s.to),label:s.label,art:"still"}));
+  return list;
+}
+function covering(d,list){
+  let best=null;
+  for(const s of list){ if(d>=s.from&&d<=s.to){ if(!best||s.to>best.to)best=s; } }
+  return best;
+}
+function thirdWerktagAfter(to){
+  let d=to,count=0;const counted=[],skipped=[];
+  while(count<3){
+    d=addDays(d,1);
+    const r=dayBlockReason(d);
+    if(r){skipped.push({d,why:r});}
+    else{count++;counted.push(d);}
+  }
+  return {end:d,counted,skipped};
+}
+function compute(ex){
+  const steps=[];
+  let eff=P(ex.zustellung);
+  const szList=schonzeiten(ex);
+
+  // Art. 142 Abs. 1bis ZPO: gewöhnliche Post an Sa/So/Feiertag
+  if(ex.kind==="post"&&(isSat(eff)||isSun(eff)||isHol(eff))){
+    const to=nextWerktag(eff);
+    steps.push({k:"1bis",from:eff,to});
+    eff=to;
+  }
+
+  // Konstellation 2: Betreibungshandlung während einer Schonzeit
+  if(ex.kind!=="post"){
+    const cov=covering(eff,szList);
+    if(cov){
+      let w=addDays(cov.to,1);const skipped=[];
+      let guard=0;
+      while(guard++<30){
+        const cov2=covering(w,szList);
+        if(cov2){skipped.push({d:w,why:cov2.label});w=addDays(cov2.to,1);continue;}
+        if(isSun(w)||isHol(w)){skipped.push({d:w,why:isHol(w)?HOLIDAYS[iso(w)]+(isSat(w)?" (zugleich Samstag)":""):"Sonntag"});w=addDays(w,1);continue;}
+        break;
+      }
+      steps.push({k:"k2",cov,wirkung:w,skipped});
+      eff=w;
+    }else if(isSun(eff)||isHol(eff)){
+      // Zustellung an geschlossener Zeit (Sonntag/Feiertag, Art. 56 Ziff. 1 SchKG)
+      let w=addDays(eff,1);const skipped=[];let guard=0;
+      while(guard++<10&&(isSun(w)||isHol(w))){skipped.push({d:w,why:isHol(w)?HOLIDAYS[iso(w)]:"Sonntag"});w=addDays(w,1);}
+      steps.push({k:"closed",from:eff,wirkung:w,skipped});
+      eff=w;
+    }
+  }
+
+  const beginn=addDays(eff,1);
+  steps.push({k:"beginn",eff,beginn});
+
+  let end,rawEnd;
+  if(ex.tage){ end=addDays(eff,ex.tage); }
+  else{ end=addMonths(beginn,ex.monate); }
+  rawEnd=end;
+  steps.push({k:"raw",end,ex});
+
+  let guard=0;
+  while(guard++<8){
+    const cov=covering(end,szList);
+    if(cov){
+      const r=thirdWerktagAfter(cov.to);
+      steps.push({k:"63",cov,r,oldEnd:end});
+      end=r.end;continue;
+    }
+    if(!isWerktag(end)){
+      const to=nextWerktag(end);
+      steps.push({k:"shift",from:end,to});
+      end=to;continue;
+    }
+    break;
+  }
+  steps.push({k:"final",end});
+  return {eff,beginn,rawEnd,end,steps};
+}
+
+/* ============================================================
+   50 ÜBUNGEN
+   Level: 1 = Leicht, 2 = Mittel, 3 = Schwer
+   kind: "p" = persönliche/eingeschriebene Zustellung (Betreibungsurkunde),
+         "post" = gewöhnliche Post (A-Post Plus) → Art. 142 Abs. 1bis ZPO
+   expect: erwartete Lösung (für den Selbsttest, #selftest)
+   ============================================================ */
+const EX=[
+// ---------------- LEICHT (1–15) ----------------
+{n:1,level:1,titel:"Rechtsvorschlag — der Grundfall",zustellung:"2025-03-10",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Das Betreibungsamt Zürich stellt Herrn Keller am <b>10. März 2025</b> einen Zahlungsbefehl persönlich zu. Herr Keller bestreitet die Forderung und will Rechtsvorschlag erheben.",
+ note:"Der Grundfall ohne Komplikationen: Zustellung + 1 Tag = Fristbeginn (Art. 142 Abs. 1 ZPO); der 10. Tag ist der letzte Tag der Frist.",
+ expect:{b:"2025-03-11",e:"2025-03-20"}},
+{n:2,level:1,titel:"Rechtsvorschlag im September",zustellung:"2025-09-02",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Frau Bianchi erhält am <b>2. September 2025</b> einen Zahlungsbefehl über CHF 3'400 persönlich zugestellt. Sie möchte Rechtsvorschlag erheben.",
+ note:"Wieder der Grundfall: keine Ferien, kein Wochenende am Fristende — einfach 10 Tage ab dem Folgetag zählen.",
+ expect:{b:"2025-09-03",e:"2025-09-12"}},
+{n:3,level:1,titel:"Fristende am Sonntag",zustellung:"2025-05-08",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Herr Da Silva erhält am <b>8. Mai 2025</b> einen Zahlungsbefehl persönlich zugestellt und will Rechtsvorschlag erheben.",
+ note:"Fällt der letzte Tag der Frist auf einen Sonntag, verschiebt sich das Fristende auf den nächsten Werktag (Art. 142 Abs. 3 ZPO).",
+ expect:{b:"2025-05-09",e:"2025-05-19"}},
+{n:4,level:1,titel:"Die Zahlungsfrist von 20 Tagen",zustellung:"2025-10-01",kind:"p",tage:20,
+ fristName:"Zahlungsfrist — 20 Tage (Art. 69 Abs. 2 Ziff. 2 SchKG)",
+ text:"Die Móda AG erhält am <b>1. Oktober 2025</b> einen Zahlungsbefehl. Sie will wissen, bis wann sie spätestens bezahlen kann, bevor der Gläubiger das Fortsetzungsbegehren stellen darf.",
+ note:"Klassischer Stolperstein: Die Zahlungsfrist beträgt <b>20 Tage</b> — nicht 10! Nach Ablauf der 20 Tage darf der Gläubiger die Fortsetzung verlangen (Art. 88 Abs. 1 SchKG).",
+ expect:{b:"2025-10-02",e:"2025-10-21"}},
+{n:5,level:1,titel:"Beschwerde an die Aufsichtsbehörde",zustellung:"2025-11-05",kind:"p",tage:10,
+ fristName:"Beschwerde — 10 Tage (Art. 17 Abs. 2 SchKG)",
+ text:"Frau Odermatt erfährt am <b>5. November 2025</b> von einer Verfügung des Betreibungsamts, die sie für gesetzeswidrig hält. Sie will Beschwerde bei der Aufsichtsbehörde führen.",
+ note:"Die Beschwerdefrist läuft ab <b>Kenntnis</b> der Verfügung. Das Fristende fällt auf einen Samstag — es verschiebt sich auf den nächsten Werktag (Art. 142 Abs. 3 ZPO).",
+ expect:{b:"2025-11-06",e:"2025-11-17"}},
+{n:6,level:1,titel:"Fristbeginn am Samstag",zustellung:"2025-06-06",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Herr Wyss erhält am Freitag, <b>6. Juni 2025</b>, einen Zahlungsbefehl persönlich zugestellt. Er fragt sich, ob es ein Problem ist, dass der erste Tag der Frist ein Samstag wäre.",
+ note:"Nein! Der <b>Fristbeginn</b> an einem Samstag oder Sonntag ist völlig unproblematisch (Art. 142 Abs. 1 ZPO). Nur das Frist<b>ende</b> wird bei Sa/So/Feiertag verschoben.",
+ expect:{b:"2025-06-07",e:"2025-06-16"}},
+{n:7,level:1,titel:"Zustellung am Samstag — gültig?",zustellung:"2026-01-17",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Der Betreibungsweibel übergibt Frau Steiner den Zahlungsbefehl am Samstag, <b>17. Januar 2026</b>, persönlich an der Haustür. Ist das zulässig — und wie läuft die Frist?",
+ note:"Der Samstag ist <b>keine geschlossene Zeit</b> im Sinne von Art. 56 Ziff. 1 SchKG (BGE 114 III 55). Die Zustellung ist gültig und sofort wirksam; die Frist beginnt am Sonntag zu laufen (auch das unproblematisch).",
+ expect:{b:"2026-01-18",e:"2026-01-27"}},
+{n:8,level:1,titel:"Aberkennungsklage",zustellung:"2025-09-15",kind:"p",tage:20,
+ fristName:"Aberkennungsklage — 20 Tage (Art. 83 Abs. 2 SchKG)",
+ text:"Dem Schuldner Herrn Roth wird am <b>15. September 2025</b> der Entscheid zugestellt, mit dem dem Gläubiger die provisorische Rechtsöffnung erteilt wurde. Herr Roth will mit der Aberkennungsklage geltend machen, dass die Forderung nicht besteht.",
+ note:"Die Aberkennungsklage ist innert <b>20 Tagen</b> nach Erteilung der provisorischen Rechtsöffnung einzureichen. Das rechnerische Ende fällt auf einen Sonntag → nächster Werktag.",
+ expect:{b:"2025-09-16",e:"2025-10-06"}},
+{n:9,level:1,titel:"Rechtsvorschlag im Februar",zustellung:"2026-02-03",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Herr Gerber erhält am <b>3. Februar 2026</b> einen Zahlungsbefehl persönlich zugestellt und will Rechtsvorschlag erheben.",
+ note:"Grundfall ohne Besonderheiten — zur Festigung des Schemas: Folgetag = Beginn, 10. Tag = Ende.",
+ expect:{b:"2026-02-04",e:"2026-02-13"}},
+{n:10,level:1,titel:"Weiterzug an die obere Aufsichtsbehörde",zustellung:"2026-05-06",kind:"p",tage:10,
+ fristName:"Weiterzug — 10 Tage (Art. 18 SchKG)",
+ text:"Der Entscheid der unteren Aufsichtsbehörde wird Frau Camenzind am <b>6. Mai 2026</b> eröffnet. Sie will ihn an die obere kantonale Aufsichtsbehörde weiterziehen.",
+ note:"Auch der Weiterzug an die obere Aufsichtsbehörde hat innert <b>10 Tagen</b> zu erfolgen (Art. 18 SchKG). Ende am Samstag → Verschiebung auf Montag.",
+ expect:{b:"2026-05-07",e:"2026-05-18"}},
+{n:11,level:1,titel:"Knapp vor den Weihnachtsferien",zustellung:"2025-11-24",kind:"p",tage:20,
+ fristName:"Zahlungsfrist — 20 Tage (Art. 69 Abs. 2 Ziff. 2 SchKG)",
+ text:"Die Bergquelle GmbH erhält am <b>24. November 2025</b> einen Zahlungsbefehl. Bis wann läuft die Zahlungsfrist? (Achtung: Bald beginnen die Weihnachts-Betreibungsferien …)",
+ note:"Falle im Kopf, aber nicht im Kalender: Das Fristende (14.12.) liegt <b>vor</b> Beginn der Weihnachtsferien (18.12.). Art. 63 SchKG greift also NICHT — nur die gewöhnliche Sonntagsverschiebung nach Art. 142 Abs. 3 ZPO.",
+ expect:{b:"2025-11-25",e:"2025-12-15"}},
+{n:12,level:1,titel:"Vor den Osterferien",zustellung:"2025-04-01",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Herr Blum erhält am <b>1. April 2025</b> einen Zahlungsbefehl persönlich zugestellt. Die Oster-Betreibungsferien 2025 dauern vom 13. bis 27. April. Beeinflussen sie seine Rechtsvorschlagsfrist?",
+ note:"Nein: Das Fristende (11.4.) liegt vor Ferienbeginn (13.4.). Immer zuerst das rechnerische Fristende bestimmen und erst dann prüfen, ob es in eine Schonzeit fällt.",
+ expect:{b:"2025-04-02",e:"2025-04-11"}},
+{n:13,level:1,titel:"Fristende an Auffahrt",zustellung:"2025-05-19",kind:"p",tage:10,
+ fristName:"Beschwerde — 10 Tage (Art. 17 Abs. 2 SchKG)",
+ text:"Frau Huber erhält am <b>19. Mai 2025</b> Kenntnis von einer Pfändungsurkunde mit einem Fehler. Sie will Beschwerde bei der Aufsichtsbehörde erheben.",
+ note:"Das rechnerische Fristende fällt auf <b>Auffahrt</b> (29.5.2025) — einen staatlich anerkannten Feiertag. Die Frist endet daher erst am nächsten Werktag (Art. 142 Abs. 3 ZPO).",
+ expect:{b:"2025-05-20",e:"2025-05-30"}},
+{n:14,level:1,titel:"Beschwerde mit Wochenend-Ende",zustellung:"2026-06-10",kind:"p",tage:10,
+ fristName:"Beschwerde — 10 Tage (Art. 17 Abs. 2 SchKG)",
+ text:"Herr Njoku erhält am <b>10. Juni 2026</b> Kenntnis von einer Verfügung des Betreibungsamts, gegen die er Beschwerde erheben will.",
+ note:"Fristende am Samstag → Verschiebung auf den nächsten Werktag (Montag). Der Samstag ist zwar keine geschlossene Zeit, aber für das Frist<b>ende</b> gilt Art. 142 Abs. 3 ZPO.",
+ expect:{b:"2026-06-11",e:"2026-06-22"}},
+{n:15,level:1,titel:"Nach den Sommerferien",zustellung:"2025-08-18",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Frau Vogel erhält am <b>18. August 2025</b> einen Zahlungsbefehl persönlich zugestellt. Die Sommer-Betreibungsferien (15.–31. Juli) sind längst vorbei; auch die «Gerichtsferien» der ZPO wären am 15. August zu Ende.",
+ note:"Nach dem 31. Juli (bzw. hier ohnehin nach Mitte August) läuft alles normal. Merke: Für SchKG-Fristen sind die <b>Betreibungsferien</b> massgebend, nicht die Gerichtsferien der ZPO.",
+ expect:{b:"2025-08-19",e:"2025-08-28"}},
+
+// ---------------- MITTEL (16–35) ----------------
+{n:16,level:2,titel:"Der Klassiker: Fristende in den Sommerferien",zustellung:"2025-07-08",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Herr Meili erhält am <b>8. Juli 2025</b> einen Zahlungsbefehl persönlich zugestellt. Er will Rechtsvorschlag erheben — doch das rechnerische Fristende fällt mitten in die Sommer-Betreibungsferien (15.–31. Juli).",
+ note:"Konstellation 1 des Art. 63 SchKG: Die Ferien <b>hemmen nicht</b> — die Frist läuft durch. Weil ihr Ende in die Ferien fällt, wird sie bis zum <b>3. Werktag</b> nach Ferienende verlängert. Der 1. August (Bundesfeiertag) sowie Sa/So zählen bei den 3 Werktagen nicht mit!",
+ expect:{b:"2025-07-09",e:"2025-08-06"}},
+{n:17,level:2,titel:"Zahlungsfrist endet in den Ferien",zustellung:"2025-07-01",kind:"p",tage:20,
+ fristName:"Zahlungsfrist — 20 Tage (Art. 69 Abs. 2 Ziff. 2 SchKG)",
+ text:"Die Tannhof AG erhält am <b>1. Juli 2025</b> einen Zahlungsbefehl. Bis wann läuft die 20-tägige Zahlungsfrist, wenn deren Ende in die Sommer-Betreibungsferien fällt?",
+ note:"Auch die 20-tägige Zahlungsfrist wird nach Art. 63 SchKG verlängert, wenn ihr Ende in die Betreibungsferien fällt. Die Verlängerung ist immer gleich: bis zum 3. Werktag nach Ferienende — egal, wie viele Fristtage schon vor den Ferien verstrichen waren.",
+ expect:{b:"2025-07-02",e:"2025-08-06"}},
+{n:18,level:2,titel:"Weihnachtsferien und Berchtoldstag",zustellung:"2025-12-10",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Herr Fontana erhält am <b>10. Dezember 2025</b> einen Zahlungsbefehl persönlich zugestellt. Das rechnerische Fristende fällt in die Weihnachts-Betreibungsferien (18.12.–1.1.).",
+ note:"Bei der 3-Werktage-Zählung nach den Weihnachtsferien ist im Kanton Zürich der <b>2. Januar (Berchtoldstag)</b> ein staatlich anerkannter Feiertag — er zählt NICHT mit, ebenso wenig Sa/So.",
+ expect:{b:"2025-12-11",e:"2026-01-07"}},
+{n:19,level:2,titel:"Fristende in den Osterferien",zustellung:"2025-04-07",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Frau Marti erhält am <b>7. April 2025</b> einen Zahlungsbefehl persönlich zugestellt. Ostern 2025 fällt auf den 20. April; die Oster-Betreibungsferien dauern vom 13. bis 27. April.",
+ note:"Das Fristende fällt in die Osterferien → Verlängerung bis zum 3. Werktag nach dem 27. April. Karfreitag und Ostermontag liegen innerhalb der Ferien und spielen bei der 3-Tage-Zählung deshalb keine Rolle mehr.",
+ expect:{b:"2025-04-08",e:"2025-04-30"}},
+{n:20,level:2,titel:"Osterferien 2026 — Ende am Samstag in den Ferien",zustellung:"2026-03-25",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Herr Achermann erhält am <b>25. März 2026</b> einen Zahlungsbefehl persönlich zugestellt. Ostern 2026 fällt auf den 5. April; die Oster-Betreibungsferien dauern vom 29. März bis 12. April 2026.",
+ note:"Das rechnerische Ende (4.4.) ist ein Samstag UND liegt in den Ferien. Massgebend ist Art. 63 SchKG: Fällt das Ende in die Schonzeit, gilt die 3-Werktage-Verlängerung nach Ferienende — die Samstagsregel von Art. 142 Abs. 3 ZPO wird davon konsumiert.",
+ expect:{b:"2026-03-26",e:"2026-04-15"}},
+{n:21,level:2,titel:"Zustellung MITTEN in den Ferien (Konstellation 2)",zustellung:"2025-07-17",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Das Betreibungsamt stellt Herrn Schoch den Zahlungsbefehl am <b>17. Juli 2025</b> zu — mitten in den Sommer-Betreibungsferien. Ist die Zustellung gültig? Und wann läuft die Rechtsvorschlagsfrist?",
+ note:"Konstellation 2: Die Zustellung ist <b>nicht nichtig</b> (BGE 121 III 284), sie wirkt aber erst nach Ferienende. Der 1. August ist Feiertag → die Wirkung tritt erst am Samstag, 2. August ein (Samstag ist zulässig!); die Frist beginnt am 3. August zu laufen.",
+ expect:{b:"2025-08-03",e:"2025-08-12"}},
+{n:22,level:2,titel:"Zustellung in den Weihnachtsferien",zustellung:"2025-12-22",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Der Zahlungsbefehl wird Frau Gasser am <b>22. Dezember 2025</b> zugestellt — während der Weihnachts-Betreibungsferien (18.12.–1.1.). Wann beginnt und endet die Rechtsvorschlagsfrist?",
+ note:"Die Zustellung wirkt erst nach dem 1. Januar. Der 2. Januar ist im Kanton Zürich Feiertag (Berchtoldstag) → Wirkung am Samstag, 3. Januar; Fristbeginn am Sonntag, 4. Januar (unproblematisch).",
+ expect:{b:"2026-01-04",e:"2026-01-13"}},
+{n:23,level:2,titel:"A-Post Plus am Samstag (neu seit 2025)",zustellung:"2025-09-06",kind:"post",tage:10,
+ fristName:"Beschwerde — 10 Tage (Art. 17 Abs. 2 SchKG)",
+ text:"Eine Verfügung des Betreibungsamts (Zustellung mit <b>A-Post Plus</b>, also gewöhnliche Post ohne Empfangsbestätigung) landet am Samstag, <b>6. September 2025</b>, im Briefkasten von Herrn Lang. Er will Beschwerde erheben.",
+ note:"Seit 1.1.2025 gilt: Zustellung durch <b>gewöhnliche Post</b> an Sa/So/Feiertag gilt erst am <b>nächsten Werktag</b> als erfolgt (Art. 142 Abs. 1bis ZPO). Die Zustellung gilt also als am Montag, 8. September erfolgt.",
+ expect:{b:"2025-09-09",e:"2025-09-18"}},
+{n:24,level:2,titel:"Kontrast: Weibel am Samstag statt A-Post Plus",zustellung:"2025-09-06",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Gleicher Samstag, anderer Kanal: Der Betreibungsweibel übergibt Herrn Lang am Samstag, <b>6. September 2025</b>, persönlich einen Zahlungsbefehl. (Vergleiche mit Aufgabe 23!)",
+ note:"Der Unterschied zu Aufgabe 23: Betreibungsurkunden werden <b>persönlich oder eingeschrieben</b> zugestellt (Art. 64, 72 SchKG) — dafür gilt Art. 142 Abs. 1bis ZPO NICHT. Die Samstagszustellung ist sofort wirksam (BGE 114 III 55); die Frist beginnt am Sonntag.",
+ expect:{b:"2025-09-07",e:"2025-09-16"}},
+{n:25,level:2,titel:"Rechtsstillstand: Todesfall in der Familie",zustellung:"2025-06-02",kind:"p",tage:10,
+ still:[{from:"2025-06-09",to:"2025-06-22",label:"Rechtsstillstand Todesfall (Art. 58 SchKG): 2 Wochen ab Todestag 9.6.2025"}],
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ stillNote:"Beim Tod des Ehegatten, von Verwandten/Verschwägerten in gerader Linie oder von Hausgenossen besteht für den Schuldner Rechtsstillstand während <b>2 Wochen ab dem Todestag</b> (Art. 58 SchKG): hier vom 9. bis 22. Juni 2025.",
+ text:"Herr Frei erhält am <b>2. Juni 2025</b> einen Zahlungsbefehl persönlich zugestellt. Am <b>9. Juni 2025</b> stirbt seine Ehefrau. Wie wirkt sich der Rechtsstillstand (Art. 58 SchKG) auf seine bereits laufende Rechtsvorschlagsfrist aus?",
+ note:"Der Rechtsstillstand wirkt auf Fristen genau gleich wie die Betreibungsferien (Art. 63 SchKG): Er hemmt nicht, aber weil das Fristende (12.6.) in den Stillstand fällt, verlängert sich die Frist bis zum 3. Werktag nach dessen Ende.",
+ expect:{b:"2025-06-03",e:"2025-06-25"}},
+{n:26,level:2,titel:"Zustellung während des Militärdienstes",zustellung:"2025-09-10",kind:"p",tage:10,
+ still:[{from:"2025-09-01",to:"2025-09-19",label:"Rechtsstillstand Militärdienst (Art. 57 SchKG): WK vom 1.–19.9.2025"}],
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ stillNote:"Herr Roos leistet vom 1. bis 19. September 2025 Militärdienst (19 Tage). Da der Dienst <b>weniger als 30 Tage</b> dauert, gibt es KEINE zusätzlichen 2 Wochen nach der Entlassung — der Rechtsstillstand endet mit dem Dienst (Art. 57 SchKG).",
+ text:"Herr Roos leistet vom <b>1. bis 19. September 2025</b> einen Wiederholungskurs (Militärdienst). Am <b>10. September 2025</b> — während des Dienstes — stellt ihm das Betreibungsamt einen Zahlungsbefehl zu.",
+ note:"Konstellation 2 beim Rechtsstillstand: Die Zustellung während des Dienstes ist nicht nichtig, wirkt aber erst nach dessen Ende. Erster möglicher Wirkungstag nach dem 19.9. ist Samstag, der 20.9. (Samstag zulässig); die Frist beginnt am Sonntag, 21.9.",
+ expect:{b:"2025-09-21",e:"2025-09-30"}},
+{n:27,level:2,titel:"Fristende am Pfingstmontag",zustellung:"2025-05-30",kind:"p",tage:10,
+ fristName:"Beschwerde — 10 Tage (Art. 17 Abs. 2 SchKG)",
+ text:"Frau Krasniqi erhält am <b>30. Mai 2025</b> Kenntnis von einer Verfügung des Betreibungsamts und will Beschwerde erheben.",
+ note:"Das rechnerische Fristende fällt auf den <b>Pfingstmontag</b> (9.6.2025) — ein staatlich anerkannter Feiertag. Die Frist endet am nächsten Werktag (Art. 142 Abs. 3 ZPO).",
+ expect:{b:"2025-05-31",e:"2025-06-10"}},
+{n:28,level:2,titel:"Ein Jahr für das Fortsetzungsbegehren",zustellung:"2025-03-05",kind:"p",monate:12,
+ fristName:"Fortsetzungsbegehren (spätestens) — 1 Jahr (Art. 88 Abs. 2 SchKG)",
+ text:"Der Gläubigerin Ehrler AG wurde der Zahlungsbefehl gegen ihren Schuldner am <b>5. März 2025</b> zugestellt; der Schuldner erhob keinen Rechtsvorschlag. Bis wann muss die Ehrler AG spätestens das Fortsetzungsbegehren stellen, bevor die Betreibung erlischt? (Es lief kein Rechtsöffnungs- oder Klageverfahren.)",
+ note:"Jahresfrist nach Art. 142 Abs. 2 ZPO: Sie endet im letzten Monat an dem Tag mit derselben Zahl wie der Tag des Fristbeginns (6. März). Hinweis: Während eines Rechtsöffnungs- oder Klageverfahrens stünde die Frist still (Art. 88 Abs. 2 SchKG) — hier nicht relevant.",
+ expect:{b:"2025-03-06",e:"2026-03-06"}},
+{n:29,level:2,titel:"Ferien hemmen nicht!",zustellung:"2025-07-09",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Herr Bühler erhält am <b>9. Juli 2025</b> — also noch VOR den Sommerferien — einen Zahlungsbefehl. Er glaubt, seine Rechtsvorschlagsfrist werde durch die Ferien «angehalten» und laufe nachher weiter. Stimmt das?",
+ note:"Nein! Anders als die ZPO-Gerichtsferien (Fristenstillstand, Art. 145 ZPO) <b>hemmen die Betreibungsferien den Fristenlauf NICHT</b>. Die Frist läuft in den Ferien weiter; einzig weil ihr Ende (19.7.) in die Ferien fällt, wird sie bis zum 3. Werktag nach Ferienende verlängert (Art. 63 SchKG).",
+ expect:{b:"2025-07-10",e:"2025-08-06"}},
+{n:30,level:2,titel:"Sommerferien 2026 — der 1. August fällt auf einen Samstag",zustellung:"2026-07-06",kind:"p",tage:10,
+ fristName:"Beschwerde — 10 Tage (Art. 17 Abs. 2 SchKG)",
+ text:"Herr Imfeld erhält am <b>6. Juli 2026</b> Kenntnis von einer beschwerdefähigen Verfügung. Das rechnerische Fristende fällt in die Sommer-Betreibungsferien 2026 (15.–31. Juli).",
+ note:"Bei der 3-Werktage-Zählung 2026: Der 1. August ist Samstag UND Bundesfeiertag, der 2. August Sonntag — beide zählen nicht. Die drei Werktage sind Montag 3.8., Dienstag 4.8. und Mittwoch 5.8.",
+ expect:{b:"2026-07-07",e:"2026-08-05"}},
+{n:31,level:2,titel:"Zustellung am letzten Ferientag",zustellung:"2026-07-31",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Das Betreibungsamt stellt Frau Wirth den Zahlungsbefehl am <b>31. Juli 2026</b> zu — dem letzten Tag der Sommer-Betreibungsferien. Wann wird die Zustellung wirksam, und wie läuft die Frist?",
+ note:"Auch am letzten Ferientag gilt: Zustellung in der Schonzeit → Wirkung erst danach. 2026 ist der 1. August ein Samstag und zugleich Bundesfeiertag (→ keine Wirkung), der 2. August ein Sonntag. Die Wirkung tritt am Montag, 3. August ein; die Frist läuft ab Dienstag, 4. August.",
+ expect:{b:"2026-08-04",e:"2026-08-13"}},
+{n:32,level:2,titel:"Die Gerichtsferien-Falle",zustellung:"2025-08-05",kind:"p",tage:10,
+ fristName:"Beschwerde gegen Rechtsöffnungsentscheid — 10 Tage (Art. 321 Abs. 2 ZPO)",
+ text:"Der Rechtsöffnungsentscheid wird dem Schuldner Herrn Portmann am <b>5. August 2025</b> zugestellt. Sein Kollege meint: «Bis 15. August sind doch Gerichtsferien — deine Beschwerdefrist beginnt erst danach!» Hat er recht?",
+ note:"Nein — doppelt falsch: (1) Die Rechtsöffnung ist ein <b>Summarverfahren</b>, in dem die Gerichtsferien ohnehin nicht gelten (Art. 145 Abs. 2 lit. b ZPO). (2) Für SchKG-Sachen gehen die SchKG-Regeln vor (Art. 145 Abs. 4 ZPO) — massgebend wären die Betreibungsferien, und die endeten am 31. Juli. Die Frist läuft also ganz normal.",
+ expect:{b:"2025-08-06",e:"2025-08-15"}},
+{n:33,level:2,titel:"Zustellung am 1. August",zustellung:"2025-08-01",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Ein übereifriger Weibel stellt Herrn Sutter den Zahlungsbefehl am <b>1. August 2025</b> (Bundesfeiertag) zu. Der 1. August ist als geschlossene Zeit den Sonntagen gleichgestellt (Art. 56 Ziff. 1 SchKG). Was gilt?",
+ note:"Die Zustellung an einem geschützten Tag ist nach der Praxis <b>nicht nichtig</b> — sie entfaltet ihre Wirkung einfach erst am nächsten nicht geschützten Tag. Das ist hier der Samstag, 2. August (Samstag ist kein geschützter Tag!). Die Frist beginnt am Sonntag, 3. August.",
+ expect:{b:"2025-08-03",e:"2025-08-12"}},
+{n:34,level:2,titel:"Todesfall — Verlängerung übers Wochenende",zustellung:"2026-01-12",kind:"p",tage:10,
+ still:[{from:"2026-01-15",to:"2026-01-28",label:"Rechtsstillstand Todesfall (Art. 58 SchKG): 2 Wochen ab Todestag 15.1.2026"}],
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ stillNote:"Der Vater ist ein Verwandter in gerader Linie: Rechtsstillstand von <b>2 Wochen ab dem Todestag</b> (Art. 58 SchKG), hier vom 15. bis 28. Januar 2026.",
+ text:"Frau Zbinden erhält am <b>12. Januar 2026</b> einen Zahlungsbefehl. Am <b>15. Januar 2026</b> stirbt ihr Vater. Wie läuft die Rechtsvorschlagsfrist?",
+ note:"Das Fristende (22.1.) fällt in den Rechtsstillstand → 3-Werktage-Verlängerung nach dessen Ende (28.1.). Bei der Zählung überspringt man das Wochenende: Do 29.1. (1.), Fr 30.1. (2.), Mo 2.2. (3.).",
+ expect:{b:"2026-01-13",e:"2026-02-02"}},
+{n:35,level:2,titel:"Fristende an Weihnachten",zustellung:"2025-12-15",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Herr Egli erhält am <b>15. Dezember 2025</b> einen Zahlungsbefehl persönlich zugestellt. Das rechnerische Fristende fällt auf den 25. Dezember. Was gilt?",
+ note:"Der 25. Dezember ist Feiertag UND liegt in den Weihnachts-Betreibungsferien (18.12.–1.1.). Massgebend ist Art. 63 SchKG (Fristende in der Schonzeit) → Verlängerung bis zum 3. Werktag nach dem 1. Januar. Berchtoldstag (2.1.) und das Wochenende zählen nicht mit.",
+ expect:{b:"2025-12-16",e:"2026-01-07"}},
+
+// ---------------- SCHWER (36–50) ----------------
+{n:36,level:3,titel:"Sieht nach Ferien aus — ist es aber nicht",zustellung:"2025-07-02",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Herr Steffen erhält am <b>2. Juli 2025</b> einen Zahlungsbefehl. Er rechnet: «10 Tage — das Ende fällt sicher in die Sommerferien, also habe ich bis im August Zeit.» Prüfe genau!",
+ note:"Falle! Das rechnerische Ende (12.7.) ist ein <b>Samstag VOR Ferienbeginn</b> (15.7.). Art. 142 Abs. 3 ZPO verschiebt nur auf den nächsten Werktag — Montag, 14. Juli. Auch dieser liegt noch VOR den Ferien. Art. 63 SchKG greift nie: Die Frist endet bereits am 14. Juli!",
+ expect:{b:"2025-07-03",e:"2025-07-14"}},
+{n:37,level:3,titel:"Kaskade: Samstag → Montag → Osterferien",zustellung:"2026-03-18",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Frau Kunz erhält am <b>18. März 2026</b> einen Zahlungsbefehl. Das rechnerische Fristende fällt auf Samstag, den 28. März — einen Tag bevor die Oster-Betreibungsferien 2026 (29.3.–12.4.) beginnen.",
+ note:"Zweistufige Prüfung: (1) Ende am Samstag 28.3. → Verschiebung auf den nächsten Werktag, Montag 30.3. (Art. 142 Abs. 3 ZPO). (2) Der 30.3. liegt IN den Osterferien → nun greift zusätzlich Art. 63 SchKG: Verlängerung bis zum 3. Werktag nach dem 12. April.",
+ expect:{b:"2026-03-19",e:"2026-04-15"}},
+{n:38,level:3,titel:"Weihnachtsferien 2026/27 — Berchtoldstag am Samstag",zustellung:"2026-12-09",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Herr Diallo erhält am <b>9. Dezember 2026</b> einen Zahlungsbefehl. Das rechnerische Fristende fällt in die Weihnachts-Betreibungsferien (18.12.2026–1.1.2027).",
+ note:"3-Werktage-Zählung ab dem 1.1.2027 (Freitag, Neujahr): Der 2.1. ist Samstag (und Berchtoldstag), der 3.1. Sonntag — beide zählen nicht. Werktage: Mo 4.1. (1.), Di 5.1. (2.), Mi 6.1. (3.).",
+ expect:{b:"2026-12-10",e:"2027-01-06"}},
+{n:39,level:3,titel:"Militärdienst über 30 Tage: +2 Wochen",zustellung:"2025-10-20",kind:"p",tage:10,
+ still:[{from:"2025-10-06",to:"2025-11-28",label:"Rechtsstillstand Militärdienst (Art. 57 SchKG): Dienst 6.10.–14.11.2025 (40 Tage ≥ 30) + 2 Wochen nach Entlassung, somit bis 28.11.2025"}],
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ stillNote:"Der Dienst dauert vom 6. Oktober bis 14. November 2025 = <b>40 Tage</b>. Bei mindestens 30 Tagen ununterbrochenem Dienst dauert der Rechtsstillstand zusätzlich <b>2 Wochen nach der Entlassung</b> (Art. 57 SchKG) — also bis am 28. November 2025.",
+ text:"Herr Baumann leistet vom <b>6. Oktober bis 14. November 2025</b> Militärdienst (Durchdiener-Abschnitt, 40 Tage am Stück). Am <b>20. Oktober 2025</b> wird ihm ein Zahlungsbefehl zugestellt. Achtung: Wie lange dauert der Rechtsstillstand hier wirklich?",
+ note:"Zwei Prüfschritte: (1) Dienst ≥ 30 Tage → Stillstand bis 2 Wochen nach Entlassung (28.11.). (2) Zustellung im Stillstand → Wirkung erst danach: Samstag 29.11. (zulässig), Fristbeginn Sonntag 30.11.",
+ expect:{b:"2025-11-30",e:"2025-12-09"}},
+{n:40,level:3,titel:"15 Monate: die Verwirkung des Konkursbegehrens",zustellung:"2025-01-08",kind:"p",monate:15,
+ fristName:"Konkursbegehren (Verwirkung) — 15 Monate (Art. 166 Abs. 2 SchKG)",
+ text:"Der Gläubigerin Nova Finanz AG wurde der Zahlungsbefehl (Konkursbetreibung) gegen die Schuldnerin am <b>8. Januar 2025</b> zugestellt. Innert welcher Frist muss sie spätestens das Konkursbegehren stellen, bevor der Zahlungsbefehl seine Wirkung verliert? (Kein Rechtsöffnungs- oder Klageverfahren.)",
+ note:"Monatsfrist nach Art. 142 Abs. 2 ZPO: 15 Monate ab Fristbeginn (9.1.2025) → rechnerisches Ende am 9. April 2026. Dieses fällt in die Oster-Betreibungsferien 2026 (29.3.–12.4.) → Verlängerung bis zum 3. Werktag nach deren Ende (Art. 63 SchKG). Auch lange Fristen sind vor Art. 63 nicht sicher!",
+ expect:{b:"2025-01-09",e:"2026-04-15"}},
+{n:41,level:3,titel:"Jahresfrist endet am Sonntag",zustellung:"2025-06-13",kind:"p",monate:12,
+ fristName:"Fortsetzungsbegehren (spätestens) — 1 Jahr (Art. 88 Abs. 2 SchKG)",
+ text:"Der Zahlungsbefehl wurde der Gläubigerin am <b>13. Juni 2025</b> zugestellt (kein Rechtsvorschlag, kein Verfahren). Bis wann kann sie das Fortsetzungsbegehren spätestens stellen?",
+ note:"Kombination Monatsfrist + Wochenendregel: Fristbeginn am 14.6.2025 (Samstag — unproblematisch!), Jahresende am 14.6.2026. Das ist ein Sonntag → die Frist endet am nächsten Werktag (Art. 142 Abs. 3 ZPO).",
+ expect:{b:"2025-06-14",e:"2026-06-15"}},
+{n:42,level:3,titel:"Aberkennungsklage über die Weihnachtsferien",zustellung:"2025-12-08",kind:"p",tage:20,
+ fristName:"Aberkennungsklage — 20 Tage (Art. 83 Abs. 2 SchKG)",
+ text:"Dem Schuldner Herrn Odriozola wird am <b>8. Dezember 2025</b> der Entscheid über die provisorische Rechtsöffnung zugestellt. Er will die Aberkennungsklage erheben. Das rechnerische Fristende fällt in die Weihnachts-Betreibungsferien.",
+ note:"Auch die (gerichtliche) Aberkennungsklagefrist ist eine betreibungsrechtliche Frist — Art. 63 SchKG ist anwendbar. Ende (28.12.) in den Ferien → 3. Werktag nach dem 1.1.2026; Berchtoldstag (2.1.) und Wochenende zählen nicht.",
+ expect:{b:"2025-12-09",e:"2026-01-07"}},
+{n:43,level:3,titel:"Rechtsöffnung in den Ferien erteilt",zustellung:"2025-07-22",kind:"p",tage:20,
+ fristName:"Aberkennungsklage — 20 Tage (Art. 83 Abs. 2 SchKG)",
+ text:"Das Gericht erteilt dem Gläubiger die provisorische Rechtsöffnung; der Entscheid wird dem Schuldner am <b>22. Juli 2025</b> — während der Sommer-Betreibungsferien — zugestellt. Die Erteilung der Rechtsöffnung ist eine Betreibungshandlung. Wann läuft die Aberkennungsklagefrist?",
+ note:"Konstellation 2: Die während der Ferien zugestellte Rechtsöffnung wirkt erst nach Ferienende. 1. August = Feiertag → Wirkung am Samstag, 2. August; die 20-tägige Frist läuft ab Sonntag, 3. August. Merke: Die Rechtsöffnung folgt den BETREIBUNGSferien (Art. 145 Abs. 4 ZPO), nicht den Gerichtsferien.",
+ expect:{b:"2025-08-03",e:"2025-08-22"}},
+{n:44,level:3,titel:"Ostersamstag: Samstag wäre okay — Ferien nicht",zustellung:"2026-04-04",kind:"p",tage:10,
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ text:"Der Weibel stellt Herrn Cavegn den Zahlungsbefehl am Samstag, <b>4. April 2026</b>, zu — dem Samstag vor Ostern. Samstagszustellungen sind doch zulässig … oder übersieht der Weibel etwas?",
+ note:"Der Samstag selbst wäre kein Problem (BGE 114 III 55) — aber der 4. April 2026 liegt in den <b>Oster-Betreibungsferien</b> (29.3.–12.4.)! Die Zustellung wirkt daher erst nach Ferienende: am Montag, 13. April (erster Tag, der kein Sonntag/Feiertag ist); die Frist läuft ab Dienstag, 14. April.",
+ expect:{b:"2026-04-14",e:"2026-04-23"}},
+{n:45,level:3,titel:"Fristende exakt am letzten Ferientag",zustellung:"2025-07-11",kind:"p",tage:20,
+ fristName:"Zahlungsfrist — 20 Tage (Art. 69 Abs. 2 Ziff. 2 SchKG)",
+ text:"Die Calanda Bau AG erhält am <b>11. Juli 2025</b> einen Zahlungsbefehl. Die 20-tägige Zahlungsfrist endet rechnerisch genau am <b>31. Juli</b> — dem letzten Tag der Sommer-Betreibungsferien. Genügt das knapp … oder greift Art. 63 SchKG trotzdem?",
+ note:"Auch der LETZTE Ferientag ist ein Ferientag! Das Fristende fällt in die Schonzeit → volle 3-Werktage-Verlängerung (1.8. Feiertag, 2./3.8. Wochenende zählen nicht; Werktage: 4., 5., 6. August). Beachte zudem den Fristbeginn am Samstag, 12.7. — unproblematisch.",
+ expect:{b:"2025-07-12",e:"2025-08-06"}},
+{n:46,level:3,titel:"Durch die Ferien gelaufen — Ende am 1. August",zustellung:"2025-07-12",kind:"p",tage:20,
+ fristName:"Zahlungsfrist — 20 Tage (Art. 69 Abs. 2 Ziff. 2 SchKG)",
+ text:"Der Weibel stellt Herrn Nussbaumer den Zahlungsbefehl am Samstag, <b>12. Juli 2025</b>, persönlich zu (zulässig!). Die 20-tägige Zahlungsfrist läuft komplett durch die Sommerferien hindurch und endet rechnerisch am <b>1. August</b>. Was gilt?",
+ note:"Doppelte Pointe: (1) Die Frist lief während der GESAMTEN Ferien weiter (keine Hemmung!) und ihr Ende (1.8.) liegt NACH dem 31.7. → Art. 63 SchKG greift NICHT. (2) Der 1. August ist aber Feiertag → gewöhnliche Verschiebung auf den nächsten Werktag: Montag, 4. August (Art. 142 Abs. 3 ZPO). Wer hier reflexartig «3 Werktage nach Ferienende» rechnet, liegt falsch!",
+ expect:{b:"2025-07-13",e:"2025-08-04"}},
+{n:47,level:3,titel:"Rechtsstillstand wegen schwerer Erkrankung",zustellung:"2026-01-26",kind:"p",tage:10,
+ still:[{from:"2026-02-02",to:"2026-03-01",label:"Rechtsstillstand schwere Erkrankung (Art. 61 SchKG): gemäss Verfügung des Betreibungsamts vom 2.2.–1.3.2026"}],
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ stillNote:"Bei schwerer Erkrankung kann das Betreibungsamt (gestützt auf ein ärztliches Zeugnis) dem Schuldner Rechtsstillstand für bestimmte Zeit gewähren (Art. 61 SchKG). Hier: verfügt vom 2. Februar bis 1. März 2026.",
+ text:"Herr Attinger erhält am <b>26. Januar 2026</b> einen Zahlungsbefehl. Wegen einer schweren Erkrankung gewährt ihm das Betreibungsamt mit Verfügung Rechtsstillstand vom <b>2. Februar bis 1. März 2026</b>. Wie wirkt sich das auf die Rechtsvorschlagsfrist aus?",
+ note:"Das Fristende (5.2.) fällt in den verfügten Rechtsstillstand → Art. 63 SchKG: Verlängerung bis zum 3. Werktag nach dem 1. März (Sonntag): Mo 2.3. (1.), Di 3.3. (2.), Mi 4.3. (3.).",
+ expect:{b:"2026-01-27",e:"2026-03-04"}},
+{n:48,level:3,titel:"Militärdienst UND Sommerferien gleichzeitig",zustellung:"2025-06-30",kind:"p",tage:10,
+ still:[{from:"2025-07-07",to:"2025-08-22",label:"Rechtsstillstand Militärdienst (Art. 57 SchKG): Dienst 7.7.–8.8.2025 (33 Tage ≥ 30) + 2 Wochen, somit bis 22.8.2025"}],
+ fristName:"Rechtsvorschlag — 10 Tage (Art. 74 Abs. 1 SchKG)",
+ stillNote:"Dienst vom 7. Juli bis 8. August 2025 = <b>33 Tage</b> ≥ 30 → Rechtsstillstand bis <b>2 Wochen nach der Entlassung</b>, d.h. bis 22. August 2025 (Art. 57 SchKG). Die Sommer-Betreibungsferien (15.–31.7.) liegen vollständig innerhalb dieser Zeit.",
+ text:"Herr Zaugg erhält am <b>30. Juni 2025</b> einen Zahlungsbefehl. Ab dem <b>7. Juli</b> leistet er 33 Tage Militärdienst (bis 8. August). Zusätzlich laufen ab 15. Juli die Sommer-Betreibungsferien. Welche Schonzeit ist für seine Frist massgebend?",
+ note:"Das Fristende (10.7.) fällt in den Rechtsstillstand (ab 7.7.). Überschneiden sich mehrere Schonzeiten, ist die <b>länger dauernde</b> massgebend: Der Stillstand dauert bis 22. August (Dienst ≥ 30 Tage → +2 Wochen) — weit über die Ferien (31.7.) hinaus. 3 Werktage nach dem 22.8. (Fr): Mo 25.8., Di 26.8., Mi 27.8.",
+ expect:{b:"2025-07-01",e:"2025-08-27"}},
+{n:49,level:3,titel:"A-Post Plus am 1. August",zustellung:"2026-08-01",kind:"post",tage:10,
+ fristName:"Beschwerde — 10 Tage (Art. 17 Abs. 2 SchKG)",
+ text:"Eine beschwerdefähige Mitteilung des Betreibungsamts wird Frau Hodel per <b>A-Post Plus</b> zugestellt und landet am <b>1. August 2026</b> im Briefkasten — einem Samstag, der zugleich Bundesfeiertag ist.",
+ note:"Doppelt geschützt: Der 1.8.2026 ist Samstag UND Feiertag. Nach Art. 142 Abs. 1bis ZPO gilt die Zustellung durch gewöhnliche Post erst am <b>nächsten Werktag</b> als erfolgt — der Sonntag (2.8.) scheidet aus, also Montag, 3. August. Fristbeginn: Dienstag, 4. August.",
+ expect:{b:"2026-08-04",e:"2026-08-13"}},
+{n:50,level:3,titel:"Finale: Zahlungsfrist über Weihnachten und Neujahr",zustellung:"2026-12-10",kind:"p",tage:20,
+ fristName:"Zahlungsfrist — 20 Tage (Art. 69 Abs. 2 Ziff. 2 SchKG)",
+ text:"Die Rigiblick Immobilien AG erhält am <b>10. Dezember 2026</b> einen Zahlungsbefehl. Die 20-tägige Zahlungsfrist läuft mitten durch die Weihnachts-Betreibungsferien (18.12.2026–1.1.2027). Bestimme Beginn und Ende der Frist — mit allen Feinheiten des Jahreswechsels 2026/27.",
+ note:"Das rechnerische Ende (30.12.) liegt in den Ferien → 3 Werktage nach dem 1.1.2027 (Freitag, Neujahr): 2.1. ist Samstag und Berchtoldstag, 3.1. Sonntag → Mo 4.1. (1.), Di 5.1. (2.), Mi 6.1. (3.). Wer alle Regeln kombiniert, landet am 6. Januar 2027.",
+ expect:{b:"2026-12-11",e:"2027-01-06"}}
+];
+
+/* ============================================================
+   ERKLÄRUNGS-GENERATOR
+   ============================================================ */
+function renderSteps(ex,sol){
+  const out=[];let i=1;
+  const zust=P(ex.zustellung);
+  const isPost=ex.kind==="post";
+  out.push({icon:"📨",html:"<b>"+(isPost?"Zustellung durch gewöhnliche Post (A-Post Plus)":"Zustellung / Ereignis")+" am "+fmt(zust)+".</b> "+(isPost?"":"Betreibungsurkunden werden persönlich oder eingeschrieben zugestellt (Art. 64, 72 SchKG).")});
+  for(const s of sol.steps){
+    if(s.k==="1bis"){
+      out.push({icon:i+++"",html:"Die Zustellung erfolgte durch <b>gewöhnliche Post</b> an einem <b>"+dayBlockReason(s.from)+"</b>. Sie gilt deshalb erst am <b>nächsten Werktag</b> als erfolgt: <b>"+fmt(s.to)+"</b> (Art. 142 Abs. 1bis ZPO, in Kraft seit 1.1.2025)."});
+    }else if(s.k==="k2"){
+      let skiptxt="";
+      if(s.skipped.length){skiptxt=" Dabei gilt: "+s.skipped.map(x=>fmt(x.d)+" scheidet aus ("+x.why+")").join("; ")+".";}
+      out.push({icon:i+++"",html:"Die Zustellung fiel in eine <b>Schonzeit</b>: "+s.cov.label+" ("+fmtS(s.cov.from)+"–"+fmtS(s.cov.to)+s.cov.to.getFullYear()+"). Sie ist deshalb <b>nicht nichtig</b>, entfaltet ihre <b>Wirkung aber erst nach dem Ende der Schonzeit</b> (BGE 121 III 284; Art. 56 SchKG)."+skiptxt+" Die Zustellung gilt somit als am <b>"+fmt(s.wirkung)+"</b> wirksam geworden."+(isSat(s.wirkung)?" (Der Samstag ist kein geschützter Tag — BGE 114 III 55.)":"")});
+    }else if(s.k==="closed"){
+      let skiptxt="";
+      if(s.skipped.length){skiptxt=" Auch "+s.skipped.map(x=>fmt(x.d)+" ("+x.why+")").join(" und ")+" scheidet als geschützter Tag aus.";}
+      out.push({icon:i+++"",html:"Die Zustellung erfolgte an einem <b>"+(isHol(s.from)?HOLIDAYS[iso(s.from)]:"Sonntag")+"</b> — einer <b>geschlossenen Zeit</b> (Art. 56 Ziff. 1 SchKG; der 1. August ist den Sonntagen gleichgestellt). Sie ist nach der Praxis <b>nicht nichtig</b>, entfaltet ihre Wirkung aber erst am nächsten nicht geschützten Tag: <b>"+fmt(s.wirkung)+"</b>."+skiptxt+(isSat(s.wirkung)?" (Der Samstag ist kein geschützter Tag — BGE 114 III 55.)":"")});
+    }else if(s.k==="beginn"){
+      let extra="";
+      if(isSat(s.beginn)||isSun(s.beginn))extra=" Der Fristbeginn an einem <b>"+WDL[s.beginn.getDay()]+"</b> ist <b>unproblematisch</b> — nur das Fristende wird verschoben.";
+      out.push({icon:i+++"",html:"<b>Fristbeginn:</b> Die Frist beginnt am <b>Tag nach</b> der (wirksamen) Zustellung zu laufen: <b>"+fmt(s.beginn)+"</b> (Art. 142 Abs. 1 ZPO i.V.m. Art. 31 SchKG)."+extra});
+    }else if(s.k==="raw"){
+      if(ex.tage){
+        out.push({icon:i+++"",html:"<b>Rechnerisches Fristende:</b> Der <b>"+ex.tage+". Tag</b> der Frist ist der <b>"+fmt(s.end)+"</b> (Zustelldatum + "+ex.tage+" Tage)."});
+      }else{
+        out.push({icon:i+++"",html:"<b>Rechnerisches Fristende (Monatsfrist):</b> Die Frist von <b>"+ex.monate+" Monat"+(ex.monate>1?"en":"")+"</b> endet im letzten Monat an dem Tag mit derselben Zahl wie der Tag des Fristbeginns: <b>"+fmt(s.end)+"</b> (Art. 142 Abs. 2 ZPO)."});
+      }
+    }else if(s.k==="63"){
+      const cnt=s.r.counted.map((d,ix)=>(ix+1)+". Werktag: "+fmt(d)).join(" · ");
+      const skp=s.r.skipped.length?("Nicht mitgezählt: "+s.r.skipped.map(x=>fmtS(x.d)+" ("+x.why+")").join(", ")+". "):"";
+      out.push({icon:i+++"",html:"<b>Art. 63 SchKG:</b> Das Fristende ("+fmt(s.oldEnd)+") fällt in die Schonzeit «"+s.cov.label+"» ("+fmtS(s.cov.from)+"–"+fmtS(s.cov.to)+s.cov.to.getFullYear()+"). Die Schonzeit <b>hemmt die Frist nicht</b> — sie verlängert sie aber bis zum <b>dritten Werktag</b> nach ihrem Ende ("+fmt(s.cov.to)+"). Samstage, Sonntage und Feiertage zählen dabei NICHT mit. "+skp+cnt+". → <b>Neues Fristende: "+fmt(s.r.end)+"</b>."});
+    }else if(s.k==="shift"){
+      out.push({icon:i+++"",html:"<b>Art. 142 Abs. 3 ZPO:</b> Der "+fmt(s.from)+" ist ein <b>"+dayBlockReason(s.from)+"</b>. Die Frist endet deshalb erst am <b>nächsten Werktag</b>: <b>"+fmt(s.to)+"</b>."});
+    }else if(s.k==="final"){
+      out.push({icon:"✅",html:"<b>Ergebnis:</b> Die Frist beginnt am <b>"+fmt(sol.beginn)+"</b> zu laufen und endet am <b>"+fmt(s.end)+"</b>. Die Handlung ist spätestens an diesem Tag vorzunehmen (Postaufgabe genügt, Art. 143 ZPO)."});
+    }
+  }
+  return out;
+}
+
+/* ============================================================
+   UI
+   ============================================================ */
+const LS_KEY="schkg-fristen-v1";
+let state={results:{},current:1,filter:0};
+try{const raw=localStorage.getItem(LS_KEY);if(raw){const s=JSON.parse(raw);state.results=s.results||{};state.current=s.current||1;}}catch(e){}
+function save(){try{localStorage.setItem(LS_KEY,JSON.stringify({results:state.results,current:state.current}));}catch(e){}}
+
+let cur=null,sol=null,pickB=null,pickE=null,target="b",checked=false;
+
+const $=id=>document.getElementById(id);
+
+function lvlName(l){return l===1?"Leicht":l===2?"Mittel":"Schwer";}
+
+function buildNav(){
+  const g=$("navGrid");g.innerHTML="";
+  EX.forEach(ex=>{
+    const b=document.createElement("button");
+    b.className="navBtn l"+ex.level+(state.filter&&state.filter!==ex.level?" hidden":"")+(ex.n===cur?.n?" current":"");
+    b.textContent=ex.n;
+    const r=state.results[ex.n];
+    if(r){const s=document.createElement("span");s.className="st";s.textContent=r==="ok"?"✓":"✗";s.style.color=r==="ok"?"var(--ok)":"var(--err)";b.appendChild(s);}
+    b.onclick=()=>loadEx(ex.n);
+    g.appendChild(b);
+  });
+  const done=Object.keys(state.results).length,ok=Object.values(state.results).filter(x=>x==="ok").length;
+  $("progBar").style.width=(done*2)+"%";
+  $("progTxt").textContent=done+" / 50 gelöst · "+ok+" richtig";
+  $("scoreBox").innerHTML="Gelöst: <b>"+done+"/50</b> &nbsp;·&nbsp; Richtig: <b>"+ok+"</b>";
+}
+
+function monthsToRender(ex,sol){
+  const mk=d=>d.getFullYear()*12+d.getMonth();
+  const a=P(ex.zustellung),b=sol.beginn,r=sol.rawEnd,e=sol.end;
+  const lo=Math.min(mk(a),mk(b)),hiStart=Math.min(mk(r),mk(e)),hi=Math.max(mk(r),mk(e));
+  let hiLo=hiStart;
+  // Schonzeit, die das rechnerische Ende abdeckt, im letzten Block mit anzeigen
+  const cov=covering(r,schonzeiten(ex));
+  if(cov)hiLo=Math.min(hiLo,mk(cov.from));
+  const first=[],last=[];
+  if(hi-lo<=4){for(let m=lo;m<=hi;m++)first.push(m);return {first,last:[],gap:false};}
+  for(let m=lo;m<=Math.min(lo+1,mk(b));m++)first.push(m);
+  for(let m=hiLo;m<=hi;m++)last.push(m);
+  return {first,last,gap:true,gapMonths:hiLo-(first[first.length-1])-1};
+}
+
+function renderCalendar(){
+  const cal=$("calendar");cal.innerHTML="";
+  const szList=schonzeiten(cur);
+  const mm=monthsToRender(cur,sol);
+  const zustIso=cur.zustellung;
+  const drawMonth=idx=>{
+    const y=Math.floor(idx/12),m=idx%12;
+    const div=document.createElement("div");div.className="month";
+    div.innerHTML="<h4>"+MON[m]+" "+y+"</h4>";
+    const grid=document.createElement("div");grid.className="mgrid";
+    ["Mo","Di","Mi","Do","Fr","Sa","So"].forEach(w=>{const c=document.createElement("div");c.className="dow";c.textContent=w;grid.appendChild(c);});
+    const firstD=new Date(y,m,1,12);
+    const offset=(firstD.getDay()+6)%7;
+    for(let k=0;k<offset;k++){const c=document.createElement("div");c.className="day empty";grid.appendChild(c);}
+    const dim=new Date(y,m+1,0).getDate();
+    for(let d=1;d<=dim;d++){
+      const dt=new Date(y,m,d,12);const s=iso(dt);
+      const c=document.createElement("div");
+      let cls="day clickable";
+      if(isSat(dt)||isSun(dt))cls+=" wknd";
+      const covr=covering(dt,szList);
+      if(covr)cls+=covr.art==="still"?" still":" ferien";
+      if(isHol(dt))cls+=" hol";
+      if(s===zustIso)cls+=" zust";
+      c.className=cls;c.dataset.d=s;c.textContent=d;
+      let tip=WDL[dt.getDay()];
+      if(HOLIDAYS[s])tip+=" · "+HOLIDAYS[s];
+      if(covr)tip+=" · "+covr.label;
+      if(s===zustIso)tip+=" · Zustellung/Ereignis";
+      c.title=tip;
+      c.onclick=()=>onPick(s);
+      grid.appendChild(c);
+    }
+    div.appendChild(grid);cal.appendChild(div);
+  };
+  mm.first.forEach(drawMonth);
+  if(mm.gap){
+    const g=document.createElement("div");g.className="gap";
+    g.innerHTML="⋯<br>"+mm.gapMonths+" Monat"+(mm.gapMonths>1?"e":"")+"<br>ausgeblendet<br>⋯";
+    cal.appendChild(g);
+    mm.last.forEach(drawMonth);
+  }
+  paintPicks();
+}
+
+function paintPicks(){
+  document.querySelectorAll(".day").forEach(c=>{
+    c.classList.remove("selB","selE");
+    if(c.dataset.d===pickB)c.classList.add("selB");
+    if(c.dataset.d===pickE)c.classList.add("selE");
+  });
+  $("valB").textContent=pickB?fmt(P(pickB)):"–";
+  $("valE").textContent=pickE?fmt(P(pickE)):"–";
+  $("chipB").classList.toggle("active",target==="b");
+  $("chipE").classList.toggle("active",target==="e");
+  $("chipHint").textContent=checked?"":(target==="b"?"→ Klicke im Kalender auf den Tag, an dem die Frist zu laufen BEGINNT.":"→ Klicke nun auf den LETZTEN Tag der Frist.");
+  $("checkBtn").disabled=!(pickB&&pickE)||checked;
+}
+
+function onPick(s){
+  if(checked)return;
+  if(target==="b"){pickB=s;target="e";}
+  else{pickE=s;if(!pickB)target="b";}
+  paintPicks();
+}
+
+function loadEx(n){
+  cur=EX.find(x=>x.n===n);state.current=n;save();
+  sol=compute(cur);
+  pickB=null;pickE=null;target="b";checked=false;
+  $("scenarioCard").innerHTML=
+    '<div class="badges"><span class="lvl l'+cur.level+'">'+lvlName(cur.level)+'</span><span class="fristTag">'+cur.fristName+'</span><span style="color:var(--grey);font-size:.8rem">Aufgabe '+cur.n+' von 50</span></div>'+
+    "<h2>"+cur.titel+"</h2>"+
+    '<div class="szenario">'+cur.text+"</div>"+
+    '<div class="frage"><b>Aufgabe:</b> Markiere im Kalender <b>(1)</b> den Tag, an dem die Frist zu laufen <b>beginnt</b>, und <b>(2)</b> den <b>letzten Tag</b>, an dem die Handlung noch fristgerecht vorgenommen werden kann. Berücksichtige Wochenenden, Feiertage, Betreibungsferien und einen allfälligen Rechtsstillstand.</div>';
+  $("solution").style.display="none";$("solution").innerHTML="";
+  $("nextBtn").style.display="none";
+  $("checkBtn").style.display="";$("clearBtn").style.display="";
+  renderCalendar();buildNav();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function check(){
+  if(!(pickB&&pickE)||checked)return;
+  checked=true;
+  const okB=pickB===iso(sol.beginn),okE=pickE===iso(sol.end);
+  const allOk=okB&&okE;
+  state.results[cur.n]=allOk?"ok":"fail";save();
+  // Kalender einfärben
+  document.querySelectorAll(".day").forEach(c=>{
+    const d=c.dataset.d;if(!d)return;
+    if(d===iso(sol.beginn))c.classList.add("solB");
+    if(d===iso(sol.end))c.classList.add("solE");
+    if((d===pickB&&!okB)||(d===pickE&&!okE)){c.classList.remove("selB","selE");c.classList.add("wrongPick");}
+  });
+  const banner=allOk?'<div class="resultBanner ok">🎉 Richtig! Beginn und Ende korrekt bestimmt.</div>'
+    :(okB||okE)?'<div class="resultBanner teils">Teilweise richtig: '+(okB?"Fristbeginn ✓, aber das Fristende stimmt nicht.":"Fristende ✓, aber der Fristbeginn stimmt nicht.")+"</div>"
+    :'<div class="resultBanner err">Leider falsch — schau dir die Herleitung an.</div>';
+  const steps=renderSteps(cur,sol).map(s=>'<li><span class="stepIcon">'+s.icon+"</span><span>"+s.html+"</span></li>").join("");
+  const stillBox=cur.stillNote?'<div class="note"><b>Rechtsstillstand:</b> '+cur.stillNote+"</div>":"";
+  const noteBox=cur.note?'<div class="note"><b>💡 Merke:</b> '+cur.note+"</div>":"";
+  $("solution").innerHTML=banner+
+    "<h3>Musterlösung</h3>"+
+    '<div class="answerLine"><div class="ab"><b>Fristbeginn:</b> '+fmt(sol.beginn)+'</div><div class="ae"><b>Fristende:</b> '+fmt(sol.end)+"</div></div>"+
+    '<ul class="steps">'+steps+"</ul>"+stillBox+noteBox;
+  $("solution").style.display="";
+  $("nextBtn").style.display="";
+  $("checkBtn").disabled=true;
+  paintPicks();
+  buildNav();
+  $("solution").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+$("checkBtn").onclick=check;
+$("clearBtn").onclick=()=>{if(checked){loadEx(cur.n);}else{pickB=null;pickE=null;target="b";paintPicks();}};
+$("nextBtn").onclick=()=>{
+  const list=EX.filter(x=>!state.filter||x.level===state.filter);
+  const idx=list.findIndex(x=>x.n===cur.n);
+  const nxt=list[(idx+1)%list.length];
+  loadEx(nxt.n);
+};
+$("chipB").onclick=()=>{if(!checked){target="b";paintPicks();}};
+$("chipE").onclick=()=>{if(!checked){target="e";paintPicks();}};
+$("theoryBtn").onclick=()=>$("theory").showModal();
+$("resetAll").onclick=()=>{if(confirm("Gesamten Fortschritt zurücksetzen?")){state.results={};save();buildNav();loadEx(cur.n);}};
+document.querySelectorAll("#filters button").forEach(b=>{
+  b.onclick=()=>{state.filter=Number(b.dataset.f);document.querySelectorAll("#filters button").forEach(x=>x.classList.toggle("active",x===b));buildNav();};
+});
+
+/* ============================================================
+   SELBSTTEST (#selftest an URL anhängen)
+   ============================================================ */
+function selftest(){
+  const rows=EX.map(ex=>{
+    const s=compute(ex);
+    const b=iso(s.beginn),e=iso(s.end);
+    const ok=(!ex.expect)||(b===ex.expect.b&&e===ex.expect.e);
+    return {n:ex.n,level:ex.level,zust:ex.zustellung,eff:iso(s.eff),beginn:b,ende:e,expB:ex.expect?.b||"",expE:ex.expect?.e||"",pass:ok};
+  });
+  const fails=rows.filter(r=>!r.pass).length;
+  document.body.innerHTML='<div class="selftest" style="padding:20px"><h2>Selbsttest: '+(rows.length-fails)+"/"+rows.length+' PASS</h2><table><tr><th>#</th><th>Lvl</th><th>Zustellung</th><th>wirksam</th><th>Beginn</th><th>Ende</th><th>erwartet B</th><th>erwartet E</th><th>Status</th></tr>'+
+    rows.map(r=>'<tr class="'+(r.pass?"pass":"fail")+'"><td>'+r.n+"</td><td>"+r.level+"</td><td>"+r.zust+"</td><td>"+r.eff+"</td><td>"+r.beginn+"</td><td>"+r.ende+"</td><td>"+r.expB+"</td><td>"+r.expE+"</td><td>"+(r.pass?"PASS":"FAIL")+"</td></tr>").join("")+"</table></div>";
+  return {fails,total:rows.length,rows};
+}
+window.__selftest=selftest;
+
+if(location.hash==="#selftest"){selftest();}
+else{
+  const start=EX.find(x=>x.n===state.current)?state.current:1;
+  loadEx(start);
+}
+</script>
+</body>
+</html>
