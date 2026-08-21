@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SchKG Fristarten-Trainer</title>
+</head>
+<body>
+<style>
+  html{ -webkit-text-size-adjust:100%; }
+  :root{
+    --paper:#F4F6F8;
+    --card:#FFFFFF;
+    --ink:#1C2B3A;
+    --ink-soft:#54626F;
+    --navy:#24456B;
+    --navy-deep:#182F4A;
+    --line:#D9DFE6;
+    --v:#A5452C; --v-bg:#F7ECE8;
+    --b:#96762A; --b-bg:#F6F0E1;
+    --o:#3A6EA5; --o-bg:#E9F0F7;
+    --z:#48795B; --z-bg:#E9F2ED;
+    --ok:#2E7D4F; --ok-bg:#E8F3EC;
+    --bad:#B3392E; --bad-bg:#F9ECEA;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper)}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    color:var(--ink);line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .serif{font-family:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif}
+
+  header{background:var(--navy-deep);color:#fff;padding:0 20px}
+  .head-in{max-width:780px;margin:0 auto;display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:18px 0 14px}
+  .head-in h1{font-size:1.15rem;font-weight:600;letter-spacing:.01em}
+  .head-in h1 span{font-family:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;font-style:italic;font-weight:400;opacity:.75;margin-left:8px;font-size:.95rem}
+  nav{display:flex;gap:4px}
+  nav button{
+    background:none;border:none;color:#fff;opacity:.62;cursor:pointer;
+    font:inherit;font-size:.9rem;padding:6px 12px;border-radius:4px;
+  }
+  nav button:hover{opacity:.9}
+  nav button.active{opacity:1;background:rgba(255,255,255,.14)}
+  nav button:focus-visible,button:focus-visible{outline:2px solid #7FA8D9;outline-offset:2px}
+
+  #bar{height:4px;background:var(--navy-deep)}
+  #bar div{height:100%;background:#7FA8D9;width:0;transition:width .3s ease}
+  @media (prefers-reduced-motion:reduce){#bar div{transition:none}}
+
+  main{max-width:780px;margin:0 auto;padding:28px 20px 72px}
+
+  .eyebrow{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft);font-weight:600}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:28px;box-shadow:0 1px 2px rgba(28,43,58,.05)}
+
+  /* Start */
+  #start .card{padding:36px}
+  #start h2{font-size:1.7rem;margin:10px 0 14px;text-wrap:balance}
+  #start p{max-width:60ch;color:var(--ink-soft);margin-bottom:10px}
+  .cat-legend{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0 26px}
+  @media(max-width:560px){.cat-legend{grid-template-columns:1fr}}
+  .cat-legend div{border-left:4px solid;border-radius:0 6px 6px 0;padding:10px 14px;font-size:.88rem}
+  .cat-legend b{display:block;font-size:.95rem}
+  .btn{
+    background:var(--navy);color:#fff;border:none;border-radius:6px;
+    font:inherit;font-size:1rem;font-weight:600;padding:12px 28px;cursor:pointer;
+  }
+  .btn:hover{background:var(--navy-deep)}
+  .btn.ghost{background:none;color:var(--navy);border:1px solid var(--line)}
+  .btn.ghost:hover{background:#EDF1F5}
+
+  /* Frage */
+  .q-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+  .q-count{font-variant-numeric:tabular-nums;font-size:.85rem;color:var(--ink-soft)}
+  .art{font-family:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;font-size:1.9rem;line-height:1.2;margin:2px 0 4px}
+  .art-title{color:var(--ink-soft);font-size:.95rem;margin-bottom:16px}
+  blockquote{
+    font-family:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;
+    font-size:1.06rem;border-left:3px solid var(--navy);
+    padding:4px 0 4px 18px;margin:0 0 24px;max-width:64ch;
+  }
+  .answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:560px){.answers{grid-template-columns:1fr}}
+  .answers button{
+    font:inherit;font-size:.98rem;font-weight:600;text-align:left;cursor:pointer;
+    padding:13px 16px;border-radius:6px;background:var(--card);
+    border:1.5px solid var(--line);border-left-width:5px;color:var(--ink);
+  }
+  .answers button small{display:block;font-weight:400;color:var(--ink-soft);font-size:.78rem;margin-top:2px}
+  .answers button:hover:not(:disabled){border-color:var(--navy)}
+  .answers button:disabled{cursor:default;opacity:.55}
+  .answers button.picked-ok{background:var(--ok-bg);border-color:var(--ok);opacity:1}
+  .answers button.picked-bad{background:var(--bad-bg);border-color:var(--bad);opacity:1}
+  .answers button.reveal{background:var(--ok-bg);border-color:var(--ok);opacity:1}
+  .answers button[data-cat="V"]{border-left-color:var(--v)}
+  .answers button[data-cat="B"]{border-left-color:var(--b)}
+  .answers button[data-cat="O"]{border-left-color:var(--o)}
+  .answers button[data-cat="Z"]{border-left-color:var(--z)}
+  kbd{
+    font-family:inherit;font-size:.72rem;color:var(--ink-soft);
+    border:1px solid var(--line);border-radius:3px;padding:0 5px;margin-right:8px;
+    background:var(--paper);font-weight:400;
+  }
+
+  #feedback{margin-top:18px;border-radius:6px;padding:16px 18px;display:none}
+  #feedback.show{display:block}
+  #feedback.good{background:var(--ok-bg);border:1px solid var(--ok)}
+  #feedback.wrong{background:var(--bad-bg);border:1px solid var(--bad)}
+  #feedback .verdict{font-weight:700;margin-bottom:6px}
+  #feedback.good .verdict{color:var(--ok)}
+  #feedback.wrong .verdict{color:var(--bad)}
+  #feedback p{font-size:.93rem;max-width:66ch}
+  #next-row{margin-top:18px;display:none;justify-content:flex-end}
+  #next-row.show{display:flex}
+
+  details.merk{margin-top:22px;font-size:.88rem;color:var(--ink-soft)}
+  details.merk summary{cursor:pointer;font-weight:600;color:var(--navy)}
+  details.merk div{margin-top:8px;padding:12px 14px;background:#EDF1F5;border-radius:6px;max-width:66ch}
+
+  /* Ergebnis */
+  #result h2{font-size:1.6rem;margin-bottom:4px}
+  .score{font-family:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;font-size:3.2rem;font-variant-numeric:tabular-nums;margin:12px 0 2px}
+  .score small{font-size:1.2rem;color:var(--ink-soft)}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  @media(max-width:560px){.stat-grid{grid-template-columns:1fr}}
+  .stat-grid div{border-left:4px solid;border-radius:0 6px 6px 0;padding:10px 14px;font-size:.9rem;font-variant-numeric:tabular-nums}
+  #miss-list{margin:6px 0 24px}
+  #miss-list h3{font-size:1rem;margin:18px 0 8px}
+  #miss-list ul{list-style:none}
+  #miss-list li{padding:7px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+  #miss-list li b{font-family:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;font-weight:600}
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap}
+
+  /* Nachschlagen */
+  #learn .intro{max-width:66ch;color:var(--ink-soft);margin-bottom:22px}
+  .ref-card{border:1px solid var(--line);border-top:4px solid;border-radius:6px;background:var(--card);padding:20px 22px;margin-bottom:16px}
+  .ref-card h3{font-size:1.1rem;margin-bottom:4px}
+  .ref-card .def{font-size:.93rem;color:var(--ink-soft);max-width:66ch;margin-bottom:12px}
+  .ref-card ul{list-style:none}
+  .ref-card li{padding:8px 0;border-top:1px solid var(--line);font-size:.9rem;display:flex;gap:14px}
+  .ref-card li b{font-family:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;font-weight:600;white-space:nowrap;min-width:9.5em}
+  @media(max-width:560px){.ref-card li{flex-direction:column;gap:2px}}
+  .merkbox{background:var(--navy-deep);color:#fff;border-radius:6px;padding:18px 22px;margin:4px 0 24px;font-size:.92rem}
+  .merkbox b{color:#AEC8E4}
+  .footnote{font-size:.8rem;color:var(--ink-soft);max-width:70ch;margin-top:18px}
+  .hidden{display:none!important}
+</style>
+
+<header>
+  <div class="head-in">
+    <h1>Fristarten-Trainer<span class="serif">SchKG · Semester 3</span></h1>
+    <nav>
+      <button id="tab-quiz" class="active" type="button">Üben</button>
+      <button id="tab-learn" type="button">Nachschlagen</button>
+    </nav>
+  </div>
+  <div id="bar"><div></div></div>
+</header>
+
+<main>
+
+  <!-- ===== Start ===== -->
+  <section id="start">
+    <div class="card">
+      <span class="eyebrow">Zuordnungsübung</span>
+      <h2>Welche Fristart steckt im Artikel?</h2>
+      <p>Du bekommst einen Gesetzesartikel aus dem SchKG mit seiner Frist vorgelegt und ordnest ihn einer der vier Fristarten zu. Falsch beantwortete Artikel kommen ans Ende des Stapels und tauchen erneut auf, bis sie sitzen.</p>
+      <div class="cat-legend">
+        <div style="border-color:var(--v);background:var(--v-bg)"><b>Verwirkungsfrist</b>Handlung nicht vorgenommen → Möglichkeit verfällt</div>
+        <div style="border-color:var(--b);background:var(--b-bg)"><b>Bedenkfrist</b>Zeit für den Schuldner, doch noch zu bezahlen</div>
+        <div style="border-color:var(--o);background:var(--o-bg)"><b>Ordnungsfrist</b>Richtet sich an SchKG-Organe; Handlung bleibt gültig</div>
+        <div style="border-color:var(--z);background:var(--z-bg)"><b>Zustandsfrist</b>Kein Adressat; es herrscht ein besonderer Zustand</div>
+      </div>
+      <button class="btn" id="btn-start" type="button">Übung starten</button>
+    </div>
+  </section>
+
+  <!-- ===== Frage ===== -->
+  <section id="quiz" class="hidden">
+    <div class="card">
+      <div class="q-head">
+        <span class="eyebrow" id="q-tag">Frage</span>
+        <span class="q-count" id="q-count"></span>
+      </div>
+      <div class="art" id="q-art"></div>
+      <div class="art-title" id="q-title"></div>
+      <blockquote id="q-text"></blockquote>
+      <div class="answers" id="answers"></div>
+      <div id="feedback" role="status">
+        <div class="verdict" id="fb-verdict"></div>
+        <p id="fb-expl"></p>
+      </div>
+      <div id="next-row"><button class="btn" id="btn-next" type="button">Weiter&ensp;⏎</button></div>
+      <details class="merk">
+        <summary>Merkregel anzeigen</summary>
+        <div>Frist an <b>Parteien oder Dritte</b> → fast immer <b>Verwirkungsfrist</b>. Frist an <b>Betreibungs- oder Konkursorgane</b> (Amt, Gericht, Konkursverwaltung) → fast immer <b>Ordnungsfrist</b>. Darf der <b>Schuldner noch zahlen</b> → <b>Bedenkfrist</b>. <b>Kein Adressat</b>, es «herrscht» nur ein Zeitraum → <b>Zustandsfrist</b>.</div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ===== Ergebnis ===== -->
+  <section id="result" class="hidden">
+    <div class="card">
+      <span class="eyebrow">Ergebnis</span>
+      <div class="score"><span id="r-score"></span><small> von <span id="r-total"></span> im ersten Anlauf</small></div>
+      <p id="r-comment" style="color:var(--ink-soft)"></p>
+      <div class="stat-grid" id="r-stats"></div>
+      <div id="miss-list"></div>
+      <div class="btn-row">
+        <button class="btn" id="btn-again" type="button">Nochmals üben</button>
+        <button class="btn ghost" id="btn-miss" type="button">Nur falsche wiederholen</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Nachschlagen ===== -->
+  <section id="learn" class="hidden">
+    <p class="intro">Die vier Fristarten des SchKG mit allen Artikeln aus dem Übungsstapel. Grundlage: Zusammenfassung «Zeit in der Betreibung» und Gesetzestext (SR 281.1, Stand 1.1.2026).</p>
+    <div class="merkbox">
+      <b>Merkregel:</b> Fristen an Parteien und Dritte sind fast immer <b>Verwirkungsfristen</b> (Versäumnis: Handlung verloren; Ausnahme Wiederherstellung Art. 33 Abs. 4 SchKG). Fristen an Betreibungs- und Konkursorgane sind fast immer <b>Ordnungsfristen</b> (Versäumnis: Handlung bleibt gültig, aber Beschwerde wegen Rechtsverzögerung möglich, Art. 17 Abs. 1 SchKG).
+    </div>
+    <div id="ref-cards"></div>
+    <p class="footnote">Hinweis: Die Zusammenfassung nennt als Beispiel für die Zustandsfrist «Art. 46 SchKG» — Art. 46 regelt aber den ordentlichen Betreibungsort und enthält keine Frist. Gemeint ist wohl <b>Art. 56 SchKG</b> (geschlossene Zeiten, Betreibungsferien, Rechtsstillstand), der hier verwendet wird.</p>
+  </section>
+
+</main>
+
+<script>
+'use strict';
+
+const CATS = {
+  V:{name:'Verwirkungsfrist', sub:'sonst verfällt die Möglichkeit', color:'var(--v)', bg:'var(--v-bg)',
+     def:'Innerhalb der Frist muss eine Handlung vorgenommen werden, sonst verfällt die Möglichkeit dazu. Adressat sind Parteien (Gläubiger, Schuldner) oder Dritte. Einzige Rettung: Wiederherstellung nach Art. 33 Abs. 4 SchKG bei unverschuldeter Verhinderung.'},
+  B:{name:'Bedenkfrist', sub:'Schuldner kann noch zahlen', color:'var(--b)', bg:'var(--b-bg)',
+     def:'Vor allem die Frist für den Schuldner, die betriebene Forderung doch noch zu bezahlen. Vor ihrem Ablauf darf das Verfahren nicht in die nächste Stufe gehen.'},
+  O:{name:'Ordnungsfrist', sub:'an die SchKG-Organe gerichtet', color:'var(--o)', bg:'var(--o-bg)',
+     def:'Richtet sich an die SchKG-Organe (Betreibungsamt, Konkursamt, Konkursverwaltung, Gericht). Die Nichteinhaltung berührt die Gültigkeit der Handlung nicht — möglich ist aber eine Beschwerde wegen Rechtsverzögerung (Art. 17 Abs. 1 SchKG).'},
+  Z:{name:'Zustandsfrist', sub:'besonderer Zustand herrscht', color:'var(--z)', bg:'var(--z-bg)',
+     def:'Ohne bestimmten Adressaten; während der Frist herrscht ein besonderer Zustand. Niemand muss etwas tun — die Zeitspanne selbst löst die Rechtsfolge aus.'}
+};
+const CAT_ORDER = ['V','B','O','Z'];
+
+const ITEMS = [
+ // ---- Verwirkungsfristen ----
+ {art:'Art. 17 Abs. 2 SchKG', title:'Beschwerde an die Aufsichtsbehörde', cat:'V',
+  txt:'Die Beschwerde muss binnen zehn Tagen seit dem Tage, an welchem der Beschwerdeführer von der Verfügung Kenntnis erhalten hat, angebracht werden.',
+  why:'Die Frist richtet sich an eine Partei bzw. einen Betroffenen: Wer die 10 Tage verpasst, verliert das Beschwerderecht endgültig. Klassisches Beispiel aus der Zusammenfassung für die Verwirkungsfrist.'},
+ {art:'Art. 18 Abs. 1 SchKG', title:'Weiterzug an die obere Aufsichtsbehörde', cat:'V',
+  txt:'Der Entscheid einer unteren Aufsichtsbehörde kann innert zehn Tagen nach der Eröffnung an die obere kantonale Aufsichtsbehörde weitergezogen werden.',
+  why:'Rechtsmittelfrist an die Partei — nach Ablauf ist der Weiterzug verwirkt. Merkhilfe: Der ganze Instanzenzug (untere AB → obere AB → Bundesgericht) läuft dreimal mit 10 Tagen.'},
+ {art:'Art. 69 Abs. 2 Ziff. 3 SchKG', title:'Zahlungsbefehl: Hinweis auf den Rechtsvorschlag', cat:'V',
+  txt:'Der Zahlungsbefehl enthält die Mitteilung, dass der Schuldner, welcher die Forderung bestreiten will, innerhalb zehn Tagen nach Zustellung des Zahlungsbefehls Rechtsvorschlag zu erheben hat.',
+  why:'Die 10-Tage-Frist für den Rechtsvorschlag richtet sich an den Schuldner als Partei: verpasst er sie, ist das Bestreitungsrecht verwirkt. Beispiel aus der Zusammenfassung. Achtung, Stolperstein: die 20-Tage-Frist in Ziff. 2 desselben Artikels ist dagegen eine Bedenkfrist.'},
+ {art:'Art. 74 Abs. 1 SchKG', title:'Rechtsvorschlag: Frist und Form', cat:'V',
+  txt:'Will der Betriebene Rechtsvorschlag erheben, so hat er dies sofort dem Überbringer des Zahlungsbefehls oder innert zehn Tagen nach der Zustellung dem Betreibungsamt mündlich oder schriftlich zu erklären.',
+  why:'Frist an den Schuldner (Partei): Ohne Rechtsvorschlag innert 10 Tagen ist das Bestreitungsrecht verwirkt und die Betreibung kann fortgesetzt werden.'},
+ {art:'Art. 77 Abs. 2 SchKG', title:'Nachträglicher Rechtsvorschlag bei Gläubigerwechsel', cat:'V',
+  txt:'Der Betriebene muss den Rechtsvorschlag innert zehn Tagen, nachdem er vom Gläubigerwechsel Kenntnis erhalten hat, beim Richter des Betreibungsortes schriftlich und begründet anbringen.',
+  why:'Auch der nachträgliche Rechtsvorschlag ist eine Handlung der Partei mit fester Frist — verpasst heisst verwirkt.'},
+ {art:'Art. 83 Abs. 2 SchKG', title:'Aberkennungsklage', cat:'V',
+  txt:'Der Betriebene kann innert 20 Tagen nach der Rechtsöffnung auf dem Weg des ordentlichen Prozesses beim Gericht des Betreibungsortes auf Aberkennung der Forderung klagen.',
+  why:'Klagefrist an den Schuldner: Unterlässt er die Klage, werden provisorische Rechtsöffnung und Pfändung definitiv (Abs. 3). Wegen dieser kurzen 20-Tage-Frist ist die Aberkennungsklage sogar von der Schlichtungspflicht befreit.'},
+ {art:'Art. 88 Abs. 2 SchKG', title:'Fortsetzungsbegehren: Erlöschen', cat:'V',
+  txt:'Dieses Recht erlischt ein Jahr nach der Zustellung des Zahlungsbefehls. Ist Rechtsvorschlag erhoben worden, so steht diese Frist zwischen der Einleitung und der Erledigung eines dadurch veranlassten Verfahrens still.',
+  why:'«Erlischt» ist das Signalwort: Der Gläubiger (Partei) verliert nach einem Jahr das Recht auf Fortsetzung — Beispiel aus der Zusammenfassung. Die Frist steht still, solange ein Verfahren zur Beseitigung des Rechtsvorschlags hängig ist.'},
+ {art:'Art. 107 Abs. 5 SchKG', title:'Widerspruchsverfahren: Klage des Dritten', cat:'V',
+  txt:'Wird der Anspruch bestritten, so setzt das Betreibungsamt dem Dritten eine Frist von 20 Tagen, innert der er auf Feststellung seines Anspruchs klagen kann. Reicht er keine Klage ein, so fällt der Anspruch in der betreffenden Betreibung ausser Betracht.',
+  why:'Frist an einen Dritten: Klagt er nicht, fällt sein Anspruch in dieser Betreibung dahin — die Rechtsfolge des Versäumnisses steht direkt im Gesetz.'},
+ {art:'Art. 111 Abs. 1 SchKG', title:'Privilegierter Pfändungsanschluss', cat:'V',
+  txt:'An der Pfändung können ohne vorgängige Betreibung innert 40 Tagen nach ihrem Vollzug teilnehmen: der Ehegatte, die eingetragene Partnerin oder der eingetragene Partner, die Kinder des Schuldners …',
+  why:'Frist an Dritte (Familienangehörige): Wer die 40 Tage verpasst, verliert das Anschlussprivileg. Nach der Merkregel sind Fristen an Parteien und Dritte fast immer Verwirkungsfristen.'},
+ {art:'Art. 116 Abs. 1 SchKG', title:'Verwertungsbegehren (Pfändung)', cat:'V',
+  txt:'Der Gläubiger kann die Verwertung der gepfändeten beweglichen Vermögensstücke spätestens ein Jahr, diejenige der gepfändeten Grundstücke spätestens zwei Jahre nach der Pfändung verlangen. — Wird das Begehren nicht gestellt, erlischt die Betreibung (Art. 121).',
+  why:'Frist an den Gläubiger mit harter Folge: Ohne rechtzeitiges Verwertungsbegehren erlischt die ganze Betreibung (Art. 121 SchKG) — Verwirkung.'},
+ {art:'Art. 148 Abs. 1 SchKG', title:'Kollokationsklage in der Betreibung auf Pfändung', cat:'V',
+  txt:'Will ein Gläubiger die Forderung oder den Rang eines andern Gläubigers bestreiten, so muss er gegen diesen innert 20 Tagen nach Empfang des Auszuges beim Gericht des Betreibungsortes Kollokationsklage erheben.',
+  why:'Klagefrist an eine Partei: Nach 20 Tagen ist das Anfechtungsrecht verwirkt und die Verteilungsliste wird für ihn verbindlich.'},
+ {art:'Art. 154 Abs. 1 SchKG', title:'Verwertungsfristen bei der Pfandverwertung', cat:'V',
+  txt:'Der Gläubiger kann die Verwertung eines Faustpfandes spätestens ein Jahr, die Verwertung eines Grundpfandes spätestens zwei Jahre nach der Zustellung des Zahlungsbefehls verlangen. Wird das Begehren nicht gestellt, erlischt die Betreibung (Abs. 2).',
+  why:'Wie bei Art. 116: Frist an den Gläubiger, deren Versäumnis die Betreibung zum Erlöschen bringt — Verwirkungsfrist.'},
+ {art:'Art. 166 Abs. 2 SchKG', title:'Konkursbegehren: Erlöschen', cat:'V',
+  txt:'Dieses Recht erlischt 15 Monate nach der Zustellung des Zahlungsbefehls. Ist Rechtsvorschlag erhoben worden, so steht diese Frist während des dadurch veranlassten gerichtlichen Verfahrens still.',
+  why:'«Erlischt» = Verwirkung: Der Gläubiger verliert nach 15 Monaten das Recht, das Konkursbegehren zu stellen. Gegenstück zur Jahresfrist von Art. 88 Abs. 2 bei der Pfändungsbetreibung.'},
+ {art:'Art. 179 Abs. 1 SchKG', title:'Rechtsvorschlag in der Wechselbetreibung', cat:'V',
+  txt:'Der Schuldner kann beim Betreibungsamt innert fünf Tagen nach Zustellung des Zahlungsbefehls schriftlich Rechtsvorschlag erheben; dabei muss er darlegen, dass eine der Voraussetzungen nach Artikel 182 erfüllt ist.',
+  why:'Verkürzte Bestreitungsfrist an den Schuldner in der strengen Wechselbetreibung — verpasst heisst verwirkt. Sogar die Wiederherstellung ist hier ausgeschlossen (Abs. 3: Art. 33 Abs. 4 nicht anwendbar).'},
+ {art:'Art. 250 Abs. 1 SchKG', title:'Kollokationsklage im Konkurs', cat:'V',
+  txt:'Ein Gläubiger, der den Kollokationsplan anfechten will, weil seine Forderung ganz oder teilweise abgewiesen worden ist, muss innert 20 Tagen nach der öffentlichen Auflage des Kollokationsplanes beim Richter am Konkursort gegen die Masse klagen.',
+  why:'Klagefrist an den Gläubiger (Partei): Nach 20 Tagen ist die Anfechtung des Kollokationsplans verwirkt.'},
+ {art:'Art. 278 Abs. 1 SchKG', title:'Einsprache gegen den Arrestbefehl', cat:'V',
+  txt:'Wer durch einen Arrest in seinen Rechten betroffen ist, kann innert zehn Tagen, nachdem er von dessen Anordnung Kenntnis erhalten hat, beim Gericht Einsprache erheben.',
+  why:'Frist an den Betroffenen (Partei oder Dritter): Ohne Einsprache innert 10 Tagen ist dieses Verteidigungsmittel verwirkt.'},
+ {art:'Art. 279 Abs. 1 SchKG', title:'Arrestprosequierung', cat:'V',
+  txt:'Hat der Gläubiger nicht schon vor der Bewilligung des Arrestes Betreibung eingeleitet oder Klage eingereicht, so muss er dies innert zehn Tagen nach Zustellung der Arresturkunde tun.',
+  why:'Frist an den Gläubiger: Prosequiert er den Arrest nicht rechtzeitig, fällt der Arrest dahin (Art. 280 SchKG) — die Möglichkeit verfällt.'},
+ // ---- Bedenkfristen ----
+ {art:'Art. 69 Abs. 2 Ziff. 2 SchKG', title:'Zahlungsbefehl: Zahlungsaufforderung', cat:'B',
+  txt:'Der Zahlungsbefehl enthält die Aufforderung, binnen 20 Tagen den Gläubiger für die Forderung samt Betreibungskosten zu befriedigen.',
+  why:'Die klassische Bedenkfrist aus der Zusammenfassung: 20 Tage Zeit für den Schuldner, die betriebene Forderung doch noch zu bezahlen. Stolperstein: nicht mit der 10-Tage-Verwirkungsfrist für den Rechtsvorschlag (Ziff. 3) verwechseln.'},
+ {art:'Art. 88 Abs. 1 SchKG', title:'Fortsetzungsbegehren: frühester Zeitpunkt', cat:'B',
+  txt:'Ist die Betreibung nicht durch Rechtsvorschlag oder durch gerichtlichen Entscheid eingestellt worden, so kann der Gläubiger frühestens 20 Tage nach der Zustellung des Zahlungsbefehls das Fortsetzungsbegehren stellen.',
+  why:'Die 20-tägige Wartefrist ist die Kehrseite der Zahlungsfrist von Art. 69 Abs. 2 Ziff. 2: Sie hält das Verfahren an, damit der Schuldner noch bezahlen kann — Bedenkfrist. (Das Erlöschen nach einem Jahr in Abs. 2 ist dagegen eine Verwirkungsfrist.)'},
+ {art:'Art. 166 Abs. 1 SchKG', title:'Konkursbegehren: frühester Zeitpunkt', cat:'B',
+  txt:'Nach Ablauf von 20 Tagen seit der Zustellung der Konkursandrohung kann der Gläubiger unter Vorlegung dieser Urkunde und des Zahlungsbefehls beim Konkursgerichte das Konkursbegehren stellen.',
+  why:'Beispiel aus der Zusammenfassung: Die 20 Tage nach der Konkursandrohung geben dem Schuldner letztmals Gelegenheit zu zahlen, bevor der Konkurs beantragt werden kann — Bedenkfrist. (Abs. 2 mit dem Erlöschen nach 15 Monaten ist eine Verwirkungsfrist.)'},
+ // ---- Ordnungsfristen ----
+ {art:'Art. 71 Abs. 1 SchKG', title:'Zeitpunkt der Zustellung des Zahlungsbefehls', cat:'O',
+  txt:'Der Zahlungsbefehl wird dem Schuldner nach Eingang des Betreibungsbegehrens zugestellt.',
+  why:'Adressat ist das Betreibungsamt (Organ). Stellt es verspätet zu, bleibt die Zustellung trotzdem gültig — möglich ist nur eine Beschwerde wegen Rechtsverzögerung (Art. 17 Abs. 1 SchKG).'},
+ {art:'Art. 84 Abs. 2 SchKG', title:'Rechtsöffnungsverfahren: Entscheidfrist', cat:'O',
+  txt:'Der Richter gibt dem Betriebenen sofort nach Eingang des Gesuches Gelegenheit zur Stellungnahme und eröffnet danach innert fünf Tagen seinen Entscheid.',
+  why:'Beispiel aus der Zusammenfassung: Die 5-Tage-Frist richtet sich an den Richter (Organ). Ein verspäteter Rechtsöffnungsentscheid ist trotzdem gültig — typische Ordnungsfrist.'},
+ {art:'Art. 89 SchKG', title:'Vollzug der Pfändung', cat:'O',
+  txt:'Unterliegt der Schuldner der Betreibung auf Pfändung, so hat das Betreibungsamt nach Empfang des Fortsetzungsbegehrens unverzüglich die Pfändung zu vollziehen oder vollziehen zu lassen.',
+  why:'«Unverzüglich» richtet sich an das Betreibungsamt (Organ): Eine verspätete Pfändung ist nicht ungültig, es droht nur die Rechtsverzögerungsbeschwerde.'},
+ {art:'Art. 120 SchKG', title:'Anzeige des Verwertungsbegehrens', cat:'O',
+  txt:'Das Betreibungsamt benachrichtigt den Schuldner binnen drei Tagen von dem Verwertungsbegehren.',
+  why:'Frist an das Betreibungsamt (Organ): Verspätete Benachrichtigung macht die Verwertung nicht ungültig — Ordnungsfrist.'},
+ {art:'Art. 122 Abs. 1 SchKG', title:'Verwertung beweglicher Sachen: Fristen', cat:'O',
+  txt:'Bewegliche Sachen und Forderungen werden vom Betreibungsamt frühestens zehn Tage und spätestens zwei Monate nach Eingang des Begehrens verwertet.',
+  why:'Adressat ist das Betreibungsamt (Organ): Verwertet es später als zwei Monate, bleibt die Verwertung gültig. Kontrast: Die Fristen für das Verwertungsbegehren des Gläubigers (Art. 116) sind Verwirkungsfristen.'},
+ {art:'Art. 168 SchKG', title:'Anzeige der Konkursverhandlung', cat:'O',
+  txt:'Ist das Konkursbegehren gestellt, so wird den Parteien wenigstens drei Tage vorher die gerichtliche Verhandlung angezeigt.',
+  why:'Frist an das Konkursgericht (Organ) für die Verfahrensorganisation — eine Ordnungsvorschrift, deren Verletzung mit Beschwerde gerügt werden kann.'},
+ {art:'Art. 232 Abs. 2 Ziff. 5 SchKG', title:'Erste Gläubigerversammlung', cat:'O',
+  txt:'Die Bekanntmachung enthält die Einladung zu einer ersten Gläubigerversammlung, die spätestens 20 Tage nach der öffentlichen Bekanntmachung stattfinden muss.',
+  why:'Organisationsfrist an das Konkursamt (Organ): Findet die Versammlung später statt, ist sie deswegen nicht ungültig — Ordnungsfrist.'},
+ {art:'Art. 247 Abs. 1 SchKG', title:'Erstellung des Kollokationsplans', cat:'O',
+  txt:'Innert 60 Tagen nach Ablauf der Eingabefrist erstellt die Konkursverwaltung den Plan für die Rangordnung der Gläubiger (Kollokationsplan).',
+  why:'Frist an die Konkursverwaltung (Organ); die Aufsichtsbehörde kann sie sogar verlängern (Abs. 4) — deutlicheres Zeichen für eine Ordnungsfrist gibt es kaum. Kontrast: Die 20-Tage-Frist zur Anfechtung des Plans (Art. 250) ist eine Verwirkungsfrist.'},
+ // ---- Zustandsfristen ----
+ {art:'Art. 40 Abs. 1 SchKG', title:'Nachwirkung des Handelsregistereintrags', cat:'Z',
+  txt:'Die Personen, welche im Handelsregister eingetragen waren, unterliegen, nachdem die Streichung bekanntgemacht worden ist, noch während sechs Monaten der Konkursbetreibung.',
+  why:'Beispiel aus der Zusammenfassung: Niemand muss innert der 6 Monate etwas tun — es herrscht schlicht der Zustand, dass die Person weiterhin der Konkursbetreibung unterliegt. Zustandsfrist ohne Adressaten.'},
+ {art:'Art. 56 SchKG', title:'Geschlossene Zeiten, Betreibungsferien, Rechtsstillstand', cat:'Z',
+  txt:'Betreibungshandlungen dürfen nicht vorgenommen werden: in den geschlossenen Zeiten (zwischen 20 und 7 Uhr sowie an Sonn- und Feiertagen), während der Betreibungsferien sowie gegen einen Schuldner, dem der Rechtsstillstand gewährt ist.',
+  why:'Die Schonzeiten sind Zeiträume, in denen ein besonderer Zustand herrscht (Betreibungsverbot) — kein Adressat muss handeln. Zustandsfrist.'},
+ {art:'Art. 57 Abs. 1 SchKG', title:'Rechtsstillstand wegen Militär-, Zivil- oder Schutzdienst', cat:'Z',
+  txt:'Für einen Schuldner, der sich im Militär-, Zivil- oder Schutzdienst befindet, besteht während der Dauer des Dienstes Rechtsstillstand.',
+  why:'Während der Dienstdauer herrscht der Zustand des Rechtsstillstands — niemand muss eine Handlung vornehmen. Zustandsfrist.'},
+ {art:'Art. 286 Abs. 1 SchKG', title:'Schenkungsanfechtung: Verdachtsfrist', cat:'Z',
+  txt:'Anfechtbar sind alle Schenkungen und unentgeltlichen Verfügungen, die der Schuldner innerhalb des letzten Jahres vor der Pfändung oder Konkurseröffnung vorgenommen hat.',
+  why:'Beispiel aus der Zusammenfassung (Art. 286 f.): Die «Verdachtsfrist» beschreibt rückblickend einen Zeitraum, in dem vorgenommene Handlungen anfechtbar sind — kein Adressat, reine Zustandsfrist.'},
+ {art:'Art. 287 Abs. 1 SchKG', title:'Überschuldungsanfechtung: Verdachtsfrist', cat:'Z',
+  txt:'Anfechtbar sind bestimmte Rechtshandlungen (z. B. Zahlung einer nicht verfallenen Schuld), wenn der Schuldner sie innerhalb des letzten Jahres vor der Pfändung oder Konkurseröffnung vorgenommen hat und bereits überschuldet war.',
+  why:'Wie bei Art. 286: Der Jahreszeitraum vor Pfändung/Konkurseröffnung ist eine Verdachtsfrist — es herrscht ein Zustand der Anfechtbarkeit, niemand muss innert Frist handeln.'},
+ {art:'Art. 288 Abs. 1 SchKG', title:'Absichtsanfechtung: Verdachtsfrist', cat:'Z',
+  txt:'Anfechtbar sind alle Rechtshandlungen, welche der Schuldner innerhalb der letzten fünf Jahre vor der Pfändung oder Konkurseröffnung in der dem andern Teile erkennbaren Absicht vorgenommen hat, seine Gläubiger zu benachteiligen.',
+  why:'Die 5-jährige Verdachtsfrist der Absichtspauliana umschreibt einen Zeitraum, keinen Handlungsauftrag — Zustandsfrist.'}
+];
+
+// ---------- State ----------
+let deck=[], pos=0, firstTry={}, answered=false, missed=new Set();
+
+const $=id=>document.getElementById(id);
+const sections={start:$('start'),quiz:$('quiz'),result:$('result'),learn:$('learn')};
+
+function show(name){
+  for(const k in sections) sections[k].classList.toggle('hidden', k!==name);
+  $('tab-quiz').classList.toggle('active', name!=='learn');
+  $('tab-learn').classList.toggle('active', name==='learn');
+}
+let quizView='start'; // which view the "Üben" tab returns to
+
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function startRun(indices){
+  deck=shuffle(indices.slice());
+  pos=0; firstTry={}; missed=new Set();
+  quizView='quiz';
+  show('quiz');
+  render();
+}
+
+function render(){
+  const item=ITEMS[deck[pos]];
+  answered=false;
+  const answeredCount=Object.keys(firstTry).length;
+  $('q-tag').textContent = firstTry[deck[pos]]===undefined ? 'Frage' : 'Wiederholung';
+  $('q-count').textContent = `${answeredCount} / ${ITEMS.length} beantwortet · ${deck.length-pos} im Stapel`;
+  $('q-art').textContent=item.art;
+  $('q-title').textContent=item.title;
+  $('q-text').textContent='«'+item.txt+'»';
+  document.querySelector('#bar div').style.width=(answeredCount/ITEMS.length*100)+'%';
+
+  const wrap=$('answers'); wrap.innerHTML='';
+  CAT_ORDER.forEach((c,i)=>{
+    const b=document.createElement('button');
+    b.type='button'; b.dataset.cat=c;
+    b.innerHTML=`<span><kbd>${i+1}</kbd>${CATS[c].name}</span><small>${CATS[c].sub}</small>`;
+    b.addEventListener('click',()=>pick(c,b));
+    wrap.appendChild(b);
+  });
+  $('feedback').className=''; $('feedback').classList.remove('show');
+  $('next-row').classList.remove('show');
+}
+
+function pick(cat,btn){
+  if(answered) return;
+  answered=true;
+  const idx=deck[pos], item=ITEMS[idx], correct=cat===item.cat;
+  if(firstTry[idx]===undefined) firstTry[idx]=correct;
+  document.querySelectorAll('#answers button').forEach(b=>{
+    b.disabled=true;
+    if(b.dataset.cat===item.cat) b.classList.add(correct?'picked-ok':'reveal');
+  });
+  if(!correct){
+    btn.classList.add('picked-bad');
+    missed.add(idx);
+    deck.push(idx); // ans Ende des Stapels
+  }
+  const fb=$('feedback');
+  fb.className=(correct?'good':'wrong')+' show';
+  fb.classList.add('show');
+  $('fb-verdict').textContent=correct?'Richtig — '+CATS[item.cat].name:'Falsch — richtig wäre: '+CATS[item.cat].name;
+  $('fb-expl').textContent=item.why + (correct?'':' Der Artikel kommt nochmals.');
+  $('next-row').classList.add('show');
+  $('btn-next').focus();
+}
+
+function next(){
+  pos++;
+  if(pos>=deck.length) finish(); else render();
+}
+
+function finish(){
+  const total=ITEMS.length;
+  const ok=Object.values(firstTry).filter(Boolean).length;
+  $('r-score').textContent=ok;
+  $('r-total').textContent=total;
+  const pct=ok/total;
+  $('r-comment').textContent =
+    pct===1 ? 'Fehlerfrei — die Fristarten sitzen.' :
+    pct>=.8 ? 'Stark. Schau dir die wiederholten Artikel unten nochmals an.' :
+    pct>=.5 ? 'Solide Basis — die Merkregel (Adressat der Frist!) hilft bei den Wacklern.' :
+              'Noch unsicher: Frag dich bei jedem Artikel zuerst, an wen sich die Frist richtet.';
+  // Statistik pro Fristart
+  const grid=$('r-stats'); grid.innerHTML='';
+  CAT_ORDER.forEach(c=>{
+    const all=ITEMS.map((it,i)=>[it,i]).filter(([it])=>it.cat===c);
+    const good=all.filter(([,i])=>firstTry[i]).length;
+    const d=document.createElement('div');
+    d.style.borderColor=CATS[c].color; d.style.background=CATS[c].bg;
+    d.innerHTML=`<b>${CATS[c].name}</b><br>${good} / ${all.length} richtig`;
+    grid.appendChild(d);
+  });
+  // Falsche
+  const ml=$('miss-list'); ml.innerHTML='';
+  if(missed.size){
+    const h=document.createElement('h3');h.textContent='Diese Artikel nochmals anschauen:';ml.appendChild(h);
+    const ul=document.createElement('ul');
+    [...missed].forEach(i=>{
+      const li=document.createElement('li');
+      li.innerHTML=`<b>${ITEMS[i].art}</b> — ${ITEMS[i].title} → ${CATS[ITEMS[i].cat].name}`;
+      ul.appendChild(li);
+    });
+    ml.appendChild(ul);
+  }
+  $('btn-miss').style.display=missed.size?'':'none';
+  quizView='result';
+  document.querySelector('#bar div').style.width='100%';
+  show('result');
+}
+
+// ---------- Nachschlagen ----------
+function buildLearn(){
+  const host=$('ref-cards');
+  CAT_ORDER.forEach(c=>{
+    const card=document.createElement('div');
+    card.className='ref-card'; card.style.borderTopColor=CATS[c].color;
+    const lis=ITEMS.filter(it=>it.cat===c)
+      .map(it=>`<li><b>${it.art}</b><span>${it.title}</span></li>`).join('');
+    card.innerHTML=`<h3>${CATS[c].name}</h3><p class="def">${CATS[c].def}</p><ul>${lis}</ul>`;
+    host.appendChild(card);
+  });
+}
+buildLearn();
+
+// ---------- Events ----------
+$('btn-start').addEventListener('click',()=>startRun(ITEMS.map((_,i)=>i)));
+$('btn-next').addEventListener('click',next);
+$('btn-again').addEventListener('click',()=>startRun(ITEMS.map((_,i)=>i)));
+$('btn-miss').addEventListener('click',()=>startRun([...missed]));
+$('tab-quiz').addEventListener('click',()=>show(quizView));
+$('tab-learn').addEventListener('click',()=>show('learn'));
+
+document.addEventListener('keydown',e=>{
+  if(sections.quiz.classList.contains('hidden')) return;
+  if(!answered && e.key>='1' && e.key<='4'){
+    const b=document.querySelectorAll('#answers button')[+e.key-1];
+    if(b) b.click();
+  } else if(answered && e.key==='Enter'){
+    e.preventDefault(); next();
+  }
+});
+</script>
+
+</body>
+</html>

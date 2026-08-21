@@ -4,7 +4,7 @@ Interaktive, self-contained HTML-Lernprogramme zum Lehrgang dipl. Rechtsfachmann
 (Semester 3). Jede Datei läuft ohne Installation und ohne
 Internet — Doppelklick genügt, der Fortschritt wird im Browser gespeichert.
 
-Einstiegspunkt ist [`index.html`](index.html) — eine Startseite, die alle vier Programme verlinkt.
+Einstiegspunkt ist [`index.html`](index.html) — eine Startseite, die alle fünf Programme verlinkt.
 
 ## Inhalt
 
@@ -14,6 +14,7 @@ Einstiegspunkt ist [`index.html`](index.html) — eine Startseite, die alle vier
 | [`programme/erbrecht.html`](programme/erbrecht.html) | Erbrecht (Teil 1 + 2) | 83 Übungen in 11 Stufen |
 | [`programme/erwachsenenschutzrecht.html`](programme/erwachsenenschutzrecht.html) | Erwachsenenschutzrecht | 77 Fragen in 11 Themen |
 | [`programme/gueterrecht.html`](programme/gueterrecht.html) | Güterrechtliche Auseinandersetzung | 20 Fälle in 6 Phasen |
+| [`programme/schkg-fristarten.html`](programme/schkg-fristarten.html) | SchKG — Fristarten | 34 Artikel, 4 Fristarten |
 
 ## Auf dem Handy
 
@@ -26,6 +27,7 @@ dann «Zum Home-Bildschirm» — damit startet es wie eine App im Vollbild.
 | Erbrecht | https://claude.ai/code/artifact/fbb6690f-fdc0-4cb7-83cb-9d2425504f9b |
 | Erwachsenenschutzrecht | https://claude.ai/code/artifact/9f95f9fd-e099-46f9-9d80-3284e0406f90 |
 | Güterrecht | https://claude.ai/code/artifact/60f9e1a9-e023-44a4-9c27-f3bb06c8bb5f |
+| SchKG — Fristarten | https://claude.ai/code/artifact/b688e725-ee8e-4f7e-9a41-c4ee0cc6c064 |
 
 Die Seiten sind privat und nur im angemeldeten Zustand sichtbar. Der Fortschritt wird pro
 Gerät und Browser gespeichert; Handy und Computer zählen also getrennt.
