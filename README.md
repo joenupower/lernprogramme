@@ -1,8 +1,10 @@
 # Lernprogramme — Rechtsfachmann HF
 
 Interaktive, self-contained HTML-Lernprogramme zum Lehrgang dipl. Rechtsfachmann HF
-(KV Business School Zürich, Semester 3). Jede Datei läuft ohne Installation und ohne
+(Semester 3). Jede Datei läuft ohne Installation und ohne
 Internet — Doppelklick genügt, der Fortschritt wird im Browser gespeichert.
+
+Einstiegspunkt ist [`index.html`](index.html) — eine Startseite, die alle vier Programme verlinkt.
 
 ## Inhalt
 
@@ -37,5 +39,5 @@ Anzeige beim Antippen).
 ## Hinweis zu den Inhalten
 
 Die Aufgaben stützen sich auf Kursunterlagen (Dozenten-Scripts, Übungsblätter mit
-Musterlösungen) der KV Business School Zürich. Dieses Repository ist deshalb privat
+Musterlösungen). Dieses Repository ist deshalb privat
 und ausschliesslich für den persönlichen Gebrauch bestimmt.

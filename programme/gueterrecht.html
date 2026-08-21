@@ -435,7 +435,7 @@ function solveCase(c) {
    20 Übungsfälle zur güterrechtlichen Auseinandersetzung
    (Errungenschaftsbeteiligung), aufsteigender Schwierigkeitsgrad.
    Methodik und Zitierweise folgen der Vorlesung HF Recht
-   (KV Business School Zürich) bzw. der Kurszusammenfassung.
+   bzw. der Kurszusammenfassung.
    ============================================================ */
 
 const CASES = [
@@ -1407,7 +1407,7 @@ function renderHome() {
         <button class="btn btn-ghost" id="btn-reset">Fortschritt zurücksetzen</button>
       </div>
     </header>
-    <p class="hinweis-methodik">Methodik und Zitierweise folgen der Vorlesung (HF Recht, KV Business School Zürich). Nach jeder Phase wird sofort geprüft – Zahlen können mit oder ohne Tausendertrennzeichen eingegeben werden (z.&nbsp;B. 12'000 oder 12000), negative Beträge mit Minuszeichen.</p>
+    <p class="hinweis-methodik">Methodik und Zitierweise folgen der Vorlesung HF Recht. Nach jeder Phase wird sofort geprüft – Zahlen können mit oder ohne Tausendertrennzeichen eingegeben werden (z.&nbsp;B. 12'000 oder 12000), negative Beträge mit Minuszeichen.</p>
     <div class="case-grid">${cards}</div>
     ${spickzettelHtml()}`;
   app().querySelectorAll('[data-case]').forEach(el => el.addEventListener('click', () => openCase(+el.dataset.case)));
