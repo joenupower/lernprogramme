@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Erwachsenenschutzrecht – Lernprogramm (ZGB 360–456)</title>
+<style>
+:root {
+  --navy: #1b3a5c;
+  --navy-dunkel: #12283f;
+  --blau: #2563a8;
+  --blau-hell: #e8f0f9;
+  --gold: #b8860b;
+  --gruen: #15803d;
+  --gruen-hell: #ecfdf3;
+  --rot: #b91c1c;
+  --rot-hell: #fef2f2;
+  --grau: #5b6b7b;
+  --grau-hell: #f4f6f8;
+  --rand: #d7dfe8;
+  --schatten: 0 1px 3px rgba(18, 40, 63, .10), 0 4px 14px rgba(18, 40, 63, .06);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; padding: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", sans-serif;
+  color: #1d2b3a; background: #eef2f6;
+  font-size: 16px; line-height: 1.55;
+}
+#app { max-width: 1080px; margin: 0 auto; padding: 24px 20px 80px; }
+h1 { font-size: 1.7rem; color: var(--navy); margin: 0 0 4px; line-height: 1.25; }
+h2 { font-size: 1.2rem; color: var(--navy); margin: 0 0 10px; }
+h3 { font-size: 1.05rem; color: var(--navy); margin: 18px 0 8px; }
+h4 { font-size: 1rem; color: var(--navy); margin: 16px 0 6px; }
+
+.btn {
+  font: inherit; font-size: .95rem; font-weight: 600;
+  padding: 10px 18px; border-radius: 10px; cursor: pointer;
+  border: 1.5px solid var(--rand); background: #fff; color: var(--navy);
+  transition: all .15s;
+}
+.btn:hover { border-color: var(--blau); box-shadow: var(--schatten); }
+.btn-primary { background: var(--navy); border-color: var(--navy); color: #fff; }
+.btn-primary:hover { background: var(--blau); border-color: var(--blau); }
+.btn-ghost { border-color: transparent; background: transparent; color: var(--grau); }
+.btn-ghost:hover { color: var(--navy); border-color: var(--rand); box-shadow: none; }
+.btn:disabled { opacity: .45; cursor: default; pointer-events: none; }
+
+/* ---------- Startseite ---------- */
+.home-header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--blau) 100%);
+  color: #fff; border-radius: 16px; padding: 32px 32px 26px; box-shadow: var(--schatten);
+}
+.home-header h1 { color: #fff; font-size: 1.9rem; }
+.untertitel { margin: 4px 0 20px; opacity: .85; }
+.home-stats { display: flex; gap: 28px; margin-bottom: 20px; flex-wrap: wrap; }
+.stat { background: rgba(255,255,255,.12); border-radius: 12px; padding: 12px 22px; }
+.stat-zahl { font-size: 1.5rem; font-weight: 700; }
+.stat-label { font-size: .82rem; opacity: .85; }
+.balken { background: rgba(255,255,255,.25); border-radius: 999px; height: 10px; overflow: hidden; margin: 4px 0 18px; }
+.balken > div { background: var(--gold); height: 100%; border-radius: 999px; transition: width .3s; }
+.home-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.home-actions .btn { border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.95); }
+.home-actions .btn-ghost { background: transparent; color: rgba(255,255,255,.8); }
+.home-actions .btn-ghost:hover { color: #fff; border-color: rgba(255,255,255,.5); }
+.hinweis-methodik { color: var(--grau); font-size: .88rem; margin: 16px 4px 20px; }
+
+/* ---------- Themen-Grid ---------- */
+.themen-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.thema-card {
+  font: inherit; text-align: left; cursor: pointer;
+  background: #fff; border: 1.5px solid var(--rand); border-radius: 14px;
+  padding: 16px 18px 14px; transition: all .15s; display: flex; flex-direction: column; gap: 5px;
+}
+.thema-card:hover { border-color: var(--blau); box-shadow: var(--schatten); transform: translateY(-2px); }
+.thema-nr { font-size: .78rem; font-weight: 700; color: var(--grau); text-transform: uppercase; letter-spacing: .05em; }
+.thema-titel { font-weight: 700; color: var(--navy); font-size: 1.04rem; line-height: 1.3; }
+.thema-kurz { color: var(--grau); font-size: .86rem; }
+.thema-fuss { margin-top: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.qdots { display: flex; gap: 5px; }
+.qdot { width: 13px; height: 13px; border-radius: 999px; background: var(--grau-hell); border: 1.5px solid var(--rand); }
+.qdot.d-geloest { background: var(--gruen); border-color: var(--gruen); }
+.qdot.d-hilfe { background: #eab308; border-color: #ca9a04; }
+
+.badge { display: inline-block; font-size: .76rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+.badge-done { background: var(--gruen-hell); color: var(--gruen); border: 1px solid #bbe7cb; }
+.badge-hilfe { background: #fff8e6; color: #92640a; border: 1px solid #f0dca4; }
+.badge-open { background: var(--grau-hell); color: var(--grau); border: 1px solid var(--rand); }
+.badge-thema { background: var(--blau-hell); color: var(--blau); border: 1px solid #c4d8ee; }
+
+/* ---------- Themen-/Fragenansicht ---------- */
+.top-bar { display: flex; justify-content: space-between; margin-bottom: 10px; gap: 10px; flex-wrap: wrap; }
+.thema-header { background: #fff; border-radius: 14px; padding: 18px 24px; box-shadow: var(--schatten); border-left: 6px solid var(--navy); }
+.thema-kopf { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: baseline; }
+.frage-nav { display: flex; gap: 7px; margin-top: 12px; flex-wrap: wrap; }
+.fnav {
+  font: inherit; font-weight: 700; font-size: .88rem; cursor: pointer;
+  width: 38px; height: 38px; border-radius: 999px; border: 1.5px solid var(--rand);
+  background: #fff; color: var(--grau); transition: all .12s;
+}
+.fnav:hover { border-color: var(--blau); color: var(--blau); }
+.fnav.f-aktiv { border-color: var(--navy); background: var(--navy); color: #fff; }
+.fnav.f-geloest { border-color: var(--gruen); background: var(--gruen-hell); color: var(--gruen); }
+.fnav.f-hilfe { border-color: #ca9a04; background: #fff8e6; color: #92640a; }
+.fnav.f-geloest.f-aktiv { background: var(--gruen); color: #fff; }
+.fnav.f-hilfe.f-aktiv { background: #ca9a04; color: #fff; }
+
+.frage-card { background: #fff; border-radius: 14px; padding: 22px 26px; box-shadow: var(--schatten); margin-top: 16px; }
+.frage-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.frage-nrchip { background: var(--navy); color: #fff; border-radius: 8px; padding: 2px 10px; font-size: .85rem; white-space: nowrap; }
+.stufe-sterne { color: var(--gold); font-size: .95rem; letter-spacing: .12em; white-space: nowrap; }
+.stern-leer { color: #d5dbe2; }
+.typ-label { font-size: .78rem; font-weight: 700; color: var(--grau); text-transform: uppercase; letter-spacing: .05em; }
+.frage-text { font-weight: 600; color: var(--navy); margin: 12px 0 14px; font-size: 1.05rem; }
+
+.sachverhalt { background: #fffdf5; border: 1.5px solid #ead9a8; border-radius: 12px; padding: 14px 18px; margin: 12px 0 14px; }
+.sachverhalt-titel { color: #7c5e10; font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+.hint { color: var(--grau); font-size: .9em; }
+
+.art {
+  display: inline-block; background: var(--blau-hell); color: var(--blau);
+  border: 1px solid #c4d8ee; border-radius: 6px; padding: 1px 8px;
+  font-size: .8rem; font-weight: 600; cursor: help; white-space: nowrap; margin: 1px 0;
+}
+.art-zeile { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 4px; align-items: baseline; }
+
+/* Multiple Choice */
+.mc-liste { display: flex; flex-direction: column; gap: 8px; }
+.mc-opt { display: flex; gap: 10px; align-items: flex-start; border: 1.5px solid var(--rand); border-radius: 10px; padding: 11px 14px; cursor: pointer; background: #fff; transition: all .12s; }
+.mc-opt:hover { border-color: var(--blau); }
+.mc-opt input { margin-top: 4px; accent-color: var(--navy); flex-shrink: 0; }
+.mc-opt.mc-ok { border-color: var(--gruen); background: var(--gruen-hell); }
+.mc-opt.mc-bad { border-color: var(--rot); background: var(--rot-hell); }
+.mc-opt.mc-dim { opacity: .6; }
+
+/* Mehrfachauswahl-Chips */
+.check-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.check-chip input { position: absolute; opacity: 0; pointer-events: none; }
+.check-chip span {
+  display: inline-block; padding: 9px 16px; border: 1.5px solid var(--rand); border-radius: 999px;
+  font-size: .93rem; font-weight: 600; color: var(--grau); cursor: pointer; transition: all .12s; background: #fff;
+}
+.check-chip input:checked + span { background: var(--navy); border-color: var(--navy); color: #fff; }
+.check-chip input:focus-visible + span { box-shadow: 0 0 0 3px rgba(37, 99, 168, .3); }
+.check-chip input:disabled + span { cursor: default; }
+.check-chip span:hover { border-color: var(--blau); }
+.check-chip.chip-ok span { background: var(--gruen); border-color: var(--gruen); color: #fff; }
+.check-chip.chip-bad span { background: var(--rot-hell); border-color: var(--rot); color: var(--rot); }
+.check-chip.chip-fehlt span { border-color: var(--rot); border-style: dashed; color: var(--rot); background: #fff; }
+
+/* Zuordnen */
+.aufgabe-tabelle { width: 100%; border-collapse: collapse; margin: 6px 0 10px; }
+.aufgabe-tabelle th {
+  text-align: left; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em;
+  color: var(--grau); padding: 8px 10px; border-bottom: 2px solid var(--rand);
+}
+.aufgabe-tabelle td { padding: 10px; border-bottom: 1px solid var(--grau-hell); vertical-align: middle; }
+.aufgabe-tabelle tr:last-child td { border-bottom: none; }
+.aufgabe-tabelle select {
+  font: inherit; font-size: .92rem; padding: 9px 10px; border: 1.5px solid var(--rand); border-radius: 8px;
+  max-width: 100%; background: #fff;
+}
+.aufgabe-tabelle select:focus { outline: none; border-color: var(--blau); box-shadow: 0 0 0 3px rgba(37, 99, 168, .15); }
+.row-ok td { background: var(--gruen-hell); }
+.row-ok td:first-child { box-shadow: inset 4px 0 0 var(--gruen); }
+.row-bad td { background: var(--rot-hell); }
+.row-bad td:first-child { box-shadow: inset 4px 0 0 var(--rot); }
+.zeile-links { font-weight: 600; color: var(--navy); }
+
+/* Reihenfolge */
+.reihe-liste { display: flex; flex-direction: column; gap: 8px; }
+.reihe-item {
+  font: inherit; text-align: left; display: flex; gap: 12px; align-items: center;
+  border: 1.5px solid var(--rand); border-radius: 10px; padding: 10px 14px;
+  cursor: pointer; background: #fff; transition: all .12s;
+}
+.reihe-item:hover { border-color: var(--blau); }
+.reihe-num {
+  flex-shrink: 0; width: 30px; height: 30px; border-radius: 999px;
+  border: 1.5px dashed var(--rand); color: var(--grau);
+  display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .9rem;
+}
+.reihe-item.gewaehlt .reihe-num { background: var(--navy); border: 1.5px solid var(--navy); color: #fff; }
+.reihe-item.reihe-ok { border-color: var(--gruen); background: var(--gruen-hell); }
+.reihe-item.reihe-ok .reihe-num { background: var(--gruen); border-color: var(--gruen); color: #fff; }
+.reihe-item.reihe-bad { border-color: var(--rot); background: var(--rot-hell); }
+.reihe-item.reihe-bad .reihe-num { background: var(--rot); border-color: var(--rot); color: #fff; }
+
+/* Feedback & Lösung */
+.frage-actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.fb { border-radius: 10px; padding: 12px 16px; font-weight: 600; margin-top: 14px; }
+.fb-ok { background: var(--gruen-hell); color: var(--gruen); border: 1px solid #bbe7cb; }
+.fb-bad { background: var(--rot-hell); color: var(--rot); border: 1px solid #f3c6c6; }
+.fb-info { background: var(--blau-hell); color: var(--blau); border: 1px solid #c4d8ee; }
+
+.solution-box { background: var(--grau-hell); border: 1.5px solid var(--rand); border-radius: 12px; padding: 16px 20px; margin-top: 16px; font-size: .96rem; }
+.solution-box > h4 { margin-top: 0; }
+.solution-box p { margin: 8px 0; }
+.solution-box ul, .solution-box ol { margin: 6px 0; padding-left: 22px; }
+.solution-box li { margin-bottom: 4px; }
+
+.merkbox {
+  background: #fffdf5; border: 1.5px solid #ead9a8; border-left: 5px solid var(--gold);
+  border-radius: 10px; padding: 10px 14px; margin-top: 12px; font-size: .93rem;
+}
+.merkbox b:first-child { color: #7c5e10; }
+
+/* Spickzettel-Modal */
+.modal-hg {
+  position: fixed; inset: 0; background: rgba(18, 40, 63, .55); z-index: 50;
+  display: flex; align-items: flex-start; justify-content: center; padding: 30px 16px; overflow-y: auto;
+}
+.modal-box {
+  background: #fff; border-radius: 16px; max-width: 880px; width: 100%;
+  padding: 26px 30px 30px; box-shadow: 0 10px 40px rgba(0,0,0,.25); position: relative;
+}
+.modal-schliessen { position: sticky; float: right; top: 0; }
+.spick-tabelle { width: 100%; border-collapse: collapse; margin: 8px 0 18px; font-size: .9rem; }
+.spick-tabelle th { text-align: left; background: var(--navy); color: #fff; padding: 7px 10px; font-size: .8rem; }
+.spick-tabelle td { padding: 7px 10px; border-bottom: 1px solid var(--grau-hell); vertical-align: top; }
+.spick-tabelle tr:nth-child(even) td { background: #f8fafc; }
+
+@media (max-width: 640px) {
+  #app { padding: 14px 10px 60px; }
+  .home-header { padding: 22px 20px 20px; }
+  .frage-card { padding: 16px 16px; }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal"></div>
+<script>
+'use strict';
+
+/* =====================  GESETZESTEXTE (Tooltip)  ===================== */
+const GESETZ = {
+  'Art. 13 ZGB': 'Die Handlungsfähigkeit besitzt, wer volljährig und urteilsfähig ist.',
+  'Art. 16 ZGB': 'Urteilsfähig ist jede Person, der nicht wegen ihres Kindesalters, infolge geistiger Behinderung, psychischer Störung, Rausch oder ähnlicher Zustände die Fähigkeit mangelt, vernunftgemäss zu handeln.',
+  'Art. 19d ZGB': 'Die Handlungsfähigkeit kann durch eine Massnahme des Erwachsenenschutzes eingeschränkt werden.',
+  'Art. 166 ZGB': 'Jeder Ehegatte vertritt während des Zusammenlebens die eheliche Gemeinschaft für die laufenden Bedürfnisse der Familie.',
+  'Art. 298a ZGB': 'Sind die Eltern nicht miteinander verheiratet, so sind sie gemeinsam Inhaber der elterlichen Sorge, wenn sie dies in einer gemeinsamen Erklärung festhalten (seit 1.7.2014 ist die gemeinsame Sorge der Regelfall).',
+  'Art. 360 ZGB': 'Eine handlungsfähige Person kann eine natürliche oder juristische Person beauftragen, im Fall ihrer Urteilsunfähigkeit die Personensorge oder die Vermögenssorge zu übernehmen oder sie im Rechtsverkehr zu vertreten (Abs. 1). Sie muss die Aufgaben umschreiben und kann Weisungen erteilen (Abs. 2) sowie Ersatzverfügungen treffen (Abs. 3).',
+  'Art. 361 ZGB': 'Der Vorsorgeauftrag ist eigenhändig zu errichten oder öffentlich zu beurkunden (Abs. 1). Eigenhändig: von Anfang bis Ende von Hand niederzuschreiben, zu datieren und zu unterzeichnen (Abs. 2). Das Zivilstandsamt trägt Errichtung und Hinterlegungsort auf Antrag in eine zentrale Datenbank ein (Abs. 3).',
+  'Art. 362 ZGB': 'Widerruf jederzeit: in einer der Errichtungsformen (Abs. 1) oder durch Vernichtung der Urkunde (Abs. 2). Ein neuer Vorsorgeauftrag tritt an die Stelle des früheren, sofern er nicht zweifellos eine blosse Ergänzung darstellt (Abs. 3).',
+  'Art. 363 ZGB': 'Erfährt die KESB von der Urteilsunfähigkeit, prüft sie, ob der Vorsorgeauftrag gültig errichtet worden ist, ob die Voraussetzungen für seine Wirksamkeit eingetreten sind, ob die beauftragte Person geeignet ist und ob weitere Massnahmen erforderlich sind (Abs. 2). Bei Annahme: Hinweis auf die Pflichten nach OR-Auftragsrecht und Aushändigung einer Urkunde über die Befugnisse (Abs. 3).',
+  'Art. 370 ZGB': 'Eine urteilsfähige Person kann in einer Patientenverfügung festlegen, welchen medizinischen Massnahmen sie im Fall ihrer Urteilsunfähigkeit zustimmt oder nicht zustimmt (Abs. 1). Sie kann eine natürliche Person bezeichnen, die mit dem Arzt die Massnahmen bespricht und in ihrem Namen entscheidet (Abs. 2).',
+  'Art. 371 ZGB': 'Die Patientenverfügung ist schriftlich zu errichten, zu datieren und zu unterzeichnen (Abs. 1 — einfache Schriftlichkeit, Text darf vorgedruckt sein). Errichtung und Hinterlegungsort können auf der Versichertenkarte eingetragen werden (Abs. 2).',
+  'Art. 372 ZGB': 'Der Arzt klärt anhand der Versichertenkarte ab, ob eine Patientenverfügung vorliegt (Abs. 1). Er entspricht ihr, ausser sie verstösst gegen gesetzliche Vorschriften oder es bestehen begründete Zweifel, dass sie auf freiem Willen beruht oder noch dem mutmasslichen Willen entspricht (Abs. 2).',
+  'Art. 373 ZGB': 'Jede der betroffenen Person nahestehende Person kann schriftlich die KESB anrufen, u. a. wenn der Patientenverfügung nicht entsprochen wird.',
+  'Art. 374 ZGB': 'Wer als Ehegatte oder eingetragener Partner mit einer urteilsunfähig gewordenen Person einen gemeinsamen Haushalt führt oder ihr regelmässig und persönlich Beistand leistet, hat von Gesetzes wegen ein Vertretungsrecht (Abs. 1). Es umfasst Rechtshandlungen zur Deckung des Unterhaltsbedarfs, die ordentliche Verwaltung des Einkommens und der übrigen Vermögenswerte und nötigenfalls das Öffnen und Erledigen der Post (Abs. 2).',
+  'Art. 375 ZGB': 'Die Ausübung des Vertretungsrechts richtet sich sinngemäss nach den Bestimmungen des OR über den einfachen Auftrag (Art. 394 ff. OR).',
+  'Art. 377 ZGB': 'Hat eine urteilsunfähige Person zur medizinischen Behandlung keine Patientenverfügung erlassen, plant der Arzt die Behandlung unter Beizug der zur Vertretung berechtigten Person.',
+  'Art. 378 ZGB': 'Vertretungsberechtigt sind der Reihe nach: 1. die in Patientenverfügung oder Vorsorgeauftrag bezeichnete Person; 2. der Beistand mit Vertretungsrecht bei medizinischen Massnahmen; 3. der Ehegatte / eingetragene Partner (gemeinsamer Haushalt oder regelmässiger persönlicher Beistand); 4. die Person im gemeinsamen Haushalt, die Beistand leistet; 5. die Nachkommen; 6. die Eltern; 7. die Geschwister (je wenn sie Beistand leisten). Fehlt eine berechtigte Person, entscheidet die KESB.',
+  'Art. 380 ZGB': 'Die Behandlung einer psychischen Störung einer urteilsunfähigen Person in einer psychiatrischen Klinik richtet sich nach den Bestimmungen über die fürsorgerische Unterbringung.',
+  'Art. 382 ZGB': 'Wird eine urteilsunfähige Person für längere Dauer in einer Wohn- oder Pflegeeinrichtung betreut, ist schriftlich in einem Betreuungsvertrag festzulegen, welche Leistungen die Einrichtung erbringt und welches Entgelt dafür geschuldet ist.',
+  'Art. 383 ZGB': 'Die Einrichtung darf die Bewegungsfreiheit einer urteilsunfähigen Person nur einschränken, wenn eine ernsthafte Gefahr für ihr Leben oder ihre körperliche Integrität oder für Dritte besteht oder eine schwerwiegende Störung des Gemeinschaftslebens beseitigt werden soll — und mildere Massnahmen nicht ausreichen (Abs. 1).',
+  'Art. 384 ZGB': 'Über jede Einschränkung der Bewegungsfreiheit wird Protokoll geführt; festzuhalten sind insbesondere der Name der anordnenden Person sowie Zweck, Art und Dauer der Massnahme (Abs. 1).',
+  'Art. 388 ZGB': 'Die behördlichen Massnahmen stellen das Wohl und den Schutz hilfsbedürftiger Personen sicher (Abs. 1). Sie sollen die Selbstbestimmung so weit wie möglich erhalten und fördern (Abs. 2).',
+  'Art. 389 ZGB': 'Die Behörde ordnet eine Massnahme nur an, wenn die Unterstützung durch Familie, nahestehende Personen oder private/öffentliche Dienste nicht ausreicht und die eigene Vorsorge bzw. Massnahmen von Gesetzes wegen nicht genügen (Abs. 1 — Subsidiarität). Jede Massnahme muss erforderlich und geeignet sein (Abs. 2 — Verhältnismässigkeit).',
+  'Art. 392 ZGB': 'Erscheint die Errichtung einer Beistandschaft wegen des Umfangs der Aufgaben als offensichtlich unverhältnismässig, kann die KESB von sich aus das Erforderliche vorkehren, namentlich die Zustimmung zu einem Rechtsgeschäft erteilen oder einer Drittperson für einzelne Aufgaben einen Auftrag erteilen.',
+  'Art. 393 ZGB': 'Eine Begleitbeistandschaft wird mit Zustimmung der hilfsbedürftigen Person errichtet, wenn sie für die Erledigung bestimmter Angelegenheiten begleitende Unterstützung braucht (Abs. 1). Sie schränkt die Handlungsfähigkeit nicht ein (Abs. 2).',
+  'Art. 394 ZGB': 'Eine Vertretungsbeistandschaft wird errichtet, wenn die hilfsbedürftige Person bestimmte Angelegenheiten nicht erledigen kann und deshalb vertreten werden muss (Abs. 1). Die KESB kann die Handlungsfähigkeit entsprechend einschränken (Abs. 2). Die Person muss sich die Handlungen des Beistands anrechnen oder gefallen lassen (Abs. 3).',
+  'Art. 395 ZGB': 'Errichtet die KESB eine Vertretungsbeistandschaft für die Vermögensverwaltung, bestimmt sie die zu verwaltenden Vermögenswerte (Abs. 1 — Vermögensverwaltungsbeistandschaft für Einkommen und/oder Vermögen).',
+  'Art. 396 ZGB': 'Eine Mitwirkungsbeistandschaft wird errichtet, wenn bestimmte Handlungen der hilfsbedürftigen Person zu ihrem Schutz der Zustimmung des Beistands bedürfen (Abs. 1). Die Handlungsfähigkeit ist von Gesetzes wegen entsprechend eingeschränkt (Abs. 2).',
+  'Art. 397 ZGB': 'Die Begleit-, die Vertretungs- und die Mitwirkungsbeistandschaft können miteinander kombiniert werden.',
+  'Art. 398 ZGB': 'Eine umfassende Beistandschaft wird errichtet, wenn eine Person, namentlich wegen dauernder Urteilsunfähigkeit, besonders hilfsbedürftig ist (Abs. 1). Sie bezieht sich auf alle Angelegenheiten der Personensorge, der Vermögenssorge und des Rechtsverkehrs (Abs. 2). Die Handlungsfähigkeit der betroffenen Person entfällt von Gesetzes wegen (Abs. 3).',
+  'Art. 400 ZGB': 'Die KESB ernennt als Beistand eine natürliche Person, die für die Aufgaben persönlich und fachlich geeignet ist, die erforderliche Zeit einsetzen kann und die Aufgaben selber wahrnimmt (Abs. 1). Die Ernennung setzt das Einverständnis der Person voraus (Abs. 2).',
+  'Art. 420 ZGB': 'Werden der Ehegatte, der eingetragene Partner, die Eltern, ein Nachkomme, ein Geschwister oder der faktische Lebenspartner als Beistand eingesetzt, kann die KESB sie von der Inventarpflicht, der Pflicht zur periodischen Berichterstattung und Rechnungsablage und der Pflicht, für bestimmte Geschäfte die Zustimmung einzuholen, ganz oder teilweise entbinden.',
+  'Art. 426 ZGB': 'Eine Person, die an einer psychischen Störung oder an geistiger Behinderung leidet oder schwer verwahrlost ist, darf in einer geeigneten Einrichtung untergebracht werden, wenn die nötige Behandlung oder Betreuung nicht anders erfolgen kann (Abs. 1). Die Person wird entlassen, sobald die Voraussetzungen nicht mehr erfüllt sind (Abs. 3). Sie oder eine nahestehende Person kann jederzeit um Entlassung ersuchen; darüber ist ohne Verzug zu entscheiden (Abs. 4).',
+  'Art. 427 ZGB': 'Eine Person mit psychischer Störung, die freiwillig eingetreten ist, kann bei Selbstgefährdung oder ernsthafter Fremdgefährdung von der ärztlichen Leitung höchstens 72 Stunden zurückbehalten werden; danach Entlassung, sofern kein vollstreckbarer Unterbringungsentscheid vorliegt.',
+  'Art. 428 ZGB': 'Für die Anordnung der Unterbringung und die Entlassung ist die KESB zuständig (Abs. 1).',
+  'Art. 429 ZGB': 'Die Kantone können Ärzte bezeichnen, die eine Unterbringung während einer vom kantonalen Recht festgelegten Dauer anordnen dürfen; die Dauer beträgt höchstens sechs Wochen (Abs. 1). Ist die ärztliche Unterbringung vorher nicht aufgehoben, entscheidet die KESB (Abs. 2). Über die Entlassung entscheidet die Einrichtung (Abs. 3).',
+  'Art. 430 ZGB': 'Die anordnende Ärztin untersucht die betroffene Person persönlich und hört sie an (Abs. 1). Der Unterbringungsentscheid ist schriftlich, mit Begründung und Rechtsmittelbelehrung (Abs. 2–4).',
+  'Art. 431 ZGB': 'Die KESB überprüft spätestens sechs Monate nach Beginn der Unterbringung, ob die Voraussetzungen noch erfüllt sind; eine zweite Überprüfung erfolgt innerhalb der folgenden sechs Monate, danach so oft wie nötig, mindestens aber einmal jährlich.',
+  'Art. 432 ZGB': 'Wer in einer Einrichtung untergebracht wird, kann eine Person ihres Vertrauens beiziehen, die sie während des Aufenthalts und bis zum Abschluss aller damit zusammenhängenden Verfahren unterstützt.',
+  'Art. 433 ZGB': 'Bei Unterbringung zur Behandlung einer psychischen Störung erstellt der behandelnde Arzt unter Beizug der betroffenen Person (und ggf. ihrer Vertrauensperson) einen schriftlichen Behandlungsplan; er wird der Person zur Zustimmung unterbreitet und laufend angepasst; umfassende Information über alle Umstände der Behandlung.',
+  'Art. 434 ZGB': 'Fehlt die Zustimmung, kann der Chefarzt die im Behandlungsplan vorgesehenen Massnahmen schriftlich anordnen, wenn ohne Behandlung ein ernsthafter gesundheitlicher Schaden oder eine erhebliche Gefährdung Dritter droht, die Person urteilsunfähig bezüglich ihrer Behandlungsbedürftigkeit ist und keine mildere Massnahme zur Verfügung steht.',
+  'Art. 435 ZGB': 'In einer Notfallsituation können die zum Schutz der betroffenen Person oder Dritter unerlässlichen medizinischen Massnahmen sofort ergriffen werden.',
+  'Art. 439 ZGB': 'Die betroffene oder eine ihr nahestehende Person kann u. a. bei ärztlich angeordneter Unterbringung, Zurückbehaltung durch die Einrichtung und Abweisung des Entlassungsgesuchs schriftlich das zuständige Gericht anrufen (Einzelgericht am Ort der Einrichtung); Frist 10 Tage; die Beschwerde hat keine aufschiebende Wirkung.',
+  'Art. 440 ZGB': 'Die Erwachsenenschutzbehörde ist eine Fachbehörde; die Kantone bestimmen sie (Abs. 1). Sie fällt ihre Entscheide in der Regel mit mindestens drei Mitgliedern; Ausnahmen (Einzelzuständigkeit) sind möglich (Abs. 2). Sie ist zugleich Kindesschutzbehörde (Abs. 3).',
+  'Art. 441 ZGB': 'Die Kantone bestimmen die Aufsichtsbehörden (Abs. 1) — z. B. ZH: Gemeindeamt; AG: Kammer für Kindes- und Erwachsenenschutzrecht des Obergerichts (KEKA); SG: Verwaltungsrekurskommission.',
+  'Art. 442 ZGB': 'Zuständig ist die Erwachsenenschutzbehörde am Wohnsitz der betroffenen Person (Abs. 1).',
+  'Art. 443 ZGB': 'Jede Person kann der KESB Meldung erstatten, wenn eine Person hilfsbedürftig erscheint (Melderecht); wer in amtlicher Tätigkeit davon erfährt, ist meldepflichtig.',
+  'Art. 446 ZGB': 'Die KESB erforscht den Sachverhalt von Amtes wegen (Untersuchungsgrundsatz).',
+  'Art. 447 ZGB': 'Die betroffene Person wird persönlich angehört, soweit dies nicht unverhältnismässig erscheint (Abs. 1). Bei fürsorgerischer Unterbringung hört die KESB die Person in der Regel als Kollegium an (Abs. 2).',
+  'Art. 450 ZGB': 'Gegen Entscheide der KESB kann Beschwerde beim zuständigen Gericht erhoben werden; beschwerdebefugt sind die am Verfahren beteiligten, die der betroffenen Person nahestehenden Personen und Personen mit rechtlich geschütztem Interesse.',
+  'Art. 450b ZGB': 'Beschwerdefrist: 30 Tage; bei fürsorgerischer Unterbringung: 10 Tage seit Mitteilung des Entscheids.',
+  'Art. 450e ZGB': 'Die Beschwerde gegen einen Entscheid auf dem Gebiet der fürsorgerischen Unterbringung muss nicht begründet werden (Abs. 1) und hat keine aufschiebende Wirkung, sofern nichts anderes angeordnet wird (Abs. 2). Bei psychischen Störungen muss gestützt auf das Gutachten einer sachverständigen Person entschieden werden (Abs. 3).',
+  'Art. 454 ZGB': 'Wer im Rahmen behördlicher Massnahmen des Erwachsenenschutzes durch widerrechtliches Handeln oder Unterlassen verletzt wird, hat Anspruch auf Schadenersatz und, sofern die Schwere der Verletzung es rechtfertigt, auf Genugtuung (Abs. 1). Haftbar ist der Kanton; gegen die verursachende Person steht der geschädigten Person kein Ersatzanspruch zu (Abs. 3).',
+  'Art. 455 ZGB': 'Der Anspruch auf Schadenersatz oder Genugtuung verjährt nach den Bestimmungen des OR über die unerlaubten Handlungen.',
+  'Art. 456 ZGB': 'Die Haftung der vorsorgebeauftragten Person sowie des vertretungsberechtigten Ehegatten oder eingetragenen Partners richtet sich nach den Bestimmungen des OR über den Auftrag.',
+  'Art. 394 ff. OR': 'Einfacher Auftrag: Der Beauftragte ist zur getreuen und sorgfältigen Ausführung verpflichtet (Art. 398 OR) und muss auf Verlangen jederzeit Rechenschaft ablegen und alles Erhaltene herausgeben (Art. 400 OR).',
+  'Art. 398 OR': 'Der Beauftragte haftet für getreue und sorgfältige Ausführung des Auftrags (Sorgfalts- und Treuepflicht).',
+  'Art. 400 OR': 'Der Beauftragte ist zur Rechenschaftsablage und zur Herausgabe des Erlangten verpflichtet.',
+  'Art. 530 ff. OR': 'Einfache Gesellschaft: vertragsmässige Verbindung von zwei oder mehreren Personen zur Erreichung eines gemeinsamen Zwecks mit gemeinsamen Kräften oder Mitteln — von der Judikatur auf vermögensrechtliche Verhältnisse des Konkubinats angewendet.',
+  'Art. 10 BV': 'Jeder Mensch hat das Recht auf persönliche Freiheit, insbesondere auf körperliche und geistige Unversehrtheit und auf Bewegungsfreiheit (Abs. 2).',
+  'Art. 471 ZGB': 'Der Pflichtteil beträgt die Hälfte des gesetzlichen Erbanspruchs (seit 1.1.2023; Eltern haben keinen Pflichtteil mehr).',
+  'Art. 505 ZGB': 'Die eigenhändige letztwillige Verfügung ist vom Erblasser von Anfang bis Ende mit Einschluss der Angabe des Datums von Hand niederzuschreiben und zu unterzeichnen.',
+  'Art. 15 PartG': 'Vertretung der Gemeinschaft in der eingetragenen Partnerschaft (analog zur ehelichen Vertretung).'
+};
+
+/* =====================  THEMEN  ===================== */
+const THEMEN = [
+  { nr: 1,  icon: '📖', titel: 'Grundlagen & Handlungsfähigkeit', kurz: 'Gegenstand, Systematik im ZGB, Revision 2013, Art. 13/16/19d ZGB' },
+  { nr: 2,  icon: '🪜', titel: 'Massnahmen-System & Grundsätze', kurz: 'Rechtsinstitute, Eingriffspyramide, Subsidiarität & Co., Art. 392 ZGB' },
+  { nr: 3,  icon: '🤝', titel: 'Die Beistandschaften', kurz: 'Art. 393–398 ZGB, Wirkungen auf die Handlungsfähigkeit, Fallzuordnung' },
+  { nr: 4,  icon: '🏛️', titel: 'Organisation, Beistand & Haftung', kurz: 'KESB, Aufsichtsbehörde, Ernennung (Art. 400), Verantwortlichkeit (Art. 454 ff.)' },
+  { nr: 5,  icon: '📝', titel: 'Der Vorsorgeauftrag', kurz: 'Art. 360–363 ZGB: Inhalt, Form, Widerruf, Validierung durch die KESB' },
+  { nr: 6,  icon: '🩺', titel: 'Die Patientenverfügung', kurz: 'Art. 370–373 ZGB: Form, Wirkung, Versichertenkarte, Vergleich mit dem VA' },
+  { nr: 7,  icon: '👥', titel: 'Gesetzliche Vertretung Urteilsunfähiger', kurz: 'Art. 374–381 ZGB: Vertretungsrecht des Ehegatten, Kaskade Art. 378' },
+  { nr: 8,  icon: '🏠', titel: 'Wohn- & Pflegeeinrichtungen', kurz: 'Art. 382–387 ZGB: Betreuungsvertrag, Einschränkung der Bewegungsfreiheit' },
+  { nr: 9,  icon: '🔒', titel: 'FU: Grundlagen & Voraussetzungen', kurz: 'Art. 426/427 ZGB: Schwächezustände, Abgrenzung, Zurückbehaltung, Fall «Peter»' },
+  { nr: 10, icon: '⚖️', titel: 'FU: Verfahren & Behandlung', kurz: 'Art. 428–435, 439 ZGB: KESB vs. Arzt, Fristen, Behandlungsplan, Fall «Laura»' },
+  { nr: 11, icon: '💍', titel: 'Familienrechtliche Partnerschaften', kurz: 'Konkubinat, Vergleich mit der Ehe, eingetragene Partnerschaft & Ehe für alle' }
+];
+
+/* =====================  FRAGEN  ===================== */
+/* Pro Thema 7 Fragen mit aufsteigendem Schwierigkeitsgrad (Stufe 1–7). */
+const FRAGEN = [
+
+/* ---------- THEMA 1: Grundlagen & Handlungsfähigkeit ---------- */
+{ id: 'T1F1', thema: 1, stufe: 1, typ: 'mc',
+  frage: 'Wo ist das Erwachsenenschutzrecht im engeren Sinn geregelt?',
+  optionen: [
+    'In Art. 360–456 ZGB',
+    'In Art. 457–640 ZGB',
+    'In Art. 90–251 ZGB',
+    'In einem eigenen Bundesgesetz ausserhalb des ZGB'
+  ],
+  richtig: 0,
+  artikel: ['Art. 13 ZGB', 'Art. 16 ZGB'],
+  erklaerung: '<p>Das Erwachsenenschutzrecht <b>im engeren Sinn</b> umfasst die Bestimmungen der <b>Art. 360–456 ZGB</b>, die explizit dem Erwachsenenschutz gewidmet sind.</p><p>Das Erwachsenenschutzrecht <b>im weiteren Sinn</b> umfasst darüber hinaus alle Normen, die den Erwachsenenschutz betreffen — z. B. die Regeln über die Handlungsfähigkeit (Art. 12 ff. ZGB), strafrechtliche und internationale Normen.</p>' },
+
+{ id: 'T1F2', thema: 1, stufe: 2, typ: 'mc',
+  frage: 'Wann trat das geltende Erwachsenenschutzrecht in Kraft — und was löste es ab?',
+  optionen: [
+    'Am 1. Januar 2013; es löste das rund 100-jährige Vormundschaftsrecht von 1912 ab',
+    'Am 1. Juli 2022; es löste das Partnerschaftsgesetz ab',
+    'Am 1. Januar 2000; es löste das alte Eherecht ab',
+    'Am 1. Januar 2023; es löste das alte Pflichtteilsrecht ab'
+  ],
+  richtig: 0,
+  artikel: [],
+  erklaerung: '<p>Das geltende Erwachsenenschutzrecht ist am <b>1. Januar 2013</b> in Kraft getreten und hat das rund 100-jährige <b>Vormundschaftsrecht von 1912</b> abgelöst.</p><p>Die starren vormundschaftlichen Massnahmen (Vormundschaft, Beiratschaft, alte Beistandschaft) wurden durch massgeschneiderte Beistandschaften ersetzt; die fürsorgerische Freiheitsentziehung (FFE) wurde zur fürsorgerischen Unterbringung (FU).</p>' },
+
+{ id: 'T1F3', thema: 1, stufe: 3, typ: 'mc',
+  frage: 'Handlungsfähig ist, wer …',
+  optionen: [
+    'volljährig <b>und</b> urteilsfähig ist',
+    'volljährig ist — auf die Urteilsfähigkeit kommt es nicht an',
+    'urteilsfähig ist — auf das Alter kommt es nicht an',
+    'mindestens 16-jährig und urteilsfähig ist'
+  ],
+  richtig: 0,
+  artikel: ['Art. 13 ZGB', 'Art. 16 ZGB'],
+  erklaerung: '<p><b>Art. 13 ZGB:</b> Die Handlungsfähigkeit besitzt, wer <b>volljährig</b> (18 Jahre) <b>und urteilsfähig</b> ist. Beide Voraussetzungen müssen kumulativ erfüllt sein.</p><p>Die Handlungsfähigkeit ist die Grundlage des Erwachsenenschutzrechts: Massnahmen des Erwachsenenschutzes können sie einschränken (Art. 19d ZGB).</p>' },
+
+{ id: 'T1F4', thema: 1, stufe: 4, typ: 'multi',
+  frage: 'Welche Gründe können nach Art. 16 ZGB die Urteilsfähigkeit ausschliessen? <span class="hint">(mehrere Antworten richtig)</span>',
+  optionen: [
+    'Kindesalter',
+    'Geistige Behinderung',
+    'Psychische Störung',
+    'Rausch oder ähnliche Zustände',
+    'Hohes Alter als solches',
+    'Fehlende Schulbildung'
+  ],
+  richtig: [0, 1, 2, 3],
+  artikel: ['Art. 16 ZGB'],
+  erklaerung: '<p><b>Art. 16 ZGB</b> nennt abschliessend die Schwächegründe: <b>Kindesalter, geistige Behinderung, psychische Störung, Rausch oder ähnliche Zustände</b> — und zwar nur, wenn deswegen die Fähigkeit fehlt, vernunftgemäss zu handeln.</p><p>Hohes Alter oder fehlende Bildung sind für sich allein <b>keine</b> Gründe: Auch eine 95-jährige Person ist urteilsfähig, solange sie vernunftgemäss handeln kann.</p>' },
+
+{ id: 'T1F5', thema: 1, stufe: 5, typ: 'zuordnen',
+  frage: 'Systematik im ZGB: Ordne die Regelungsbereiche den richtigen Artikelgruppen zu.',
+  zeilen: [
+    { links: 'Eigene Vorsorge (Vorsorgeauftrag & Patientenverfügung)', rechts: 'ZGB 360–373' },
+    { links: 'Massnahmen von Gesetzes wegen (Vertretung, Wohn-/Pflegeeinrichtungen)', rechts: 'ZGB 374–387' },
+    { links: 'Die Beistandschaften', rechts: 'ZGB 390–425' },
+    { links: 'Die fürsorgerische Unterbringung', rechts: 'ZGB 426–439' },
+    { links: 'Organisation, Verfahren & Verantwortlichkeit', rechts: 'ZGB 440–456' }
+  ],
+  optionen: ['ZGB 360–373', 'ZGB 374–387', 'ZGB 390–425', 'ZGB 426–439', 'ZGB 440–456'],
+  artikel: [],
+  erklaerung: '<p>Das Erwachsenenschutzrecht ist in <b>drei Titeln</b> geregelt:</p><ul><li><b>10. Titel</b> (ZGB 360–387): Die eigene Vorsorge (360–373) und die Massnahmen von Gesetzes wegen (374–387)</li><li><b>11. Titel</b> (ZGB 388–439): Die behördlichen Massnahmen — allgemeine Grundsätze (388–389), Beistandschaften (390–425), fürsorgerische Unterbringung (426–439)</li><li><b>12. Titel</b> (ZGB 440–456): Organisation — Behörden und Zuständigkeit (440–442), Verfahren (443–450g), Verhältnis zu Dritten (451–453), Verantwortlichkeit (454–456)</li></ul>' },
+
+{ id: 'T1F6', thema: 1, stufe: 6, typ: 'multi',
+  frage: 'Was waren die Kernanliegen der Revision, die 2013 in Kraft trat? <span class="hint">(mehrere Antworten richtig)</span>',
+  optionen: [
+    'Stärkung des Selbstbestimmungsrechts (neu: Vorsorgeauftrag und Patientenverfügung)',
+    'Massgeschneiderte Beistandschaften anstelle der starren vormundschaftlichen Massnahmen',
+    'Interdisziplinäre Fachbehörde (KESB) anstelle der oft aus Laien bestehenden Vormundschaftsbehörden',
+    'Einführung der fürsorgerischen Freiheitsentziehung (FFE)',
+    'Übertragung des Erwachsenenschutzes an die Bundesverwaltung'
+  ],
+  richtig: [0, 1, 2],
+  artikel: ['Art. 388 ZGB', 'Art. 440 ZGB'],
+  erklaerung: '<p>Die drei Kernanliegen der Revision:</p><ul><li><b>Selbstbestimmung stärken:</b> neu Vorsorgeauftrag (Art. 360 ff.) und Patientenverfügung (Art. 370 ff.)</li><li><b>Massschneiderung:</b> Beistandschaften nach Mass statt Vormundschaft, Beiratschaft und alter Beistandschaft</li><li><b>Professionalisierung:</b> die interdisziplinäre Fachbehörde KESB ersetzt die Laien-Vormundschaftsbehörden</li></ul><p>Die FFE wurde gerade <b>abgeschafft</b> und durch die fürsorgerische Unterbringung (FU) ersetzt. Der Erwachsenenschutz blieb <b>kantonal</b> organisiert.</p>' },
+
+{ id: 'T1F7', thema: 1, stufe: 7, typ: 'mc',
+  sachverhalt: 'Der 45-jährige A steht unter umfassender Beistandschaft. Er möchte im Elektrogeschäft ein Handy-Abo abschliessen. Sein Kollege meint: «Du bist doch volljährig und weisst, was du tust — also bist du handlungsfähig und kannst das Abo problemlos abschliessen.»',
+  frage: 'Trifft die Aussage des Kollegen zu?',
+  optionen: [
+    'Nein — bei der umfassenden Beistandschaft entfällt die Handlungsfähigkeit von Gesetzes wegen; die Handlungsfähigkeit kann durch Massnahmen des Erwachsenenschutzes eingeschränkt werden',
+    'Ja — wer volljährig und urteilsfähig ist, ist immer handlungsfähig; daran ändert auch eine Beistandschaft nichts',
+    'Nein — unter Beistandschaft stehende Personen sind nie urteilsfähig',
+    'Ja — nur ein Gericht könnte die Handlungsfähigkeit einschränken, nicht die KESB'
+  ],
+  richtig: 0,
+  artikel: ['Art. 19d ZGB', 'Art. 398 ZGB', 'Art. 13 ZGB'],
+  erklaerung: '<p><b>Art. 19d ZGB</b> ist die Schnittstelle zum Erwachsenenschutz: Die Handlungsfähigkeit kann durch eine <b>Massnahme des Erwachsenenschutzes</b> eingeschränkt werden.</p><p>Bei der <b>umfassenden Beistandschaft</b> entfällt die Handlungsfähigkeit sogar <b>von Gesetzes wegen</b> (Art. 398 Abs. 3 ZGB) — obwohl A volljährig und allenfalls urteilsfähig ist.</p><div class="merkbox"><b>Merke:</b> Volljährig + urteilsfähig = handlungsfähig (Art. 13 ZGB) gilt nur, solange keine erwachsenenschutzrechtliche Massnahme die Handlungsfähigkeit einschränkt oder entzieht.</div>' },
+
+/* ---------- THEMA 2: Massnahmen-System & Grundsätze ---------- */
+{ id: 'T2F1', thema: 2, stufe: 1, typ: 'mc',
+  frage: 'In welche zwei Hauptkategorien lassen sich die Massnahmen des Erwachsenenschutzrechts einteilen?',
+  optionen: [
+    'Behördliche und nicht behördliche Massnahmen',
+    'Zivilrechtliche und strafrechtliche Massnahmen',
+    'Vorsorgliche und endgültige Massnahmen',
+    'Kantonale und eidgenössische Massnahmen'
+  ],
+  richtig: 0,
+  artikel: [],
+  erklaerung: '<p>Die Rechtsinstitute des Erwachsenenschutzrechts werden eingeteilt in:</p><ul><li><b>Behördliche Massnahmen:</b> die Beistandschaften (393–398), die erforderliche Vorkehr der KESB (392) und die fürsorgerische Unterbringung (426 ff.)</li><li><b>Nicht behördliche Massnahmen:</b> die gesetzliche Vertretung durch Ehegatten/eingetragene Partner (374 ff.) sowie die eigene Vorsorge — Vorsorgeauftrag (360 ff.) und Patientenverfügung (370 ff.)</li></ul>' },
+
+{ id: 'T2F2', thema: 2, stufe: 2, typ: 'multi',
+  frage: 'Welche Institute gehören zu den <b>nicht behördlichen</b> Massnahmen? <span class="hint">(mehrere Antworten richtig)</span>',
+  optionen: [
+    'Vorsorgeauftrag',
+    'Patientenverfügung',
+    'Vertretung durch den Ehegatten oder eingetragenen Partner',
+    'Begleitbeistandschaft',
+    'Fürsorgerische Unterbringung',
+    'Erforderliche Vorkehr der KESB (Art. 392 ZGB)'
+  ],
+  richtig: [0, 1, 2],
+  artikel: ['Art. 360 ZGB', 'Art. 370 ZGB', 'Art. 374 ZGB'],
+  erklaerung: '<p><b>Nicht behördlich</b> sind die eigene Vorsorge (Vorsorgeauftrag, Patientenverfügung) und die gesetzlichen Vertretungsrechte (Art. 374 ff. ZGB) — sie entstehen ohne behördliche Anordnung.</p><p><b>Behördlich</b> sind alle Beistandschaften, die erforderliche Vorkehr der KESB (392) und die FU (426 ff.) — sie werden von der KESB (bzw. bei der FU auch von Ärzten) angeordnet.</p>' },
+
+{ id: 'T2F3', thema: 2, stufe: 3, typ: 'mc',
+  frage: 'Welche Massnahme steht an der Spitze der Eingriffspyramide (grösster Eingriff in die Rechtsstellung)?',
+  optionen: [
+    'Die umfassende Beistandschaft (Art. 398 ZGB)',
+    'Die fürsorgerische Unterbringung (Art. 426 ZGB)',
+    'Die Mitwirkungsbeistandschaft (Art. 396 ZGB)',
+    'Der Vorsorgeauftrag (Art. 360 ZGB)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 398 ZGB'],
+  erklaerung: '<p>Nach der Eingriffspyramide der Folien ist die <b>umfassende Beistandschaft (Art. 398 ZGB)</b> der grösste Eingriff: Sie erfasst Personensorge, Vermögenssorge und Rechtsverkehr, und die Handlungsfähigkeit entfällt von Gesetzes wegen.</p><p>Am unteren Ende (kleinster Eingriff) stehen Vorsorgeauftrag und Patientenverfügung — sie beruhen auf dem eigenen Willen.</p><div class="merkbox"><b>Merke:</b> Je stärker die Massnahme in die Handlungsfähigkeit eingreift, desto höher steht sie in der Pyramide.</div>' },
+
+{ id: 'T2F4', thema: 2, stufe: 4, typ: 'mc',
+  frage: 'Wann kann die KESB nach Art. 392 ZGB «das Erforderliche vorkehren», statt eine Beistandschaft zu errichten?',
+  optionen: [
+    'Wenn die Errichtung einer Beistandschaft wegen des Umfangs der Aufgaben offensichtlich unverhältnismässig wäre',
+    'Wenn die betroffene Person eine Beistandschaft ablehnt',
+    'Wenn kein geeigneter Beistand gefunden werden kann',
+    'Wenn die Angehörigen dies gemeinsam beantragen'
+  ],
+  richtig: 0,
+  artikel: ['Art. 392 ZGB'],
+  erklaerung: '<p><b>Art. 392 ZGB:</b> Erscheint die Errichtung einer Beistandschaft wegen des <b>Umfangs der Aufgaben als offensichtlich unverhältnismässig</b> (z. B. nur ein einzelnes Geschäft ist zu erledigen), kann die KESB von sich aus:</p><ul><li>die Zustimmung zu einem Rechtsgeschäft erteilen,</li><li>einer Drittperson für einzelne Aufgaben einen Auftrag erteilen oder</li><li>eine geeignete Person/Stelle bezeichnen, der für bestimmte Bereiche Einblick und Auskunft zu geben ist.</li></ul>' },
+
+{ id: 'T2F5', thema: 2, stufe: 5, typ: 'zuordnen',
+  frage: 'Ordne die Umschreibungen den vier Grundsätzen der Massnahmenanordnung zu.',
+  zeilen: [
+    { links: 'Entscheidet darüber, OB die Behörde überhaupt eingreift: nur wenn der Person nicht anders geholfen werden kann', rechts: 'Subsidiarität' },
+    { links: 'Bestimmt, WIE die Massnahme ausgestaltet wird: auf den Fähigkeiten der Person und ihres Umfelds aufbauen, ergänzen statt ersetzen', rechts: 'Komplementarität' },
+    { links: 'Die Massnahme muss geeignet, erforderlich und ausgewogen sein und veränderten Verhältnissen angepasst werden', rechts: 'Verhältnismässigkeit' },
+    { links: 'Die Autonomie der betroffenen Person ist so weit wie möglich zu erhalten und zu fördern', rechts: 'Wahrung der Selbstbestimmung' }
+  ],
+  optionen: ['Subsidiarität', 'Komplementarität', 'Verhältnismässigkeit', 'Wahrung der Selbstbestimmung'],
+  artikel: ['Art. 388 ZGB', 'Art. 389 ZGB'],
+  erklaerung: '<p>Die vier Grundsätze:</p><ul><li><b>Subsidiarität</b> (Art. 389 Abs. 1): <i>ob</i> eingegriffen wird — Vorrang von Familie, nahestehenden Personen, privaten/öffentlichen Diensten, eigener Vorsorge und gesetzlichen Massnahmen</li><li><b>Komplementarität:</b> <i>wie</i> die Massnahme ausgestaltet wird — ergänzen, nicht ersetzen</li><li><b>Verhältnismässigkeit</b> (Art. 389 Abs. 2): geeignet, erforderlich, ausgewogen</li><li><b>Wahrung der Selbstbestimmung</b> (Art. 388 Abs. 2): Autonomie erhalten und fördern</li></ul>' },
+
+{ id: 'T2F6', thema: 2, stufe: 6, typ: 'reihenfolge',
+  frage: 'Eingriffspyramide: Ordne die Massnahmen vom <b>kleinsten</b> (1.) zum <b>grössten</b> Eingriff (8.).',
+  items: [
+    'Vorsorgeauftrag und Patientenverfügung',
+    'Gesetzliche Vertretungsrechte',
+    'Anordnungen der KESB nach Art. 392 ZGB',
+    'Begleitbeistandschaft (Art. 393)',
+    'Vertretungs- / Vermögensverwaltungsbeistandschaft (Art. 394/395)',
+    'Mitwirkungsbeistandschaft (Art. 396)',
+    'Kombinierte Beistandschaft (Art. 397)',
+    'Umfassende Beistandschaft (Art. 398)'
+  ],
+  anzeige: [4, 0, 6, 2, 7, 1, 3, 5],
+  artikel: ['Art. 392 ZGB', 'Art. 393 ZGB', 'Art. 398 ZGB'],
+  erklaerung: '<p>Die Stufenfolge ordnet die Massnahmen nach der <b>Schwere des Eingriffs</b> in die Rechtsstellung der betroffenen Person — von der eigenen Vorsorge (kleinster Eingriff, eigener Wille) über die gesetzlichen Vertretungsrechte und die Anordnungen nach Art. 392 hinauf zu den Beistandschaften und schliesslich zur umfassenden Beistandschaft (Verlust der Handlungsfähigkeit von Gesetzes wegen).</p>' },
+
+{ id: 'T2F7', thema: 2, stufe: 7, typ: 'mc',
+  sachverhalt: 'Die betagte Frau B kommt mit ihrer Post und ihren Zahlungen nicht mehr zurecht. Ihre Tochter wohnt im gleichen Haus, hat eine Bankvollmacht und erledigt seit Jahren zuverlässig alle administrativen und finanziellen Angelegenheiten. Ein besorgter Nachbar meldet der KESB, Frau B sei «offensichtlich überfordert und brauche einen Beistand».',
+  frage: 'Wie hat die KESB vorzugehen?',
+  optionen: [
+    'Sie ordnet keine Massnahme an: Die Unterstützung durch die Familie genügt — behördliche Massnahmen sind subsidiär (Art. 389 Abs. 1 ZGB)',
+    'Sie errichtet eine Vermögensverwaltungsbeistandschaft (Art. 395 ZGB), weil Frau B ihre Finanzen nicht mehr selbst verwalten kann',
+    'Sie errichtet eine Begleitbeistandschaft (Art. 393 ZGB), da dies der mildeste Eingriff ist',
+    'Sie muss auf die Meldung des Nachbarn hin zwingend eine Massnahme anordnen (Art. 443 ZGB)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 389 ZGB', 'Art. 443 ZGB'],
+  erklaerung: '<p><b>Subsidiarität (Art. 389 Abs. 1 ZGB):</b> Die KESB ordnet eine Massnahme nur an, wenn die Unterstützung durch die <b>Familie</b>, nahestehende Personen oder private/öffentliche Dienste <b>nicht ausreicht</b>.</p><p>Hier funktioniert die private Lösung (Tochter mit Vollmacht) — es besteht kein Schutzbedürfnis, also keine Massnahme. Die Meldung des Nachbarn (Melderecht, Art. 443 ZGB) löst zwar eine Prüfung aus, verpflichtet die KESB aber nicht zur Anordnung.</p>' },
+
+/* ---------- THEMA 3: Die Beistandschaften ---------- */
+{ id: 'T3F1', thema: 3, stufe: 1, typ: 'mc',
+  frage: 'Frau S. braucht nur begleitende Unterstützung bei Einzahlungen und im Verkehr mit der Krankenkasse — sonst kommt sie gut zurecht. Welche Beistandschaft passt?',
+  optionen: [
+    'Die Begleitbeistandschaft (Art. 393 ZGB)',
+    'Die Vertretungsbeistandschaft (Art. 394 ZGB)',
+    'Die Mitwirkungsbeistandschaft (Art. 396 ZGB)',
+    'Die umfassende Beistandschaft (Art. 398 ZGB)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 393 ZGB'],
+  erklaerung: '<p>Die <b>Begleitbeistandschaft (Art. 393 ZGB)</b> wird errichtet, wenn die hilfsbedürftige Person für die Erledigung bestimmter Angelegenheiten (Einzahlungen, Verkehr mit Krankenkassen etc.) <b>begleitende Unterstützung</b> braucht.</p><p>Sie setzt die <b>Zustimmung</b> der betroffenen Person voraus und schränkt die Handlungsfähigkeit nicht ein — der Beistand begleitet, handelt aber nicht anstelle der Person.</p>' },
+
+{ id: 'T3F2', thema: 3, stufe: 2, typ: 'zuordnen',
+  frage: 'Ordne jeder Beistandschaft den richtigen Gesetzesartikel zu.',
+  zeilen: [
+    { links: 'Begleitbeistandschaft', rechts: 'Art. 393 ZGB' },
+    { links: 'Vertretungsbeistandschaft', rechts: 'Art. 394 ZGB' },
+    { links: 'Vermögensverwaltungsbeistandschaft', rechts: 'Art. 395 ZGB' },
+    { links: 'Mitwirkungsbeistandschaft', rechts: 'Art. 396 ZGB' },
+    { links: 'Kombinierte Beistandschaft', rechts: 'Art. 397 ZGB' },
+    { links: 'Umfassende Beistandschaft', rechts: 'Art. 398 ZGB' }
+  ],
+  optionen: ['Art. 393 ZGB', 'Art. 394 ZGB', 'Art. 395 ZGB', 'Art. 396 ZGB', 'Art. 397 ZGB', 'Art. 398 ZGB'],
+  artikel: ['Art. 393 ZGB', 'Art. 394 ZGB', 'Art. 395 ZGB', 'Art. 396 ZGB', 'Art. 397 ZGB', 'Art. 398 ZGB'],
+  erklaerung: '<p>Die Artikelfolge als Eselsbrücke — sie entspricht zugleich der aufsteigenden Eingriffsintensität:</p><ul><li><b>393</b> Begleiten</li><li><b>394</b> Vertreten</li><li><b>395</b> Vermögen verwalten (Unterfall der Vertretung)</li><li><b>396</b> Mitwirken (zustimmen)</li><li><b>397</b> Kombinieren</li><li><b>398</b> Umfassend (frühere Vormundschaft)</li></ul>' },
+
+{ id: 'T3F3', thema: 3, stufe: 3, typ: 'mc',
+  frage: 'Wann wird eine Vertretungsbeistandschaft (Art. 394 ZGB) errichtet?',
+  optionen: [
+    'Wenn die Person bestimmte Angelegenheiten nicht erledigen kann <b>und</b> auch nicht in der Lage ist, jemanden rechtsgenügend zu bevollmächtigen',
+    'Wenn die Person zwar alles selbst erledigen könnte, aber keine Zeit dafür hat',
+    'Immer, wenn eine Person urteilsunfähig wird',
+    'Nur wenn die Person der Massnahme ausdrücklich zustimmt'
+  ],
+  richtig: 0,
+  artikel: ['Art. 394 ZGB'],
+  erklaerung: '<p>Die <b>Vertretungsbeistandschaft (Art. 394 ZGB)</b> wird errichtet, wenn die hilfsbedürftige Person bestimmte Angelegenheiten <b>nicht oder nicht zweckmässig erledigen kann</b> und auch <b>niemanden rechtsgenügend bevollmächtigen</b> kann.</p><p>Kursbeispiele: Dem geistig behinderten Herrn X soll eine Liegenschaft übertragen werden; die demente Erbin Frau X braucht für eine Erbstreitigkeit vor Gericht einen Beistand.</p><p>Kann die Person noch gültig eine Vollmacht erteilen, geht die private Lösung vor (Subsidiarität).</p>' },
+
+{ id: 'T3F4', thema: 3, stufe: 4, typ: 'zuordnen',
+  frage: 'Ordne die Kursbeispiele der passenden Beistandschaft zu.',
+  zeilen: [
+    { links: 'Nach therapierter Suchterkrankung ist die Selbständigkeit von Herrn X noch zu wenig entwickelt — die bisherige stärkere Massnahme wird aufgehoben', rechts: 'Begleitbeistandschaft (393)' },
+    { links: 'Die alleinstehende, demente Frau X im Altersheim braucht jemanden für Administration und Finanzen; niemand hat eine Vollmacht', rechts: 'Vermögensverwaltungsbeistandschaft (395)' },
+    { links: 'Der leicht beeinflussbare, verwitwete Herr X hat Vermögen; «Freunde» versuchen, ihm namhafte Summen abzuluchsen', rechts: 'Mitwirkungsbeistandschaft (396)' },
+    { links: 'Frau X braucht einen Beistand für einen Prozess und zugleich für die Verwaltung ihrer finanziellen Angelegenheiten', rechts: 'Kombinierte Beistandschaft (397)' },
+    { links: 'Herr X ist völlig in Wahnideen verstrickt, hält sich für Napoleon und schliesst immer wieder krass nachteilige Verträge ab', rechts: 'Umfassende Beistandschaft (398)' }
+  ],
+  optionen: ['Begleitbeistandschaft (393)', 'Vermögensverwaltungsbeistandschaft (395)', 'Mitwirkungsbeistandschaft (396)', 'Kombinierte Beistandschaft (397)', 'Umfassende Beistandschaft (398)'],
+  artikel: ['Art. 393 ZGB', 'Art. 395 ZGB', 'Art. 396 ZGB', 'Art. 397 ZGB', 'Art. 398 ZGB'],
+  erklaerung: '<p>Das sind die Originalbeispiele des Kurses:</p><ul><li><b>Begleit (393):</b> nur begleitende Unterstützung nötig — z. B. nach therapierter Sucht</li><li><b>Vermögensverwaltung (395):</b> Einkommen/Vermögen kann nicht mehr verwaltet werden, keine Vollmacht vorhanden</li><li><b>Mitwirkung (396):</b> Schutz durch Zustimmungserfordernis des Beistands (Darlehen, Schenkungen etc.)</li><li><b>Kombiniert (397):</b> mehrere Arten nötig (Vertretung für Prozess + Vermögensverwaltung)</li><li><b>Umfassend (398):</b> besonders hilfsbedürftig, alle Bereiche betroffen</li></ul>' },
+
+{ id: 'T3F5', thema: 3, stufe: 5, typ: 'mc',
+  frage: 'Herr M. steht unter Mitwirkungsbeistandschaft; die Gewährung von Darlehen ist zustimmungsbedürftig. Er gewährt einem Bekannten ohne Wissen des Beistands ein Darlehen von CHF 20 000. Was gilt?',
+  optionen: [
+    'Das Darlehen ist ohne die Zustimmung des Beistands nicht gültig — die Handlungsfähigkeit ist insoweit von Gesetzes wegen eingeschränkt (Art. 396 Abs. 2 ZGB)',
+    'Das Darlehen ist gültig, denn die Mitwirkungsbeistandschaft schränkt die Handlungsfähigkeit nicht ein (Art. 393 Abs. 2 ZGB)',
+    'Das Darlehen ist gültig, aber der Beistand kann es innert 10 Tagen anfechten (Art. 450b ZGB)',
+    'Das Darlehen ist nur gültig, wenn zusätzlich die KESB zustimmt (Art. 416 ZGB)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 396 ZGB'],
+  erklaerung: '<p>Bei der <b>Mitwirkungsbeistandschaft (Art. 396 ZGB)</b> bedürfen bestimmte Handlungen zum Schutz der Person der <b>Zustimmung des Beistands</b>.</p><p><b>Abs. 2:</b> Die Handlungsfähigkeit ist <b>von Gesetzes wegen</b> entsprechend eingeschränkt — zustimmungsbedürftige Geschäfte sind ohne Zustimmung <b>nicht gültig</b>.</p><p>Typische zustimmungsbedürftige Geschäfte gemäss Kurs: Gewährung von Darlehen, Schenkungen etc.</p>' },
+
+{ id: 'T3F6', thema: 3, stufe: 6, typ: 'multi',
+  frage: 'Wirkungen der Beistandschaften auf die Handlungsfähigkeit — welche Aussagen sind richtig? <span class="hint">(mehrere Antworten richtig)</span>',
+  optionen: [
+    'Die Begleitbeistandschaft schränkt die Handlungsfähigkeit nicht ein (Art. 393 Abs. 2)',
+    'Bei der Vertretungs- und der Vermögensverwaltungsbeistandschaft <b>kann</b> die KESB die Handlungsfähigkeit entsprechend einschränken (Art. 394 Abs. 2)',
+    'Bei der umfassenden Beistandschaft entfällt die Handlungsfähigkeit von Gesetzes wegen (Art. 398 Abs. 3)',
+    'Jede Beistandschaft entzieht der betroffenen Person automatisch die Handlungsfähigkeit (Art. 19d ZGB)',
+    'Die Mitwirkungsbeistandschaft lässt die Handlungsfähigkeit vollständig unberührt (Art. 396 Abs. 2 ZGB)'
+  ],
+  richtig: [0, 1, 2],
+  artikel: ['Art. 393 ZGB', 'Art. 394 ZGB', 'Art. 396 ZGB', 'Art. 398 ZGB'],
+  erklaerung: '<p>Die Wirkungen im Überblick:</p><ul><li><b>Begleit (393 II):</b> keine Einschränkung</li><li><b>Vertretung/Vermögensverwaltung (394 II):</b> KESB <b>kann</b> einschränken; die Person muss sich die Handlungen des Beistands ohnehin anrechnen oder gefallen lassen (394 III)</li><li><b>Mitwirkung (396 II):</b> von Gesetzes wegen eingeschränkt (zustimmungsbedürftige Geschäfte)</li><li><b>Umfassend (398 III):</b> Handlungsfähigkeit entfällt von Gesetzes wegen</li></ul><p>Diese Abstufung erklärt die Eingriffspyramide.</p>' },
+
+{ id: 'T3F7', thema: 3, stufe: 7, typ: 'mc',
+  sachverhalt: 'Die 84-jährige Frau K leidet an fortgeschrittener Demenz. Sie kann weder ihre administrativen und finanziellen Angelegenheiten besorgen noch rechtsgültig eine Vollmacht erteilen; Angehörige fehlen. Ein KESB-Mitglied schlägt vor, wegen der dauernden Urteilsunfähigkeit eine umfassende Beistandschaft zu errichten.',
+  frage: 'Entspricht dieser Vorschlag der Praxis gemäss Kurs?',
+  optionen: [
+    'Nein — für demente Betagte gilt in der Regel keine umfassende Beistandschaft, sondern eine Vertretungsbeistandschaft mit Vermögensverwaltung (Art. 394 i.V.m. Art. 395 ZGB)',
+    'Ja — dauernde Urteilsunfähigkeit führt immer zur umfassenden Beistandschaft (Art. 398 Abs. 1 ZGB)',
+    'Nein — bei Demenz ist einzig die fürsorgerische Unterbringung zulässig (Art. 426 ZGB)',
+    'Ja — ohne Angehörige ist die umfassende Beistandschaft zwingend (Art. 390 ZGB)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 394 ZGB', 'Art. 395 ZGB', 'Art. 398 ZGB'],
+  erklaerung: '<p><b>Kurs-Merksatz: Keine umfassende Beistandschaft für demente Betagte!</b></p><p>In der Regel genügt die <b>Vertretungsbeistandschaft mit Vermögensverwaltung (Art. 394 i.V.m. Art. 395 ZGB)</b> — sie ist massgeschneidert und verhältnismässig.</p><p>Die umfassende Beistandschaft (398) bleibt Fällen besonderer Hilfsbedürftigkeit vorbehalten (Kursbeispiel: Herr X, der sich für Napoleon hält, Grossprojekte plant und laufend krass nachteilige Verträge schliesst).</p>' },
+
+/* ---------- THEMA 4: Organisation, Beistand & Haftung ---------- */
+{ id: 'T4F1', thema: 4, stufe: 1, typ: 'mc',
+  frage: 'Was ist die KESB?',
+  optionen: [
+    'Eine interdisziplinäre Fachbehörde (u. a. juristische, psychologische und medizinische Sachkenntnisse), kantonal organisiert',
+    'Ein eidgenössisches Gericht mit Sitz in Lausanne',
+    'Eine private Beratungsstelle für Altersfragen',
+    'Eine Abteilung der Bundesverwaltung'
+  ],
+  richtig: 0,
+  artikel: ['Art. 440 ZGB'],
+  erklaerung: '<p>Die <b>Kindes- und Erwachsenenschutzbehörde (KESB)</b> ist eine <b>Fachbehörde</b> (Art. 440 Abs. 1 ZGB): Ihre Mitglieder verfügen über juristische, psychologische und medizinische Sachkenntnisse sowie Kenntnisse in Sozialarbeit, Sozialpädagogik und Sozialversicherungswesen.</p><p>Sie ist die Nachfolgerin der rund 100-jährigen (oft aus Laien bestehenden) Vormundschaftsbehörde und ist <b>kantonal</b> organisiert. Sie steht seit ihrer Einführung immer wieder in der medialen Kritik.</p>' },
+
+{ id: 'T4F2', thema: 4, stufe: 2, typ: 'mc',
+  frage: 'In welcher Besetzung fällt die KESB ihre Entscheide in der Regel — und welche Doppelfunktion hat sie?',
+  optionen: [
+    'In der Regel mit mindestens drei Mitgliedern; sie ist zugleich Kindesschutzbehörde (Art. 440 Abs. 2 und 3 ZGB)',
+    'Immer als Einzelbehörde; sie ist zugleich Betreibungsamt (Art. 440 Abs. 1 ZGB)',
+    'Mit mindestens fünf Mitgliedern; sie ist zugleich Aufsichtsbehörde (Art. 441 ZGB)',
+    'In beliebiger Besetzung; eine Doppelfunktion besteht nicht (Art. 442 ZGB)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 440 ZGB'],
+  erklaerung: '<p><b>Art. 440 Abs. 2 ZGB:</b> Die KESB fällt ihre Entscheide in der Regel mit <b>mindestens drei Mitgliedern</b>; für bestimmte Geschäfte können die Kantone Ausnahmen (Einzelzuständigkeit) vorsehen.</p><p><b>Abs. 3:</b> Sie ist zugleich <b>Kindesschutzbehörde</b> — daher der Name «Kindes- und Erwachsenenschutzbehörde».</p>' },
+
+{ id: 'T4F3', thema: 4, stufe: 3, typ: 'zuordnen',
+  frage: 'Aufsichtsbehörde über die KESB (Art. 441 ZGB): Ordne den Kantonen ihre Aufsichtsbehörde gemäss Folien zu.',
+  zeilen: [
+    { links: 'Kanton Zürich (ZH)', rechts: 'Gemeindeamt des Kantons Zürich' },
+    { links: 'Kanton Aargau (AG)', rechts: 'Kammer für Kindes- und Erwachsenenschutzrecht des Obergerichts (KEKA)' },
+    { links: 'Kanton St. Gallen (SG)', rechts: 'Verwaltungsrekurskommission' }
+  ],
+  optionen: ['Gemeindeamt des Kantons Zürich', 'Kammer für Kindes- und Erwachsenenschutzrecht des Obergerichts (KEKA)', 'Verwaltungsrekurskommission'],
+  artikel: ['Art. 441 ZGB'],
+  erklaerung: '<p>Gemäss <b>Art. 441 Abs. 1 ZGB</b> haben die Kantone eine Aufsichtsbehörde vorzusehen. Die Ausgestaltung ist kantonal verschieden:</p><ul><li><b>ZH:</b> Gemeindeamt des Kantons Zürich (Verwaltungsbehörde)</li><li><b>AG:</b> KEKA — Kammer für Kindes- und Erwachsenenschutzrecht des Obergerichts (Gericht)</li><li><b>SG:</b> Verwaltungsrekurskommission</li></ul><p>Die Aufsicht kann ein- oder zweistufig organisiert sein (untere Aufsichtsbehörde als Verwaltungseinheit, obere als Gericht).</p>' },
+
+{ id: 'T4F4', thema: 4, stufe: 4, typ: 'mc',
+  frage: 'Wer wird Beistand, und wer ernennt ihn (Art. 400 ZGB)?',
+  optionen: [
+    'Die KESB ernennt eine natürliche Person, die persönlich und fachlich geeignet ist, die erforderliche Zeit hat und die Aufgaben selber wahrnimmt; ihr Einverständnis ist nötig — es können auch mehrere Personen ernannt werden',
+    'Das kantonale Gericht ernennt von Amtes wegen einen Anwalt oder eine Anwältin',
+    'Die Gemeindeversammlung wählt den Beistand; das Amt ist Bürgerpflicht und kann nicht abgelehnt werden',
+    'Nur vom Gemeinwesen angestellte Berufsbeistände dürfen ernannt werden'
+  ],
+  richtig: 0,
+  artikel: ['Art. 400 ZGB'],
+  erklaerung: '<p><b>Art. 400 ZGB:</b> Die KESB ernennt eine <b>natürliche Person</b>, die persönlich und fachlich geeignet ist, die erforderliche Zeit einsetzen kann und die Aufgaben selber wahrnimmt (Abs. 1). Die Ernennung setzt das <b>Einverständnis</b> voraus (Abs. 2); die KESB sorgt für Instruktion, Beratung und Unterstützung (Abs. 3).</p><p>Möglich sind <b>Privatbeistände</b> (auch Angehörige: Ehegatte, Eltern, Nachkommen, Geschwister, Lebenspartner) oder <b>Berufs-/Amtsbeistände</b>. Erfordern es die Umstände, können <b>mehrere Personen</b> ernannt werden — Kursbeispiel: Mutter (Personensorge) und Bruder als Treuhänder (Finanzen) für den volljährig gewordenen, geistig behinderten X.</p>' },
+
+{ id: 'T4F5', thema: 4, stufe: 5, typ: 'multi',
+  frage: 'Der Ehemann wird als Beistand seiner Frau eingesetzt. Von welchen Pflichten kann die KESB ihn nach Art. 420 ZGB ganz oder teilweise entbinden? <span class="hint">(mehrere Antworten richtig)</span>',
+  optionen: [
+    'Von der Inventarpflicht',
+    'Von der Pflicht zur periodischen Berichterstattung',
+    'Von der Pflicht zur periodischen Rechnungsablage',
+    'Von der Pflicht, für bestimmte Geschäfte die Zustimmung der KESB einzuholen',
+    'Von der Sorgfalts- und Treuepflicht',
+    'Von der Haftung für verursachte Schäden'
+  ],
+  richtig: [0, 1, 2, 3],
+  artikel: ['Art. 420 ZGB'],
+  erklaerung: '<p><b>Art. 420 ZGB</b> — Erleichterungen für Angehörigen-Beistände (Ehegatte, eingetragene Partnerin, Eltern, Nachkommen, Geschwister, faktische Lebenspartner): Befreiung möglich von</p><ul><li>der <b>Inventarpflicht</b>,</li><li>der Pflicht zur <b>periodischen Berichterstattung und Rechnungsablage</b> und</li><li>der Pflicht, für bestimmte Geschäfte die <b>Zustimmung</b> einzuholen.</li></ul><p>Nicht dispensierbar sind die Sorgfaltspflicht und die Haftung — der Beistand muss immer im Interesse der betroffenen Person handeln.</p>' },
+
+{ id: 'T4F6', thema: 4, stufe: 6, typ: 'mc',
+  frage: 'Welche KESB ist örtlich zuständig?',
+  optionen: [
+    'Grundsätzlich die Erwachsenenschutzbehörde am Wohnsitz der betroffenen Person (Art. 442 ZGB)',
+    'Die Behörde am Heimatort der betroffenen Person (Art. 442 Abs. 1 ZGB)',
+    'Die Behörde am Wohnsitz der Angehörigen, die die Meldung erstattet haben (Art. 444 ZGB)',
+    'Jede KESB der Schweiz nach freier Wahl der betroffenen Person (Art. 443 ZGB)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 442 ZGB', 'Art. 443 ZGB', 'Art. 446 ZGB', 'Art. 447 ZGB'],
+  erklaerung: '<p><b>Art. 442 ZGB:</b> Zuständig ist grundsätzlich die KESB am <b>Wohnsitz</b> der betroffenen Person.</p><p>Wichtige Verfahrensbestimmungen (sachliche Zuständigkeit der KESB, Art. 443–449c ZGB): Melderechte und Meldepflichten (443), Untersuchungsgrundsatz (446), Anhörung (447), Begutachtung bei FU (449), Akteneinsicht (449b). Die gerichtlichen Beschwerdeinstanzen richten sich nach Art. 450–450e ZGB.</p>' },
+
+{ id: 'T4F7', thema: 4, stufe: 7, typ: 'mc',
+  sachverhalt: 'Der Amtsbeistand B verwaltet das Vermögen der verbeiständeten Frau V und verursacht durch pflichtwidrige Anlagen einen Schaden von CHF 50 000. Frau V will den Schaden ersetzt haben — am liebsten direkt von B persönlich.',
+  frage: 'Von wem kann Frau V Ersatz verlangen?',
+  optionen: [
+    'Ausschliesslich vom Kanton — gegen B persönlich steht ihr kein Ersatzanspruch zu (Art. 454 Abs. 3 ZGB); der Kanton kann nach kantonalem Recht auf B Rückgriff nehmen',
+    'Direkt von B persönlich — wer den Schaden verursacht, haftet (Art. 41 OR)',
+    'Von der Gemeinde, die B angestellt hat (Art. 55 OR)',
+    'Vom Bund, da der Erwachsenenschutz im ZGB geregelt ist'
+  ],
+  richtig: 0,
+  artikel: ['Art. 454 ZGB', 'Art. 455 ZGB', 'Art. 456 ZGB'],
+  erklaerung: '<p><b>Art. 454 ZGB:</b> Wer im Rahmen behördlicher Massnahmen durch widerrechtliches Handeln oder Unterlassen verletzt wird, hat Anspruch auf <b>Schadenersatz</b> und — sofern die Schwere der Verletzung es rechtfertigt — auf <b>Genugtuung</b> (Abs. 1).</p><p>Haftbar ist <b>ausschliesslich der Kanton</b> (Abs. 3 — Kausalhaftung); die geschädigte Person hat <b>keinen</b> direkten Anspruch gegen die verursachende Person. Der Rückgriff des Kantons richtet sich nach kantonalem Recht.</p><p><b>Verjährung:</b> nach den OR-Regeln über die unerlaubten Handlungen (Art. 455 ZGB). Die Haftung der <b>vorsorgebeauftragten Person</b> und des vertretungsberechtigten Ehegatten richtet sich dagegen nach dem <b>OR-Auftragsrecht</b> (Art. 456 ZGB).</p>' },
+
+/* ---------- THEMA 5: Der Vorsorgeauftrag ---------- */
+{ id: 'T5F1', thema: 5, stufe: 1, typ: 'multi',
+  frage: 'Für welche Bereiche kann mit einem Vorsorgeauftrag vorgesorgt werden (Art. 360 Abs. 1 ZGB)? <span class="hint">(mehrere Antworten richtig)</span>',
+  optionen: [
+    'Personensorge',
+    'Vermögenssorge',
+    'Vertretung im Rechtsverkehr',
+    'Verteilung des Nachlasses',
+    'Bestimmung der Grabstätte'
+  ],
+  richtig: [0, 1, 2],
+  artikel: ['Art. 360 ZGB'],
+  erklaerung: '<p>Mit dem Vorsorgeauftrag kann eine Person für den Fall ihrer Urteilsunfähigkeit eine andere Person beauftragen mit</p><ul><li>der <b>Personensorge</b>,</li><li>der <b>Vermögenssorge</b> oder</li><li>der <b>Vertretung im Rechtsverkehr</b>.</li></ul><p>Der Auftrag kann eine <b>Generalvollmacht</b> sein (faktisch wie eine umfassende Beistandschaft nach Art. 398) oder sich auf konkrete Rechtsgeschäfte beschränken. Nachlassverteilung und Bestattung gehören ins Erbrecht bzw. zu den Anordnungen für den Todesfall.</p>' },
+
+{ id: 'T5F2', thema: 5, stufe: 2, typ: 'mc',
+  frage: 'Wer kann einen Vorsorgeauftrag errichten — und wer kann beauftragt werden?',
+  optionen: [
+    'Errichten kann ihn nur eine <b>handlungsfähige</b> Person; beauftragt werden kann eine natürliche <b>oder juristische</b> Person',
+    'Errichten kann ihn jede urteilsfähige Person; beauftragt werden können nur Familienangehörige',
+    'Errichten kann ihn jede volljährige Person; beauftragt werden kann nur eine natürliche Person',
+    'Errichten kann ihn nur, wer bereits verbeiständet ist; beauftragt wird immer die KESB'
+  ],
+  richtig: 0,
+  artikel: ['Art. 360 ZGB', 'Art. 13 ZGB'],
+  erklaerung: '<p><b>Art. 360 Abs. 1 ZGB:</b> Die auftraggebende Person muss <b>handlungsfähig</b> sein (volljährig und urteilsfähig, Art. 13).</p><p>Beauftragt werden kann eine <b>natürliche oder juristische Person</b> — z. B. auch eine Bank oder Treuhandgesellschaft.</p><div class="merkbox"><b>Vergleich:</b> Für die Patientenverfügung genügt die <b>Urteilsfähigkeit</b> — dort kann nur eine natürliche Person als Vertretung bezeichnet werden.</div>' },
+
+{ id: 'T5F3', thema: 5, stufe: 3, typ: 'mc',
+  frage: 'Welche Formen sind für den Vorsorgeauftrag zulässig (Art. 361 ZGB)?',
+  optionen: [
+    'Öffentliche Beurkundung <b>oder</b> eigenhändige Errichtung: von Anfang bis Ende von Hand niedergeschrieben, datiert und unterzeichnet',
+    'Einfache Schriftlichkeit: Computertext mit Datum und Unterschrift von Hand genügt',
+    'Mündliche Erklärung vor zwei Zeugen',
+    'Nur die öffentliche Beurkundung beim Notar'
+  ],
+  richtig: 0,
+  artikel: ['Art. 361 ZGB', 'Art. 505 ZGB'],
+  erklaerung: '<p><b>Art. 361 Abs. 1 ZGB:</b> Der Vorsorgeauftrag wird <b>öffentlich beurkundet</b> oder <b>eigenhändig</b> errichtet.</p><p>Für die eigenhändige Errichtung gelten wie beim eigenhändigen Testament (vgl. Art. 505 ZGB) erhöhte Anforderungen (Abs. 2): <b>von A–Z handschriftlich</b>, datiert und unterzeichnet.</p><p>Blosse einfache Schriftlichkeit (Computertext + Unterschrift) genügt <b>nicht</b> — das reicht nur für die Patientenverfügung.</p>' },
+
+{ id: 'T5F4', thema: 5, stufe: 4, typ: 'mc',
+  frage: 'Wann entfaltet der Vorsorgeauftrag seine Wirkung?',
+  optionen: [
+    'Wenn die auftraggebende Person urteilsunfähig geworden ist — die Urteilsunfähigkeit muss nicht endgültig sein, aber von einer gewissen Dauer; die KESB prüft die Wirksamkeit (Validierung)',
+    'Sofort mit der Unterzeichnung',
+    'Erst mit dem Tod der auftraggebenden Person',
+    'Automatisch bei der ersten Spitaleinweisung, ohne jede behördliche Prüfung'
+  ],
+  richtig: 0,
+  artikel: ['Art. 363 ZGB'],
+  erklaerung: '<p>Der Vorsorgeauftrag entfaltet Wirkung, sobald die auftraggebende Person <b>urteilsunfähig</b> geworden ist. Vorausgesetzt ist keine endgültige, aber eine Urteilsunfähigkeit <b>von einer gewissen Dauer</b>.</p><p>Die Wirksamkeit tritt nicht «automatisch» ein: Die KESB <b>validiert</b> den Auftrag (Art. 363 ZGB) und händigt der beauftragten Person bei Annahme eine <b>Urkunde</b> über ihre Befugnisse aus.</p><div class="merkbox"><b>Wichtig:</b> Amtliche Schutzmassnahmen gehen den Weisungen des Vorsorgeauftrags vor.</div>' },
+
+{ id: 'T5F5', thema: 5, stufe: 5, typ: 'multi',
+  frage: 'Was prüft die KESB bei der Validierung des Vorsorgeauftrags (Art. 363 Abs. 2 ZGB)? <span class="hint">(mehrere Antworten richtig)</span>',
+  optionen: [
+    'Ob der Vorsorgeauftrag gültig errichtet worden ist',
+    'Ob die Voraussetzungen für seine Wirksamkeit eingetreten sind',
+    'Ob die beauftragte Person für ihre Aufgaben geeignet ist',
+    'Ob weitere Massnahmen des Erwachsenenschutzes erforderlich sind',
+    'Ob die gesetzlichen Erben mit dem Auftrag einverstanden sind',
+    'Ob der Auftrag bei einem Notar hinterlegt wurde'
+  ],
+  richtig: [0, 1, 2, 3],
+  artikel: ['Art. 363 ZGB'],
+  erklaerung: '<p>Erfährt die KESB, dass eine Person urteilsunfähig geworden ist (nötigenfalls Nachfrage beim Zivilstandsamt), prüft sie <b>vier Punkte</b> (Art. 363 Abs. 2 ZGB):</p><ol><li>gültige <b>Errichtung</b>,</li><li>Eintritt der <b>Wirksamkeitsvoraussetzungen</b> (Urteilsunfähigkeit),</li><li><b>Eignung</b> der beauftragten Person,</li><li>Erforderlichkeit <b>weiterer Massnahmen</b>.</li></ol><p>Nimmt die beauftragte Person den Auftrag an, weist die Behörde sie auf die Pflichten nach den <b>OR-Auftragsregeln</b> hin und händigt ihr eine Urkunde über ihre Befugnisse aus (Abs. 3). Die Zustimmung der Erben ist irrelevant.</p>' },
+
+{ id: 'T5F6', thema: 5, stufe: 6, typ: 'mc',
+  frage: 'Wie kann ein Vorsorgeauftrag widerrufen werden (Art. 362 ZGB) — und was gilt, wenn später ein neuer errichtet wird?',
+  optionen: [
+    'Jederzeit in einer der Errichtungsformen oder durch Vernichtung der Urkunde; ein neuer Vorsorgeauftrag tritt an die Stelle des früheren, sofern er nicht zweifellos eine blosse Ergänzung darstellt',
+    'Nur mit Zustimmung der beauftragten Person und der KESB',
+    'Nur durch öffentliche Beurkundung des Widerrufs',
+    'Ein einmal errichteter Vorsorgeauftrag ist unwiderruflich'
+  ],
+  richtig: 0,
+  artikel: ['Art. 362 ZGB', 'Art. 361 ZGB'],
+  erklaerung: '<p><b>Art. 362 ZGB</b> — Widerruf <b>jederzeit</b> möglich:</p><ul><li>in einer der <b>Errichtungsformen</b> (eigenhändig oder öffentlich beurkundet, Abs. 1),</li><li>durch <b>Vernichtung</b> der Urkunde (Abs. 2),</li><li>durch <b>Neuerstellung</b>: der neue Auftrag ersetzt den früheren, sofern er nicht zweifellos eine blosse Ergänzung ist (Abs. 3).</li></ul><p><b>Hinterlegung:</b> je nach Kanton bei der KESB (z. B. ZH) oder Mitteilungsvermerk beim Zivilstandsamt mit Hinterlegungsort (z. B. LU); Eintrag in die zentrale Datenbank auf Antrag (Art. 361 Abs. 3).</p>' },
+
+{ id: 'T5F7', thema: 5, stufe: 7, typ: 'mc',
+  sachverhalt: 'Herr M (62, handlungsfähig) schreibt seinen Vorsorgeauftrag am Computer, druckt ihn aus und versieht ihn eigenhändig mit Ort, Datum und Unterschrift. Er setzt seine Ehefrau als Beauftragte ein. Drei Jahre später erleidet er einen schweren Hirnschlag und wird dauerhaft urteilsunfähig.',
+  frage: 'Kann die Ehefrau gestützt auf diesen Vorsorgeauftrag handeln?',
+  optionen: [
+    'Nein — der Auftrag ist formungültig: Er wurde weder öffentlich beurkundet noch von A–Z handschriftlich errichtet; die KESB wird dies bei der Validierung feststellen',
+    'Ja — Datum und Unterschrift von Hand genügen, der Text darf am Computer erstellt sein',
+    'Ja — als Ehefrau braucht sie ohnehin keinen Vorsorgeauftrag, sie hat automatisch eine unbeschränkte Generalvollmacht',
+    'Nein — Vorsorgeaufträge zugunsten des Ehegatten sind unzulässig'
+  ],
+  richtig: 0,
+  artikel: ['Art. 361 ZGB', 'Art. 363 ZGB', 'Art. 374 ZGB'],
+  erklaerung: '<p>Der Auftrag ist <b>formungültig</b>: Art. 361 ZGB verlangt öffentliche Beurkundung <b>oder</b> vollständig eigenhändige Errichtung (von A–Z von Hand, datiert, unterzeichnet). «Nur» handschriftliches Datum und Unterschrift genügen bei der <b>Patientenverfügung</b> (Art. 371), nicht beim Vorsorgeauftrag.</p><p>Die KESB stellt die Ungültigkeit bei der <b>Validierung</b> (Art. 363) fest. Immerhin: Als Ehefrau mit gemeinsamem Haushalt hat sie das <b>gesetzliche Vertretungsrecht</b> nach Art. 374 ZGB — dieses ist aber auf Unterhaltsbedarf, ordentliche Verwaltung und Post beschränkt; für Weitergehendes braucht es eine Beistandschaft.</p>' },
+
+/* ---------- THEMA 6: Die Patientenverfügung ---------- */
+{ id: 'T6F1', thema: 6, stufe: 1, typ: 'mc',
+  frage: 'Wer kann eine Patientenverfügung errichten?',
+  optionen: [
+    'Jede <b>urteilsfähige</b> Person — Handlungsfähigkeit ist nicht erforderlich',
+    'Nur handlungsfähige Personen (volljährig und urteilsfähig)',
+    'Nur Personen über 65 Jahre',
+    'Nur Personen, die bereits in ärztlicher Behandlung sind'
+  ],
+  richtig: 0,
+  artikel: ['Art. 370 ZGB', 'Art. 16 ZGB'],
+  erklaerung: '<p><b>Art. 370 Abs. 1 ZGB:</b> Eine <b>urteilsfähige</b> Person kann in einer Patientenverfügung festlegen, welchen medizinischen Massnahmen sie im Fall ihrer Urteilsunfähigkeit zustimmt oder nicht zustimmt.</p><p>Anders als beim Vorsorgeauftrag (Art. 360: Handlungsfähigkeit) genügt die <b>Urteilsfähigkeit</b> — auch urteilsfähige Minderjährige oder verbeiständete Personen können eine Patientenverfügung errichten, denn es geht um höchstpersönliche Rechte.</p>' },
+
+{ id: 'T6F2', thema: 6, stufe: 2, typ: 'mc',
+  frage: 'Was kann in einer Patientenverfügung festgelegt werden?',
+  optionen: [
+    'Welchen medizinischen Massnahmen die Person zustimmt oder nicht zustimmt; zusätzlich kann eine natürliche Person bezeichnet werden, die im Namen der verfügenden Person entscheidet',
+    'Nur der Verzicht auf jegliche medizinische Behandlung',
+    'Die Verteilung des Vermögens im Todesfall',
+    'Die Wahl des Beistands für den Fall einer Beistandschaft'
+  ],
+  richtig: 0,
+  artikel: ['Art. 370 ZGB'],
+  erklaerung: '<p><b>Art. 370 ZGB:</b></p><ul><li><b>Abs. 1:</b> Festlegung, welchen medizinischen Massnahmen die Person im Fall der Urteilsunfähigkeit <b>zustimmt oder nicht zustimmt</b> (z. B. lebensverlängernde Massnahmen, künstliche Ernährung, Reanimation).</li><li><b>Abs. 2:</b> Bezeichnung einer <b>natürlichen Person</b>, die mit dem Arzt die Massnahmen bespricht und entscheidet; ihr können Weisungen erteilt werden.</li><li><b>Abs. 3:</b> <b>Ersatzverfügungen</b> für den Fall, dass die bezeichnete Person ungeeignet ist, ablehnt oder kündigt.</li></ul>' },
+
+{ id: 'T6F3', thema: 6, stufe: 3, typ: 'mc',
+  frage: 'Welche Form muss die Patientenverfügung erfüllen (Art. 371 Abs. 1 ZGB)?',
+  optionen: [
+    'Einfache Schriftlichkeit: schriftlich errichtet, datiert und unterzeichnet — der Text darf vorgedruckt oder am Computer erstellt sein',
+    'Wie der Vorsorgeauftrag: von A–Z handschriftlich oder öffentlich beurkundet',
+    'Öffentliche Beurkundung mit zwei Zeugen',
+    'Formfrei — auch eine mündliche Äusserung genügt'
+  ],
+  richtig: 0,
+  artikel: ['Art. 371 ZGB'],
+  erklaerung: '<p><b>Art. 371 Abs. 1 ZGB</b> verlangt einfache <b>Schriftlichkeit</b>: Die Patientenverfügung ist schriftlich zu errichten, zu <b>datieren</b> und zu <b>unterzeichnen</b>.</p><p>«Nur» Datum und Unterschrift müssen handschriftlich sein — der Text darf (anders als beim eigenhändigen Vorsorgeauftrag) vorgedruckt oder am Computer erstellt sein (z. B. Musterformulare von Pro Senectute/«Docupass» oder der KESB ZH).</p><p>Sie kann <b>jederzeit</b> widerrufen und abgeändert werden.</p>' },
+
+{ id: 'T6F4', thema: 6, stufe: 4, typ: 'mc',
+  frage: 'Welche Rolle spielt die Versichertenkarte bei der Patientenverfügung?',
+  optionen: [
+    'Errichtung und Hinterlegungsort können auf ihr eingetragen werden; bei Urteilsunfähigkeit klärt der Arzt anhand der Karte ab, ob eine Patientenverfügung vorliegt',
+    'Die Patientenverfügung muss vollständig auf der Karte gespeichert werden, sonst ist sie ungültig',
+    'Die Karte ersetzt die Patientenverfügung',
+    'Keine — die Versichertenkarte hat mit der Patientenverfügung nichts zu tun'
+  ],
+  richtig: 0,
+  artikel: ['Art. 371 ZGB', 'Art. 372 ZGB'],
+  erklaerung: '<p><b>Art. 371 Abs. 2 ZGB:</b> Die verfügende Person kann die <b>Errichtung und den Hinterlegungsort</b> auf der Versichertenkarte eintragen lassen.</p><p><b>Art. 372 Abs. 1 ZGB:</b> Tritt Urteilsunfähigkeit ein, klärt die Ärztin oder der Arzt <b>anhand der Versichertenkarte</b> ab, ob eine Patientenverfügung vorliegt.</p>' },
+
+{ id: 'T6F5', thema: 6, stufe: 5, typ: 'mc',
+  frage: 'In welchen Fällen darf die Ärztin der Patientenverfügung NICHT entsprechen (Art. 372 Abs. 2 ZGB)?',
+  optionen: [
+    'Wenn sie gegen gesetzliche Vorschriften verstösst oder begründete Zweifel bestehen, dass sie auf freiem Willen beruht oder noch dem mutmasslichen Willen der Patientin entspricht',
+    'Wenn die Angehörigen mit dem Inhalt nicht einverstanden sind',
+    'Wenn die Verfügung älter als fünf Jahre ist',
+    'Wenn die Krankenkasse die gewünschte Behandlung nicht bezahlt'
+  ],
+  richtig: 0,
+  artikel: ['Art. 372 ZGB'],
+  erklaerung: '<p><b>Art. 372 Abs. 2 ZGB:</b> Der Arzt entspricht der Patientenverfügung, <b>ausser</b></p><ul><li>sie verstösst gegen <b>gesetzliche Vorschriften</b> (z. B. Verlangen einer aktiven direkten Sterbehilfe) oder</li><li>es bestehen <b>begründete Zweifel</b>, dass sie auf <b>freiem Willen</b> beruht oder noch dem <b>mutmasslichen Willen</b> entspricht.</li></ul><p>Der Wille der Angehörigen und das Alter der Verfügung sind für sich allein keine Gründe. Die Verfügung ist <b>für Dritte bindend</b>.</p>' },
+
+{ id: 'T6F6', thema: 6, stufe: 6, typ: 'mc',
+  frage: 'Das Spital missachtet die Patientenverfügung der urteilsunfähigen Frau P. Was kann ihre Schwester tun?',
+  optionen: [
+    'Schriftlich die KESB anrufen (Art. 373 ZGB) — dieses Recht hat jede der Patientin nahestehende Person',
+    'Nichts — nur die Patientin selbst könnte sich wehren (Art. 372 ZGB)',
+    'Direkt beim Bundesgericht Beschwerde erheben (Art. 450 ZGB)',
+    'Die Staatsanwaltschaft muss zwingend ein Strafverfahren eröffnen (Art. 302 StPO)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 373 ZGB'],
+  erklaerung: '<p><b>Art. 373 ZGB:</b> Jede der betroffenen Person <b>nahestehende Person</b> kann <b>schriftlich die KESB anrufen</b>, wenn</p><ul><li>der Patientenverfügung nicht entsprochen wird,</li><li>die Interessen der urteilsunfähigen Person gefährdet sind oder</li><li>die Patientenverfügung nicht auf freiem Willen beruht.</li></ul><p>Daneben können auch <b>Anordnungen für den Todesfall</b> getroffen werden (Bestattungswünsche, Sterbebegleitung, Organentnahme etc.) — diese sind im ZGB nicht als eigenes Institut des Erwachsenenschutzrechts geregelt, aber praktisch bedeutsam.</p>' },
+
+{ id: 'T6F7', thema: 6, stufe: 7, typ: 'zuordnen',
+  frage: 'Vorsorgeauftrag (VA) oder Patientenverfügung (PV)? Ordne die Merkmale dem richtigen Institut zu.',
+  zeilen: [
+    { links: 'Errichtung setzt Handlungsfähigkeit voraus', rechts: 'Vorsorgeauftrag' },
+    { links: 'Errichtung durch jede urteilsfähige Person möglich', rechts: 'Patientenverfügung' },
+    { links: 'Form: von A–Z handschriftlich oder öffentliche Beurkundung', rechts: 'Vorsorgeauftrag' },
+    { links: 'Form: Computertext mit handschriftlichem Datum und Unterschrift genügt', rechts: 'Patientenverfügung' },
+    { links: 'Wird von der KESB validiert; die beauftragte Person erhält eine Urkunde', rechts: 'Vorsorgeauftrag' },
+    { links: 'Errichtung und Hinterlegungsort können auf der Versichertenkarte eingetragen werden', rechts: 'Patientenverfügung' },
+    { links: 'Auch eine juristische Person kann eingesetzt werden', rechts: 'Vorsorgeauftrag' }
+  ],
+  optionen: ['Vorsorgeauftrag', 'Patientenverfügung'],
+  artikel: ['Art. 360 ZGB', 'Art. 361 ZGB', 'Art. 363 ZGB', 'Art. 370 ZGB', 'Art. 371 ZGB'],
+  erklaerung: '<p>Die wichtigsten Unterschiede:</p><ul><li><b>Voraussetzung:</b> VA = Handlungsfähigkeit (360) · PV = Urteilsfähigkeit (370)</li><li><b>Form:</b> VA = eigenhändig A–Z oder öffentliche Beurkundung (361) · PV = einfache Schriftlichkeit, Text darf vorgedruckt sein (371)</li><li><b>Beauftragte:</b> VA = natürliche oder juristische Person · PV = natürliche Person</li><li><b>Wirksamwerden:</b> VA = Validierung durch KESB (363) · PV = direkt, Arzt prüft via Versichertenkarte (372)</li></ul><p>Gemeinsam: beide jederzeit widerrufbar, beide wirken erst bei Urteilsunfähigkeit.</p>' },
+
+/* ---------- THEMA 7: Gesetzliche Vertretung Urteilsunfähiger ---------- */
+{ id: 'T7F1', thema: 7, stufe: 1, typ: 'mc',
+  frage: 'Wann kommen die gesetzlichen Auffangregeln der Art. 374 ff. ZGB zum Zug?',
+  optionen: [
+    'Wenn eine urteilsunfähig gewordene Person weder einen Vorsorgeauftrag noch eine Patientenverfügung errichtet hat',
+    'Immer, sobald eine Person das 80. Altersjahr erreicht',
+    'Nur wenn die KESB dies ausdrücklich anordnet',
+    'Wenn eine Person unter umfassender Beistandschaft steht'
+  ],
+  richtig: 0,
+  artikel: ['Art. 374 ZGB'],
+  erklaerung: '<p>Hat eine urteilsunfähig gewordene Person <b>weder Vorsorgeauftrag noch Patientenverfügung</b> erlassen, greifen die gesetzlichen Auffangregeln:</p><ul><li>gesetzliches <b>Vertretungsrecht</b> des Ehegatten/eingetragenen Partners (Art. 374–376),</li><li>Vertretung bei <b>medizinischen Massnahmen</b> (Art. 377–381),</li><li>Regeln zum Aufenthalt in <b>Wohn- und Pflegeeinrichtungen</b> (Art. 382–387).</li></ul><p>Diese Massnahmen «von Gesetzes wegen» sind nicht behördlich — sie entstehen ohne Anordnung.</p>' },
+
+{ id: 'T7F2', thema: 7, stufe: 2, typ: 'mc',
+  frage: 'Wer hat das gesetzliche Vertretungsrecht nach Art. 374 ZGB?',
+  optionen: [
+    'Der Ehegatte oder eingetragene Partner, der mit der urteilsunfähigen Person einen gemeinsamen Haushalt führt <b>oder</b> ihr regelmässig und persönlich Beistand leistet',
+    'Automatisch alle Verwandten in gerader Linie',
+    'Der Konkubinatspartner, auch ohne weitere Voraussetzungen',
+    'Die erwachsenen Kinder, sobald beide Eltern urteilsunfähig sind'
+  ],
+  richtig: 0,
+  artikel: ['Art. 374 ZGB'],
+  erklaerung: '<p><b>Art. 374 Abs. 1 ZGB:</b> Das gesetzliche Vertretungsrecht hat, wer als <b>Ehegatte oder eingetragene Partnerin/Partner</b></p><ul><li>mit der urteilsunfähigen Person einen <b>gemeinsamen Haushalt</b> führt <b>oder</b></li><li>ihr <b>regelmässig und persönlich Beistand</b> leistet.</li></ul><p>Konkubinatspartner und Kinder haben dieses Vertretungsrecht <b>nicht</b> (sie kommen erst in der Kaskade von Art. 378 bei medizinischen Massnahmen zum Zug).</p>' },
+
+{ id: 'T7F3', thema: 7, stufe: 3, typ: 'multi',
+  frage: 'Was umfasst das gesetzliche Vertretungsrecht des Ehegatten (Art. 374 Abs. 2 ZGB)? <span class="hint">(mehrere Antworten richtig)</span>',
+  optionen: [
+    'Alle Rechtshandlungen, die zur Deckung des Unterhaltsbedarfs üblicherweise erforderlich sind',
+    'Die ordentliche Verwaltung des Einkommens und der übrigen Vermögenswerte',
+    'Nötigenfalls die Befugnis, die Post zu öffnen und zu erledigen',
+    'Den Verkauf des Familienhauses',
+    'Die Errichtung eines Testaments im Namen der urteilsunfähigen Person'
+  ],
+  richtig: [0, 1, 2],
+  artikel: ['Art. 374 ZGB'],
+  erklaerung: '<p><b>Art. 374 Abs. 2 ZGB</b> — das Vertretungsrecht umfasst:</p><ol><li>Rechtshandlungen zur Deckung des <b>Unterhaltsbedarfs</b>,</li><li>die <b>ordentliche</b> Verwaltung des Einkommens und der übrigen Vermögenswerte,</li><li>nötigenfalls das <b>Öffnen und Erledigen der Post</b> (auch elektronisch).</li></ol><p><b>Ausserordentliche</b> Vermögensverwaltung (z. B. Hausverkauf) ist nicht gedeckt — dafür braucht es die Zustimmung der KESB bzw. eine Beistandschaft. Ein Testament ist höchstpersönlich und kann nie durch Vertretung errichtet werden.</p>' },
+
+{ id: 'T7F4', thema: 7, stufe: 4, typ: 'mc',
+  frage: 'Wie und wann entsteht das gesetzliche Vertretungsrecht nach Art. 374 ZGB?',
+  optionen: [
+    'Sofort von Gesetzes wegen — ohne behördlichen Errichtungsakt — aber nur im Fall und während der Dauer der Urteilsunfähigkeit',
+    'Durch Verfügung der KESB auf Gesuch des Ehegatten',
+    'Durch öffentliche Beurkundung beim Notar',
+    'Es entsteht mit der Heirat und gilt zeitlich unbeschränkt für alle Geschäfte'
+  ],
+  richtig: 0,
+  artikel: ['Art. 374 ZGB', 'Art. 166 ZGB'],
+  erklaerung: '<p>Das Vertretungsrecht entsteht <b>sofort von Gesetzes wegen</b> — es braucht keinen behördlichen Errichtungsakt.</p><p>Es gilt aber <b>nur im Fall und während der Dauer der Urteilsunfähigkeit</b>. Ist die Person urteilsfähig, gelten stattdessen die Vertretungsregeln des Eherechts (Art. 166 ZGB — Vertretung der ehelichen Gemeinschaft für die laufenden Bedürfnisse) bzw. Art. 15 PartG.</p>' },
+
+{ id: 'T7F5', thema: 7, stufe: 5, typ: 'mc',
+  frage: 'Nach welchen Regeln richtet sich die Ausübung des gesetzlichen Vertretungsrechts (Art. 375 ZGB) — und was bedeutet das?',
+  optionen: [
+    'Sinngemäss nach den OR-Bestimmungen über den einfachen Auftrag (Art. 394–406 OR): Sorgfalts- und Treuepflicht, Rechenschafts- und Herausgabepflicht',
+    'Nach den Regeln über die Geschäftsführung ohne Auftrag (Art. 419 ff. OR) — der Ehegatte haftet nie',
+    'Nach kantonalem Verwaltungsrecht (Art. 6 ZGB)',
+    'Nach den erbrechtlichen Teilungsregeln (Art. 602 ff. ZGB)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 375 ZGB', 'Art. 394 ff. OR', 'Art. 398 OR', 'Art. 400 OR'],
+  erklaerung: '<p><b>Art. 375 ZGB</b> verweist für die Ausübung des Vertretungsrechts sinngemäss auf die Bestimmungen über den <b>einfachen Auftrag (Art. 394–406 OR)</b>.</p><p>Das bedeutet: Der vertretende Ehegatte untersteht der <b>Sorgfalts- und Treuepflicht</b> (Art. 398 OR) sowie der <b>Rechenschafts- und Herausgabepflicht</b> (Art. 400 OR) — er muss im Interesse der urteilsunfähigen Person handeln und über seine Tätigkeit Rechenschaft ablegen können.</p><p><span class="hint">Hinweis: Die Kursfolie schrieb versehentlich «Art. 394–406 ZGB» — richtig ist OR, denn der einfache Auftrag ist im Obligationenrecht geregelt.</span></p>' },
+
+{ id: 'T7F6', thema: 7, stufe: 6, typ: 'reihenfolge',
+  frage: 'Kaskadenordnung bei medizinischen Massnahmen (Art. 378 ZGB): Bringe die Vertretungsberechtigten in die richtige Reihenfolge (1. = zuerst berechtigt).',
+  items: [
+    'Person gemäss Patientenverfügung oder Vorsorgeauftrag',
+    'Beistand mit Vertretungsrecht bei medizinischen Massnahmen',
+    'Ehegatte / eingetragener Partner (gemeinsamer Haushalt oder Beistand)',
+    'Andere Person mit gemeinsamem Haushalt, die Beistand leistet',
+    'Nachkommen (wenn sie Beistand leisten)',
+    'Eltern (wenn sie Beistand leisten)',
+    'Geschwister (wenn sie Beistand leisten)',
+    'KESB (wenn niemand vorhanden ist)'
+  ],
+  anzeige: [3, 6, 0, 5, 2, 7, 1, 4],
+  artikel: ['Art. 378 ZGB', 'Art. 377 ZGB'],
+  erklaerung: '<p>Die <b>Kaskade des Art. 378 Abs. 1 ZGB</b> bestimmt, wer eine urteilsunfähige Person (ohne Patientenverfügung) bei medizinischen Massnahmen vertritt — der Reihe nach:</p><ol><li>Person gemäss <b>PV oder VA</b></li><li><b>Beistand</b> mit Vertretungsrecht bei medizinischen Massnahmen</li><li><b>Ehegatte/eingetragener Partner</b> (gemeinsamer Haushalt oder Beistand)</li><li><b>andere Person</b> mit gemeinsamem Haushalt (z. B. Konkubinatspartner)</li><li><b>Nachkommen</b></li><li><b>Eltern</b></li><li><b>Geschwister</b></li></ol><p>Bei 5.–7. gilt die Zusatzvoraussetzung, dass sie der Person <b>persönlich Beistand leisten</b>. Ist niemand vorhanden oder will niemand entscheiden, entscheidet die <b>KESB</b>. Dieselbe Kaskade gilt beim Abschluss des Betreuungsvertrags (Art. 382).</p>' },
+
+{ id: 'T7F7', thema: 7, stufe: 7, typ: 'mc',
+  sachverhalt: 'Frau T ist urteilsunfähig und leidet an einer schweren psychischen Störung. Sie wird zur Behandlung in eine psychiatrische Klinik eingewiesen. Ihr Ehemann verlangt, gestützt auf die Vertretungskaskade über die Medikation zu entscheiden — schliesslich stehe er an dritter Stelle der Kaskade.',
+  frage: 'Kann der Ehemann über die Behandlung der psychischen Störung entscheiden?',
+  optionen: [
+    'Nein — die Behandlung einer psychischen Störung in einer psychiatrischen Klinik richtet sich nach den FU-Regeln (Art. 380 i.V.m. Art. 426 ff. ZGB); die Stellvertreterregeln kommen dort nicht zur Anwendung',
+    'Ja — die Kaskade von Art. 378 ZGB gilt für alle medizinischen Massnahmen ohne Ausnahme',
+    'Ja, aber nur zusammen mit den Nachkommen (Art. 378 Abs. 1 Ziff. 5 ZGB)',
+    'Nein — bei psychischen Störungen entscheidet immer das Gericht (Art. 439 ZGB)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 380 ZGB', 'Art. 433 ZGB', 'Art. 378 ZGB'],
+  erklaerung: '<p><b>Art. 380 ZGB:</b> Die Behandlung einer <b>psychischen Störung</b> einer urteilsunfähigen Person <b>in einer psychiatrischen Klinik</b> richtet sich nach den Bestimmungen über die <b>fürsorgerische Unterbringung</b> (Art. 426 ff., insb. Art. 433 ff. ZGB: Behandlungsplan).</p><p>Die gesetzliche Vertretungsregel (Kaskade Art. 378) gilt hier <b>nicht</b> — der Ehemann hat kein Entscheidungsrecht über die Psychiatrie-Behandlung. Er kann Frau T aber als <b>Vertrauensperson</b> (Art. 432) unterstützen.</p>' },
+
+/* ---------- THEMA 8: Wohn- & Pflegeeinrichtungen ---------- */
+{ id: 'T8F1', thema: 8, stufe: 1, typ: 'mc',
+  frage: 'Was bildet die Grundlage für den Aufenthalt einer urteilsunfähigen Person in einer Wohn- oder Pflegeeinrichtung?',
+  optionen: [
+    'Ein schriftlicher Betreuungsvertrag, der festhält, welche Leistungen die Einrichtung erbringt und welches Entgelt geschuldet ist (Art. 382 ZGB)',
+    'Eine Verfügung der KESB (Art. 428 ZGB)',
+    'Ein mündlicher Vertrag mit den Angehörigen (Art. 11 OR)',
+    'Ein Entscheid des Einzelgerichts am Ort der Einrichtung (Art. 439 ZGB)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 382 ZGB'],
+  erklaerung: '<p><b>Art. 382 ZGB:</b> Wird eine urteilsunfähige Person für längere Dauer in einer Wohn- oder Pflegeeinrichtung betreut, muss <b>schriftlich</b> in einem <b>Betreuungsvertrag</b> festgelegt werden, welche <b>Leistungen</b> die Einrichtung erbringt und welches <b>Entgelt</b> dafür geschuldet ist.</p>' },
+
+{ id: 'T8F2', thema: 8, stufe: 2, typ: 'mc',
+  frage: 'Wer schliesst den Betreuungsvertrag für die urteilsunfähige Person ab?',
+  optionen: [
+    'Die nach der Kaskade von Art. 378 ZGB vertretungsberechtigte Person — es gilt die gleiche Vertretungsregelung wie bei medizinischen Massnahmen',
+    'Immer die KESB persönlich (Art. 440 ZGB)',
+    'Die Einrichtung selbst als Geschäftsführerin ohne Auftrag (Art. 419 OR)',
+    'Der nächstwohnende Verwandte, unabhängig von jeder Rangordnung (Art. 378 ZGB)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 382 ZGB', 'Art. 378 ZGB'],
+  erklaerung: '<p>Beim Abschluss des Betreuungsvertrags wird die urteilsunfähige Person durch die nach <b>Art. 378 ZGB</b> berechtigte Person vertreten — dieselbe <b>Kaskade</b> wie bei medizinischen Massnahmen (PV/VA-Person → Beistand → Ehegatte → Haushaltsperson → Nachkommen → Eltern → Geschwister → KESB).</p>' },
+
+{ id: 'T8F3', thema: 8, stufe: 3, typ: 'multi',
+  frage: 'Unter welchen Voraussetzungen darf eine Wohn-/Pflegeeinrichtung die Bewegungsfreiheit einer urteilsunfähigen Person einschränken (Art. 383 Abs. 1 ZGB)? <span class="hint">(mehrere Antworten richtig)</span>',
+  optionen: [
+    'Ernsthafte Gefahr für das Leben oder die körperliche Integrität der betroffenen Person',
+    'Ernsthafte Gefahr für das Leben oder die körperliche Integrität Dritter',
+    'Beseitigung einer schwerwiegenden Störung des Gemeinschaftslebens',
+    'Personalmangel in der Nachtschicht',
+    'Wunsch der Angehörigen',
+    'Kosteneinsparung der Einrichtung'
+  ],
+  richtig: [0, 1, 2],
+  artikel: ['Art. 383 ZGB'],
+  erklaerung: '<p><b>Art. 383 Abs. 1 ZGB</b> — die Einschränkung der Bewegungsfreiheit setzt voraus:</p><ul><li><b>Selbstgefährdung:</b> ernsthafte Gefahr für Leben oder körperliche Integrität der Person, oder</li><li><b>Drittgefährdung</b>, oder</li><li>Beseitigung einer <b>schwerwiegenden Störung des Gemeinschaftslebens</b>.</li></ul><p>Zudem müssen <b>mildere Massnahmen</b> zuvor geprüft worden sein und nicht ausreichen (Verhältnismässigkeit). Organisatorische Gründe (Personal, Kosten) oder blosse Wünsche der Angehörigen genügen nie.</p>' },
+
+{ id: 'T8F4', thema: 8, stufe: 4, typ: 'mc',
+  frage: 'Was muss bei einer Einschränkung der Bewegungsfreiheit protokolliert werden (Art. 384 ZGB)?',
+  optionen: [
+    'Über jede Massnahme ist Protokoll zu führen — insbesondere Name der anordnenden Person, Zweck, Art und Dauer der Massnahme',
+    'Nur die Dauer der Massnahme',
+    'Nichts — eine Protokollpflicht besteht nur in der Psychiatrie',
+    'Nur Massnahmen, die länger als eine Woche dauern'
+  ],
+  richtig: 0,
+  artikel: ['Art. 384 ZGB'],
+  erklaerung: '<p><b>Art. 384 Abs. 1 ZGB:</b> Über <b>jede</b> Massnahme zur Einschränkung der Bewegungsfreiheit wird <b>Protokoll</b> geführt. Festzuhalten sind insbesondere:</p><ul><li>der <b>Name der anordnenden Person</b>,</li><li>der <b>Zweck</b>,</li><li>die <b>Art</b> und</li><li>die <b>Dauer</b> der Massnahme.</li></ul><p>Im Ablaufschema der Folie ist <b>jeder Prozessschritt</b> zu protokollieren (geprüfte Alternativen, Anhörung, Entscheid, Durchführung, Mitteilung, Überprüfung, Aufhebung).</p>' },
+
+{ id: 'T8F5', thema: 8, stufe: 5, typ: 'mc',
+  frage: 'Worin unterscheiden sich der Aufenthalt nach Art. 382 ff. ZGB und die fürsorgerische Unterbringung nach Art. 426 ZGB?',
+  optionen: [
+    'Der Betreuungsvertrag begründet ein privatrechtliches, die FU ein öffentlich-rechtliches Verhältnis; widersetzt sich die Person, ist immer eine FU notwendig',
+    'Es gibt keinen Unterschied — beide beruhen auf einem Vertrag',
+    'Die FU ist privatrechtlich, der Betreuungsvertrag öffentlich-rechtlich',
+    'Der Betreuungsvertrag gilt nur für urteilsfähige, die FU nur für urteilsunfähige Personen'
+  ],
+  richtig: 0,
+  artikel: ['Art. 382 ZGB', 'Art. 426 ZGB'],
+  erklaerung: '<p>Die Abgrenzung gemäss Kurs:</p><ul><li><b>Aufenthalt nach Art. 382 ff.:</b> beruht auf dem schriftlichen <b>Betreuungsvertrag</b> (durch den gesetzlichen Vertreter abgeschlossen) → <b>privatrechtliches</b> Verhältnis</li><li><b>FU nach Art. 426:</b> staatlich verordnete Zwangsmassnahme → <b>öffentlich-rechtliches</b> Verhältnis</li></ul><div class="merkbox"><b>Merke:</b> Eine FU ist immer notwendig, wenn sich die betroffene Person dem Aufenthalt <b>widersetzt</b>.</div>' },
+
+{ id: 'T8F6', thema: 8, stufe: 6, typ: 'reihenfolge',
+  frage: 'Ablauf bewegungseinschränkender Massnahmen (Schema der Folie): Bringe die Schritte in die richtige Reihenfolge.',
+  items: [
+    'Auslöser: Selbstgefährdung, Drittgefährdung oder schwerwiegende Störung des Gemeinschaftslebens',
+    'Prüfung von alternativen (milderen) Massnahmen — interdisziplinäre Entscheidfindung',
+    'Prüfung bewegungseinschränkender Massnahmen',
+    'Anhörung der betroffenen Person',
+    'Entscheid durch die Einrichtung',
+    'Durchführung der Bewegungseinschränkung',
+    'Mitteilung an die zur Vertretung bei medizinischen Massnahmen berechtigte Person',
+    'Periodische Überprüfung',
+    'Aufhebung der Bewegungseinschränkung'
+  ],
+  anzeige: [5, 2, 8, 0, 7, 4, 1, 6, 3],
+  artikel: ['Art. 383 ZGB', 'Art. 384 ZGB'],
+  erklaerung: '<p>Das Ablaufschema «bewegungseinschränkende Massnahmen bei urteilsunfähigen Erwachsenen» (Art. 383 ff. ZGB):</p><ol><li><b>Auslöser</b> — Verhalten der Person (Selbst-/Drittgefährdung, Störung des Gemeinschaftslebens)</li><li>Prüfung <b>alternativer Massnahmen</b> (Ärzteschaft, Pflege, betreute Person, Angehörige)</li><li>Prüfung <b>bewegungseinschränkender</b> Massnahmen</li><li><b>Anhörung</b> der betroffenen Person</li><li><b>Entscheid</b> durch die Einrichtung</li><li><b>Durchführung</b></li><li><b>Mitteilung</b> an die vertretungsberechtigte Person</li><li><b>periodische Überprüfung</b></li><li><b>Aufhebung</b></li></ol><p><b>Jeder Schritt ist zu protokollieren</b> (Art. 384).</p>' },
+
+{ id: 'T8F7', thema: 8, stufe: 7, typ: 'mc',
+  sachverhalt: 'Der demente, urteilsunfähige Herr W lebt im Pflegeheim (Betreuungsvertrag besteht). Nachts verlässt er mehrmals unbemerkt das Haus und irrt auf die stark befahrene Hauptstrasse. Die Pflegedienstleitung will sein Zimmer nachts abschliessen. Eine Sitzwache wurde versucht, scheiterte aber; ein Sensor-Armband lehnt die Familie nicht ab, es hat den Weglauf jedoch nicht verhindert.',
+  frage: 'Darf die Einrichtung das Zimmer nachts abschliessen?',
+  optionen: [
+    'Ja — es besteht eine ernsthafte Gefahr für Leben und körperliche Integrität, mildere Massnahmen wurden geprüft und genügen nicht; erforderlich sind u. a. Anhörung, Protokollierung, Mitteilung an die vertretungsberechtigte Person und periodische Überprüfung',
+    'Nein — Einschränkungen der Bewegungsfreiheit sind in Pflegeheimen generell verboten',
+    'Ja — die Einrichtung ist im Rahmen ihres Hausrechts völlig frei',
+    'Nur mit vorgängiger Genehmigung des Einzelgerichts am Ort der Einrichtung'
+  ],
+  richtig: 0,
+  artikel: ['Art. 383 ZGB', 'Art. 384 ZGB'],
+  erklaerung: '<p>Prüfung nach <b>Art. 383 ZGB</b>:</p><ul><li><b>Voraussetzung:</b> ernsthafte <b>Selbstgefährdung</b> (nächtliches Umherirren auf der Hauptstrasse) ✓</li><li><b>Subsidiarität/Verhältnismässigkeit:</b> mildere Massnahmen (Sitzwache, Sensor-Armband) wurden geprüft und reichen nicht aus ✓</li></ul><p>Das Vorgehen muss dem Ablaufschema folgen: <b>Anhörung</b> der betroffenen Person, <b>Entscheid</b> gemäss Konzept der Einrichtung, <b>Protokollierung</b> (Name, Zweck, Art, Dauer — Art. 384), <b>Mitteilung</b> an die zur Vertretung berechtigte Person, <b>periodische Überprüfung</b> und Aufhebung, sobald möglich.</p>' },
+
+/* ---------- THEMA 9: FU – Grundlagen & Voraussetzungen ---------- */
+{ id: 'T9F1', thema: 9, stufe: 1, typ: 'mc',
+  frage: 'Was löste die fürsorgerische Unterbringung (FU) per 1. Januar 2013 ab?',
+  optionen: [
+    'Die fürsorgerische Freiheitsentziehung (FFE) — die Voraussetzungen sind weitgehend gleich geblieben',
+    'Die Vormundschaft',
+    'Die Beiratschaft',
+    'Das Konkordat über die Zwangsmassnahmen'
+  ],
+  richtig: 0,
+  artikel: ['Art. 426 ZGB', 'Art. 10 BV'],
+  erklaerung: '<p>Die <b>FU</b> löste per 1.1.2013 die bisherige <b>fürsorgerische Freiheitsentziehung (FFE)</b> ab; die Voraussetzungen sind weitgehend gleich.</p><p>Die FU ist eine <b>staatlich verordnete freiheitsentziehende Zwangsmassnahme</b> und greift massiv in die Grundrechte ein (Art. 10 Abs. 2 BV — persönliche Freiheit).</p>' },
+
+{ id: 'T9F2', thema: 9, stufe: 2, typ: 'multi',
+  frage: 'Welche Schwächezustände können eine FU rechtfertigen (Art. 426 Abs. 1 ZGB)? <span class="hint">(mehrere Antworten richtig)</span>',
+  optionen: [
+    'Psychische Störung',
+    'Geistige Behinderung',
+    'Schwere Verwahrlosung',
+    'Urteilsunfähigkeit',
+    'Verschwendung',
+    'Hohes Alter'
+  ],
+  richtig: [0, 1, 2],
+  artikel: ['Art. 426 ZGB'],
+  erklaerung: '<p><b>Art. 426 Abs. 1 ZGB</b> nennt abschliessend drei Schwächezustände:</p><ul><li><b>psychische Störung</b>,</li><li><b>geistige Behinderung</b>,</li><li><b>schwere Verwahrlosung</b>.</li></ul><p>Urteilsunfähigkeit, Verschwendung oder Alter sind <b>keine</b> FU-Gründe. (Verschwendung war noch ein Entmündigungsgrund des alten Rechts.)</p>' },
+
+{ id: 'T9F3', thema: 9, stufe: 3, typ: 'mc',
+  frage: 'Ist die Urteilsunfähigkeit eine Voraussetzung der FU?',
+  optionen: [
+    'Nein — eine FU kann auch gegenüber urteilsfähigen Personen angeordnet werden',
+    'Ja — nur urteilsunfähige Personen können untergebracht werden',
+    'Ja, aber nur bei der ärztlichen Unterbringung',
+    'Nein, aber die betroffene Person muss mindestens zustimmen'
+  ],
+  richtig: 0,
+  artikel: ['Art. 426 ZGB'],
+  erklaerung: '<p><b>Kurs-Merksatz: Urteilsunfähigkeit ist nicht Voraussetzung!</b></p><p>Eine FU kann auch gegenüber <b>urteilsfähigen</b> Personen angeordnet werden. Entscheidend sind der Schwächezustand, die Behandlungs-/Betreuungsbedürftigkeit und die geeignete Einrichtung — nicht die Urteilsfähigkeit und nicht die Zustimmung (die FU ist gerade eine <b>Zwangsmassnahme</b>).</p>' },
+
+{ id: 'T9F4', thema: 9, stufe: 4, typ: 'zuordnen',
+  frage: 'Ordne die Umschreibungen der Folien dem richtigen Schwächezustand zu.',
+  zeilen: [
+    { links: 'Psychosen und Psychopathien; Demenzerkrankungen, Suchterkrankungen', rechts: 'Psychische Störung' },
+    { links: 'Verminderung der Intelligenz (unter IQ 69), von Geburt an oder durch Krankheit/Unfall bedingt', rechts: 'Geistige Behinderung' },
+    { links: 'Zustand, der mit der Menschenwürde unvereinbar ist; oft in Kombination mit einer psychischen Störung', rechts: 'Schwere Verwahrlosung' }
+  ],
+  optionen: ['Psychische Störung', 'Geistige Behinderung', 'Schwere Verwahrlosung'],
+  artikel: ['Art. 426 ZGB'],
+  erklaerung: '<p>Die Umschreibungen gemäss Folie:</p><ul><li><b>Psychische Störung:</b> Psychosen, Psychopathien, Demenz- und <b>Suchterkrankungen</b></li><li><b>Geistige Behinderung:</b> Intelligenzminderung (IQ unter 69), angeboren oder erworben</li><li><b>Schwere Verwahrlosung:</b> menschenwürde-unvereinbarer Zustand, oft kombiniert mit psychischer Störung</li></ul>' },
+
+{ id: 'T9F5', thema: 9, stufe: 5, typ: 'multi',
+  frage: 'Welche weiteren Voraussetzungen müssen für eine FU erfüllt sein (neben dem Schwächezustand)? <span class="hint">(mehrere Antworten richtig)</span>',
+  optionen: [
+    'Aus dem Schwächezustand resultierende Behandlungs- und/oder Betreuungsbedürftigkeit',
+    'Eine geeignete Einrichtung ist vorhanden',
+    'Die allgemeinen Grundsätze (Verhältnismässigkeit, Subsidiarität etc.) sind gewahrt',
+    'Die Zustimmung der betroffenen Person',
+    'Die Zustimmung der Angehörigen',
+    'Urteilsunfähigkeit der betroffenen Person'
+  ],
+  richtig: [0, 1, 2],
+  artikel: ['Art. 426 ZGB'],
+  erklaerung: '<p>Voraussetzungen der FU (Art. 426 ZGB):</p><ol><li>Die <b>allgemeinen Grundsätze</b> behördlicher Massnahmen gelten auch hier (Verhältnismässigkeit, Komplementarität, Subsidiarität, Wahrung der Selbstbestimmung),</li><li><b>Schwächezustand</b> (psychische Störung, geistige Behinderung, schwere Verwahrlosung),</li><li>daraus resultierende <b>Behandlungs- und/oder Betreuungsbedürftigkeit</b> («die nötige Behandlung oder Betreuung kann nicht anders erfolgen»),</li><li>eine <b>geeignete Einrichtung</b> ist vorhanden.</li></ol><p>Weder die Zustimmung der Person noch der Angehörigen noch Urteilsunfähigkeit sind Voraussetzungen.</p>' },
+
+{ id: 'T9F6', thema: 9, stufe: 6, typ: 'mc',
+  frage: 'Die freiwillig in die Klinik eingetretene Frau F (psychische Störung) will die Klinik in akuter Selbstgefährdung verlassen. Was gilt für die Zurückbehaltung (Art. 427 ZGB)?',
+  optionen: [
+    'Die ärztliche Leitung kann sie bei Selbst- oder ernsthafter Fremdgefährdung höchstens 72 Stunden zurückbehalten; danach Entlassung, sofern kein vollstreckbarer FU-Entscheid vorliegt — anfechtbar beim Einzelgericht am Ort der Einrichtung',
+    'Die Klinik kann sie unbeschränkt lange zurückbehalten, da sie freiwillig eingetreten ist',
+    'Eine Zurückbehaltung ist ausgeschlossen — wer freiwillig eintritt, kann jederzeit gehen',
+    'Die Zurückbehaltung dauert maximal 6 Wochen'
+  ],
+  richtig: 0,
+  artikel: ['Art. 427 ZGB', 'Art. 439 ZGB'],
+  erklaerung: '<p><b>Art. 427 ZGB</b> — Zurückbehaltung freiwillig Eingetretener:</p><ul><li><b>Voraussetzungen:</b> psychische Störung + freiwilliger Eintritt + <b>Selbstgefährdung oder ernsthafte Fremdgefährdung</b></li><li><b>Maximaldauer: 72 Stunden</b> — danach Entlassung, ausser es liegt ein vollstreckbarer Unterbringungsentscheid (FU) vor</li><li><b>Rechtsschutz:</b> Anfechtung beim <b>Einzelgericht am Ort der Einrichtung</b> (Art. 439 Abs. 1 Ziff. 1 ZGB)</li></ul>' },
+
+{ id: 'T9F7', thema: 9, stufe: 7, typ: 'mc',
+  sachverhalt: 'Fallbeispiel «Peter» (Kurs): Peter ist ein berufstätiger, 28-jähriger Mann mit einer schizophrenen Erkrankung, mit der er normalerweise gut umgehen kann. Während einer erneuten schizophrenen Episode verliert er akut den Bezug zur Wirklichkeit und irrt im Dezember mit Sack und Pack im Quartier umher. Nachts klingelt er bei den Nachbarn, wird laut und teilweise bedrohlich. Bei der Arbeit ist er auffällig und kann seine Aufgaben nicht mehr erledigen.',
+  frage: 'Kommt eine FU in Betracht?',
+  optionen: [
+    'Ja — psychische Störung (Schizophrenie), akute Behandlungs-/Betreuungsbedürftigkeit mit Selbst- und teilweiser Drittgefährdung, geeignete Einrichtung (psychiatrische Klinik); mildere Massnahmen dürften angesichts des akuten Realitätsverlusts kaum genügen',
+    'Nein — Peter ist möglicherweise noch urteilsfähig, und eine FU setzt Urteilsunfähigkeit voraus',
+    'Nein — eine FU ist nur bei geistiger Behinderung zulässig',
+    'Ja, aber nur wenn Peter schriftlich zustimmt'
+  ],
+  richtig: 0,
+  artikel: ['Art. 426 ZGB'],
+  erklaerung: '<p>Prüfschema <b>Art. 426 ZGB</b> gemäss Kurslösung:</p><ol><li><b>Schwächezustand:</b> psychische Störung (Schizophrenie) ✓</li><li><b>Behandlungs-/Betreuungsbedürftigkeit:</b> akuter Realitätsverlust; Alltag und Arbeit nicht mehr zu bewältigen; <b>Selbstgefährdung</b> (Umherirren im Dezember — Kälte) und teilweise <b>Drittgefährdung</b> (bedrohliches Verhalten) ✓</li><li><b>Geeignete Einrichtung:</b> psychiatrische Klinik ✓</li><li><b>Verhältnismässigkeit/Subsidiarität:</b> mildere Massnahmen (ambulante Behandlung, freiwilliger Eintritt) sind zu prüfen, dürften aber kaum genügen ✓</li></ol><p>Dass Peter allenfalls noch <b>urteilsfähig</b> ist, schadet nicht — Urteilsunfähigkeit ist keine FU-Voraussetzung.</p>' },
+
+/* ---------- THEMA 10: FU – Verfahren & Behandlung ---------- */
+{ id: 'T10F1', thema: 10, stufe: 1, typ: 'mc',
+  frage: 'Wer kann eine fürsorgerische Unterbringung anordnen?',
+  optionen: [
+    'Die KESB (Art. 428 ZGB) sowie die von den Kantonen bezeichneten Ärztinnen und Ärzte (Art. 429 ZGB)',
+    'Nur die KESB (Art. 428 ZGB)',
+    'Nur ein Gericht (Art. 439 ZGB)',
+    'Die Polizei und die Heimleitung (Art. 427 ZGB)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 428 ZGB', 'Art. 429 ZGB'],
+  erklaerung: '<p>Es gibt <b>zwei Anordnungswege</b>:</p><ul><li><b>KESB (Art. 428 ZGB):</b> zuständig für Anordnung und Entlassung; Dauer unbestimmt mit periodischer Überprüfung</li><li><b>Ärztinnen und Ärzte (Art. 429 ZGB):</b> von den Kantonen bezeichnet; befristete Unterbringung (max. 6 Wochen)</li></ul>' },
+
+{ id: 'T10F2', thema: 10, stufe: 2, typ: 'mc',
+  frage: 'Wie lange darf eine ärztlich angeordnete FU maximal dauern — und wer entscheidet dort über die Entlassung?',
+  optionen: [
+    'Maximal 6 Wochen; über die Entlassung entscheidet die Einrichtung (Art. 429 Abs. 3 ZGB) — für eine längere Unterbringung braucht es einen FU-Entscheid der KESB',
+    'Maximal 72 Stunden; über die Entlassung entscheidet die KESB (Art. 427 ZGB)',
+    'Maximal 6 Monate; über die Entlassung entscheidet das Gericht (Art. 431 ZGB)',
+    'Unbeschränkt; über die Entlassung entscheidet der anordnende Arzt persönlich (Art. 429 Abs. 3 ZGB)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 429 ZGB', 'Art. 430 ZGB'],
+  erklaerung: '<p><b>Art. 429 ZGB:</b></p><ul><li><b>Dauer:</b> maximal <b>6 Wochen</b> (Abs. 1); ist die Unterbringung vorher nicht aufgehoben, braucht es einen FU-Entscheid der <b>KESB</b> (Abs. 2)</li><li><b>Entlassung:</b> darüber entscheidet die <b>Einrichtung</b> (Abs. 3)</li><li><b>Verfahren</b> (Art. 430): persönliche Untersuchung und Anhörung zwingend; schriftlicher Einweisungsentscheid mit Rechtsmittelbelehrung</li></ul><div class="merkbox"><b>Fristen-Trio FU:</b> 72 Stunden (Zurückbehaltung, 427) · 6 Wochen (ärztliche FU, 429) · 6/6/12 Monate (Überprüfung, 431).</div>' },
+
+{ id: 'T10F3', thema: 10, stufe: 3, typ: 'mc',
+  frage: 'In welchem Rhythmus überprüft die KESB eine Unterbringung (Art. 431 ZGB)?',
+  optionen: [
+    'Spätestens 6 Monate nach Beginn, eine zweite Überprüfung innerhalb der folgenden 6 Monate, danach so oft wie nötig, mindestens aber einmal jährlich',
+    'Nur auf Gesuch der betroffenen Person',
+    'Alle 30 Tage',
+    'Einmalig nach einem Jahr'
+  ],
+  richtig: 0,
+  artikel: ['Art. 431 ZGB', 'Art. 426 ZGB'],
+  erklaerung: '<p><b>Art. 431 ZGB</b> — periodische Überprüfung:</p><ol><li>spätestens <b>6 Monate</b> nach Beginn der Unterbringung,</li><li>eine zweite Überprüfung <b>innerhalb der folgenden 6 Monate</b>,</li><li>danach so oft wie nötig, <b>mindestens einmal jährlich</b>.</li></ol><p>Unabhängig davon gilt: <b>Entlassung, sobald die Voraussetzungen nicht mehr erfüllt sind</b> (Art. 426 Abs. 3 ZGB).</p>' },
+
+{ id: 'T10F4', thema: 10, stufe: 4, typ: 'multi',
+  frage: 'Vertrauensperson und Entlassungsgesuch — welche Aussagen sind richtig? <span class="hint">(mehrere Antworten richtig)</span>',
+  optionen: [
+    'Die betroffene Person kann ihre Vertrauensperson frei wählen (Art. 432 ZGB)',
+    'Die Vertrauensperson unterstützt allgemein, begleitet im Verfahren und wird beim Erstellen des Behandlungsplans beigezogen (Art. 432 ZGB)',
+    'Das Entlassungsgesuch kann formlos — auch mündlich — und ohne Begründung gestellt werden (Art. 426 Abs. 4 ZGB)',
+    'Die Abweisung des Entlassungsgesuchs ist gerichtlich anfechtbar (Art. 439 ZGB)',
+    'Die Vertrauensperson wird von der KESB bestimmt (Art. 432 ZGB)',
+    'Das Entlassungsgesuch muss schriftlich und begründet sein (Art. 450e ZGB)'
+  ],
+  richtig: [0, 1, 2, 3],
+  artikel: ['Art. 432 ZGB', 'Art. 426 ZGB', 'Art. 439 ZGB'],
+  erklaerung: '<p><b>Vertrauensperson (Art. 432 ZGB):</b> frei wählbar; Aufgaben: allgemeine Unterstützung, Begleitung und Unterstützung im Verfahren, Beizug beim Erstellen des Behandlungsplans.</p><p><b>Entlassung (Art. 426 Abs. 3/4 ZGB):</b> sobald die Voraussetzungen entfallen; das Gesuch können die betroffene und/oder nahestehende Personen an die KESB oder die Einrichtung richten — <b>formlos, auch mündlich, ohne Begründung</b>. Die Abweisung ist gerichtlich anfechtbar (Art. 439 Abs. 1 Ziff. 3 bzw. Art. 450 ZGB).</p>' },
+
+{ id: 'T10F5', thema: 10, stufe: 5, typ: 'mc',
+  frage: 'Welche Anforderungen gelten für den Behandlungsplan bei der Behandlung einer psychischen Störung (Art. 433 ZGB)?',
+  optionen: [
+    'Schriftlichkeit; Einbezug der betroffenen Person und ggf. der Vertrauensperson; umfassende Information; der Plan wird der Person zur Zustimmung unterbreitet und laufend angepasst',
+    'Der Chefarzt erstellt ihn allein und muss ihn niemandem vorlegen',
+    'Er wird von der KESB erstellt und ist geheim',
+    'Ein Behandlungsplan ist nur bei urteilsfähigen Patienten nötig'
+  ],
+  richtig: 0,
+  artikel: ['Art. 433 ZGB', 'Art. 434 ZGB', 'Art. 435 ZGB'],
+  erklaerung: '<p><b>Art. 433 ZGB</b> — Anforderungen an den Behandlungsplan:</p><ul><li><b>Schriftlichkeit</b>,</li><li><b>Einbezug</b> der betroffenen Person und gegebenenfalls ihrer Vertrauensperson,</li><li>umfassende <b>Informationspflicht</b> (Gründe, Zweck, Art, Modalitäten, Risiken, Nebenwirkungen etc.),</li><li>der Plan wird der Person <b>zur Zustimmung unterbreitet</b>,</li><li><b>laufende Anpassung</b> an neue Entwicklungen.</li></ul><p>Ohne Zustimmung: Behandlung nur unter den engen Voraussetzungen von <b>Art. 434 ZGB</b> (schriftliche Anordnung des Chefarztes); in Notfällen <b>Art. 435 ZGB</b>. <span class="hint">Filmtipp der Folien zur Zwangsbehandlung: «Einer flog über das Kuckucksnest» (1975).</span></p>' },
+
+{ id: 'T10F6', thema: 10, stufe: 6, typ: 'zuordnen',
+  frage: 'FU durch die KESB oder FU durch die Ärztin? Ordne die Merkmale dem richtigen Anordnungsweg zu.',
+  zeilen: [
+    { links: 'Dauer unbestimmt, mit Pflicht zur periodischen Überprüfung', rechts: 'FU durch die KESB (428)' },
+    { links: 'Dauer maximal 6 Wochen', rechts: 'FU durch die Ärztin (429)' },
+    { links: 'Über die Entlassung entscheidet die Einrichtung', rechts: 'FU durch die Ärztin (429)' },
+    { links: 'Bei psychischer Störung nur gestützt auf ein Sachverständigengutachten', rechts: 'FU durch die KESB (428)' },
+    { links: 'Anhörung im Kollegium als Regelfall, ausnahmsweise Delegation an ein Einzelmitglied', rechts: 'FU durch die KESB (428)' },
+    { links: 'Beschwerde ans Einzelgericht am Ort der Einrichtung (Art. 439)', rechts: 'FU durch die Ärztin (429)' },
+    { links: 'Beschwerdefrist 10 Tage, keine aufschiebende Wirkung', rechts: 'Beide Anordnungswege' }
+  ],
+  optionen: ['FU durch die KESB (428)', 'FU durch die Ärztin (429)', 'Beide Anordnungswege'],
+  artikel: ['Art. 428 ZGB', 'Art. 429 ZGB', 'Art. 431 ZGB', 'Art. 439 ZGB', 'Art. 450b ZGB', 'Art. 450e ZGB'],
+  erklaerung: '<p>Der Vergleich gemäss Kurstabelle:</p><ul><li><b>KESB (428):</b> Dauer unbestimmt mit periodischer Überprüfung (431); Verfahren nach Art. 430/443 ff.: Anhörung im Kollegium (447 Abs. 2), bei psychischer Störung <b>Sachverständigengutachten</b> (450e Abs. 3); Rechtsschutz nach Art. 450 ff.</li><li><b>Ärztin (429):</b> max. 6 Wochen; persönliche Untersuchung + Anhörung, schriftliche Einweisung mit Rechtsmittelbelehrung; Entlassung durch die <b>Einrichtung</b>; Beschwerde ans <b>Einzelgericht am Ort der Einrichtung</b> (439)</li><li><b>Beide:</b> Frist <b>10 Tage</b> ab Mitteilung, Beschwerde <b>ohne aufschiebende Wirkung</b></li></ul>' },
+
+{ id: 'T10F7', thema: 10, stufe: 7, typ: 'mc',
+  sachverhalt: 'Fallbeispiel «Laura» (Kurs): Laura ist verheiratet und befindet sich wegen einer schweren Depression mit Suizidgedanken in einer psychiatrischen Klinik. Ihr Ehemann Peter erfährt, dass sie mit Psychopharmaka behandelt wird. Er meint, diese veränderten Laura und machten alles noch schlimmer.',
+  frage: 'Kann Peter die Behandlung von Laura verhindern?',
+  optionen: [
+    'Nein — bei der Behandlung einer psychischen Störung in der Klinik gelten die Stellvertreterregeln nicht (Art. 380, 433 ff. ZGB); der Behandlungsplan wird mit Laura selbst erstellt, und ist sie urteilsfähig, entscheidet sie allein — Peter kann sie höchstens als Vertrauensperson unterstützen',
+    'Ja — als Ehemann steht er in der Vertretungskaskade und hat deshalb ein Vetorecht gegen die Medikation (Art. 378 ZGB)',
+    'Ja — ohne Zustimmung beider Ehegatten ist jede Behandlung widerrechtlich (Art. 166 ZGB)',
+    'Nein — aber er kann die Behandlung durch ein Gesuch an die Aufsichtsbehörde sofort stoppen (Art. 441 ZGB)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 380 ZGB', 'Art. 433 ZGB', 'Art. 434 ZGB', 'Art. 435 ZGB', 'Art. 432 ZGB', 'Art. 439 ZGB'],
+  erklaerung: '<p>Kurslösung: <b>Nein.</b></p><ul><li>Bei der Behandlung einer psychischen Störung in einer psychiatrischen Klinik kommen die <b>Stellvertreterregeln nicht zur Anwendung</b> (Art. 380 bzw. 433 ff. ZGB) — der Ehemann hat <b>kein Vetorecht</b>.</li><li>Der <b>Behandlungsplan</b> wird vom zuständigen Arzt <b>mit Laura selbst</b> erstellt und ihr zur Zustimmung unterbreitet (433); ist Laura urteilsfähig, entscheidet <b>sie allein</b>.</li><li>Eine Behandlung <b>ohne Zustimmung</b> ist nur unter den engen Voraussetzungen von Art. 434 (bzw. im Notfall 435) zulässig — dagegen könnte sich nur Laura bzw. eine ihr nahestehende Person mit den Rechtsmitteln wehren (439).</li><li>Peter kann Laura als <b>Vertrauensperson (432)</b> unterstützen.</li></ul>' },
+
+/* ---------- THEMA 11: Familienrechtliche Partnerschaften ---------- */
+{ id: 'T11F1', thema: 11, stufe: 1, typ: 'mc',
+  frage: 'Ist das Konkubinat gesetzlich geregelt?',
+  optionen: [
+    'Nein — es zieht aber in verschiedenen Rechtsgebieten Rechtsfolgen nach sich; auf vermögensrechtliche Verhältnisse wendet die Judikatur das Recht der einfachen Gesellschaft (Art. 530 ff. OR) an',
+    'Ja — im ZGB unter den familienrechtlichen Partnerschaften',
+    'Ja — im Partnerschaftsgesetz (PartG)',
+    'Nein — es entfaltet auch keinerlei Rechtswirkungen; Verträge unter Konkubinatspartnern sind nichtig (Art. 20 OR)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 530 ff. OR'],
+  erklaerung: '<p>Das Konkubinat ist <b>gesetzlich nicht geregelt</b>, zieht aber in verschiedenen Rechtsgebieten Rechtsfolgen nach sich (Steuern, Sozialversicherung, Sozialhilfe etc.).</p><p>Auf bestimmte <b>vermögensrechtliche Verhältnisse</b> wendet die Judikatur das Recht der <b>einfachen Gesellschaft (Art. 530 ff. OR)</b> an — bei Streitfällen kommen zudem Auftragsrecht und andere Rechtstitel in Frage.</p>' },
+
+{ id: 'T11F2', thema: 11, stufe: 2, typ: 'mc',
+  frage: 'Was gilt für die eingetragene Partnerschaft seit dem 1. Juli 2022?',
+  optionen: [
+    'Mit der «Ehe für alle» ist sie obsolet: keine Neueintragungen mehr; bestehende Partnerschaften bleiben auf Wunsch bestehen oder können durch gemeinsame Erklärung in eine Ehe umgewandelt werden',
+    'Sie wurde für alle Paare — auch verschiedengeschlechtliche — geöffnet',
+    'Alle eingetragenen Partnerschaften wurden automatisch in Ehen umgewandelt',
+    'Sie besteht unverändert weiter und kann neu eingetragen werden'
+  ],
+  richtig: 0,
+  artikel: [],
+  erklaerung: '<p>Mit Inkrafttreten der <b>«Ehe für alle» am 1. Juli 2022</b>:</p><ul><li><b>keine neuen</b> eingetragenen Partnerschaften mehr,</li><li>bestehende bleiben auf Wunsch <b>unverändert</b> bestehen,</li><li><b>Umwandlung in eine Ehe</b> durch gemeinsame Erklärung gegenüber dem Zivilstandsamt möglich,</li><li>gleichgeschlechtliche Paare können seither <b>heiraten</b>.</li></ul><p>Zur Geschichte: Das PartG wurde am 5. Juni 2005 mit 58 % Ja-Stimmen angenommen; Eintragungen waren seit dem 1. Januar 2007 möglich.</p>' },
+
+{ id: 'T11F3', thema: 11, stufe: 3, typ: 'mc',
+  frage: 'Frau A liegt nach einem Unfall im Spital. Ihr langjähriger Konkubinatspartner B möchte ärztliche Auskunft und sie besuchen. Was gilt?',
+  optionen: [
+    'Konkubinatspartner haben kein gegenseitiges Beistandsrecht: keine ärztliche Auskunft, kein Zutritt — dafür braucht es eine schriftliche Erklärung (z. B. Patientenverfügung/Vollmacht)',
+    'B hat als Konkubinatspartner dieselben Rechte wie ein Ehegatte',
+    'B erhält Auskunft, sobald das Konkubinat fünf Jahre gedauert hat',
+    'Nur die KESB kann B den Zutritt bewilligen'
+  ],
+  richtig: 0,
+  artikel: ['Art. 370 ZGB', 'Art. 378 ZGB'],
+  erklaerung: '<p>Gemäss Vergleichstabelle des Kurses:</p><ul><li><b>Ehe:</b> gegenseitiges Beistandsrecht — der Ehegatte erhält ärztliche Auskunft und Zutritt zum Spital; zudem gegenseitige Beistandspflicht</li><li><b>Konkubinat:</b> <b>kein</b> Beistandsrecht — keine ärztliche Auskunft, kein Zutritt; daher ist eine <b>schriftliche Erklärung</b> notwendig (z. B. Patientenverfügung mit Bezeichnung des Partners, Vollmacht)</li></ul><p>Beachte: In der <b>Kaskade von Art. 378 ZGB</b> kommt der Konkubinatspartner als «Person mit gemeinsamem Haushalt» immerhin an 4. Stelle — aber erst bei Urteilsunfähigkeit und nach Ehegatten/Beistand.</p>' },
+
+{ id: 'T11F4', thema: 11, stufe: 4, typ: 'zuordnen',
+  frage: 'Ehe oder Konkubinat? Ordne die Merkmale gemäss Vergleichstabelle zu.',
+  zeilen: [
+    { links: 'Gemeinsame Besteuerung mit Progressionsnachteil', rechts: 'Ehe' },
+    { links: 'Einzelbesteuerung mit Progressionsvorteil', rechts: 'Konkubinat' },
+    { links: 'Erbschafts-/Schenkungssteuer: je nach Kanton oft höchster Tarifsatz (wie Nichtverwandte)', rechts: 'Konkubinat' },
+    { links: 'Gegenseitige Beistandspflicht', rechts: 'Ehe' },
+    { links: 'Streitfälle werden nach dem Recht der einfachen Gesellschaft beurteilt', rechts: 'Konkubinat' },
+    { links: 'Anspruch auf Witwen-/Witwerrente der AHV', rechts: 'Ehe' },
+    { links: 'Gesamthaft höhere AHV-Renten dank voller Einzelrenten (keine Plafonierung)', rechts: 'Konkubinat' }
+  ],
+  optionen: ['Ehe', 'Konkubinat'],
+  artikel: ['Art. 530 ff. OR'],
+  erklaerung: '<p>Kernpunkte der Tabelle «Ehe oder Konkubinat?»:</p><ul><li><b>Steuern:</b> Ehe = gemeinsame Besteuerung (Progressionsnachteil) · Konkubinat = Einzelbesteuerung (Vorteil), aber bei Erbschafts-/Schenkungssteuern oft <b>höchster Tarif</b>, da kein Partnerprivileg</li><li><b>Beistand:</b> Pflicht und Recht nur in der Ehe</li><li><b>AHV:</b> Ehepaar-Rente plafoniert, dafür Witwen-/Witwerrente · Konkubinat: volle Einzelrenten, aber <b>keine</b> Hinterlassenenrente</li><li><b>Streit:</b> Ehe = Eheschutzrichter · Konkubinat = Liquidation der einfachen Gesellschaft, kein Unterhaltsanspruch</li></ul>' },
+
+{ id: 'T11F5', thema: 11, stufe: 5, typ: 'mc',
+  frage: 'Wie ist der Konkubinatspartner erbrechtlich gestellt?',
+  optionen: [
+    'Er hat weder Erb- noch Pflichtteilsanspruch — für eine Begünstigung braucht es ein Testament; dabei sind Pflichtteile Dritter zu beachten (seit 1.1.2023: Eltern kein Pflichtteil mehr, Nachkommen ½ des gesetzlichen Anspruchs)',
+    'Er erbt von Gesetzes wegen wie ein Ehegatte, sobald das Konkubinat fünf Jahre gedauert hat',
+    'Er hat einen Pflichtteil von einem Viertel',
+    'Er kann testamentarisch nicht begünstigt werden'
+  ],
+  richtig: 0,
+  artikel: ['Art. 471 ZGB'],
+  erklaerung: '<p><b>Konkubinatspartner haben weder Erb- noch Pflichtteilsanspruch</b> — für eine Begünstigung ist ein <b>Testament</b> notwendig. Oft sind Pflichtteile Dritter (Kinder, früher auch Eltern) zu beachten.</p><p><b>Erbrechtsrevision per 1.1.2023:</b> Die Eltern haben keinen Pflichtteil mehr; der Pflichtteil der Nachkommen beträgt die Hälfte des gesetzlichen Erbanspruchs (Art. 471 ZGB). Die frei verfügbare Quote ist damit grösser — Konkubinatspartner können weitergehend begünstigt werden als früher.</p><p><span class="hint">Je nach Kanton fällt auf der Zuwendung allerdings eine hohe Erbschaftssteuer an (kein Partnerprivileg).</span></p>' },
+
+{ id: 'T11F6', thema: 11, stufe: 6, typ: 'multi',
+  frage: 'Welche Wirkungen hat(te) die Eintragung der Partnerschaft nach PartG? <span class="hint">(mehrere Antworten richtig)</span>',
+  optionen: [
+    'Zivilstand «in eingetragener Partnerschaft»',
+    'Grundsätzlich Gütertrennung — vertraglich ist ein anderer Güterstand möglich',
+    'Gemeinsame Besteuerung wie bei der Ehe',
+    'Beim Tod des Partners gleiche Ansprüche wie bei Witwen/Witwern',
+    'Automatische Änderung des Namens',
+    'Erleichterte Einbürgerung für die ausländische Partnerin bzw. den ausländischen Partner'
+  ],
+  richtig: [0, 1, 2, 3],
+  artikel: ['Art. 15 PartG'],
+  erklaerung: '<p>Wirkungen der eingetragenen Partnerschaft gemäss Kurstabelle:</p><ul><li><b>Zivilstand:</b> «in eingetragener Partnerschaft»</li><li><b>Güterrecht:</b> Grundsatz <b>Gütertrennung</b> (Vermögen und Schulden getrennt); anderer Güterstand vertraglich möglich</li><li><b>Steuern:</b> gemeinsame Besteuerung wie Ehe</li><li><b>Tod:</b> gleiche Ansprüche wie Witwen/Witwer</li><li><b>Informationspflicht:</b> Auskunft über Vermögen und Schulden (analog Art. 170 ZGB)</li></ul><p><b>Kein</b> automatischer gemeinsamer Name (nur auf Erklärung) und — im Gegensatz zur Heirat — <b>keine erleichterte Einbürgerung</b>.</p>' },
+
+{ id: 'T11F7', thema: 11, stufe: 7, typ: 'mc',
+  sachverhalt: 'Nina und Marco leben im Konkubinat und haben eine gemeinsame Tochter (geboren 2020), die Marco anerkannt hat. Ein Bekannter behauptet: «Ohne Heirat hat allein Nina das Sorgerecht, und das Kind trägt automatisch Marcos Namen.»',
+  frage: 'Was trifft nach heutiger Rechtslage zu?',
+  optionen: [
+    'Seit 1.7.2014 ist die gemeinsame elterliche Sorge der Regelfall — unverheiratete Eltern begründen sie mit gemeinsamer Erklärung (Art. 298a ZGB); das Kind trägt jedoch von Gesetzes wegen den Ledignamen der Mutter',
+    'Der Bekannte hat recht: Ohne Heirat bleibt die Sorge immer allein bei der Mutter (Art. 298 ZGB)',
+    'Mit der Anerkennung erhält Marco automatisch die Alleinsorge (Art. 260 ZGB)',
+    'Das Kind unverheirateter Eltern erhält immer den Namen des Vaters (Art. 270a ZGB)'
+  ],
+  richtig: 0,
+  artikel: ['Art. 298a ZGB'],
+  erklaerung: '<p><b>Elterliche Sorge:</b> Seit dem <b>1. Juli 2014</b> ist die <b>gemeinsame elterliche Sorge der Regelfall</b> — unabhängig vom Zivilstand. Unverheiratete Eltern begründen sie mit der <b>gemeinsamen Erklärung</b> (Art. 298a ZGB; z. B. zusammen mit der Anerkennung beim Zivilstandsamt). Die Kurstabelle («Sorgerecht bei der Kindsmutter») gibt die frühere Rechtslage wieder.</p><p><b>Name:</b> Das Kind unverheirateter Eltern trägt den <b>Ledignamen der Mutter</b> (Tabelle: «Familienname der Mutter»).</p><p><b>Bürgerrecht:</b> Das Kind erhält das Schweizer Bürgerrecht auch dann, wenn (nur) der anerkennende Vater Schweizer ist.</p><p><span class="hint">Ergänzung Sozialhilfe: Bei einem stabilen Konkubinat (5 Jahre Dauer oder gemeinsame Kinder) wird das Partnereinkommen in der Praxis der Sozialbehörden berücksichtigt.</span></p>' }
+];
+
+/* =====================  APP-LOGIK  ===================== */
+const KEY = 'esr-lernprogramm-v1';
+
+function ladeStore() {
+  try { return JSON.parse(localStorage.getItem(KEY)) || { status: {} }; }
+  catch (e) { return { status: {} }; }
+}
+let store = ladeStore();
+function speichern() { localStorage.setItem(KEY, JSON.stringify(store)); }
+
+const session = {};
+function sess(q) {
+  if (!session[q.id]) session[q.id] = { sel: null, set: new Set(), zuord: {}, ordnung: [], perm: null, hilfe: false, korrekt: false, geprueft: false, loesungOffen: false };
+  return session[q.id];
+}
+
+/* Zufällige Anzeigereihenfolge der Antwortoptionen (pro Frage und Sitzung stabil) */
+function permFuer(st, n) {
+  if (!st.perm || st.perm.length !== n) {
+    const a = Array.from({ length: n }, (_, i) => i);
+    for (let i = n - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const h = a[i]; a[i] = a[j]; a[j] = h;
+    }
+    st.perm = a;
+  }
+  return st.perm;
+}
+
+let ansicht = { seite: 'home', thema: 1, frage: 0 };
+
+function fragenZu(nr) { return FRAGEN.filter(f => f.thema === nr); }
+function statusVon(q) { return store.status[q.id] || null; }
+function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+function artBadges(liste) {
+  if (!liste || !liste.length) return '';
+  const b = liste.map(a => '<span class="art" title="' + esc(GESETZ[a] || '') + '">' + a + '</span>').join(' ');
+  return '<div class="art-zeile"><span class="hint">Gesetzesartikel (mit Maus darüberfahren):</span> ' + b + '</div>';
+}
+
+function sterne(stufe) {
+  let s = '';
+  for (let i = 1; i <= 7; i++) s += i <= stufe ? '★' : '<span class="stern-leer">★</span>';
+  return '<span class="stufe-sterne" title="Schwierigkeit ' + stufe + ' von 7">' + s + '</span>';
+}
+
+const TYP_LABEL = { mc: 'Multiple Choice', multi: 'Mehrfachauswahl', zuordnen: 'Zuordnen', reihenfolge: 'Reihenfolge' };
+
+/* ---------- Startseite ---------- */
+function renderHome() {
+  const total = FRAGEN.length;
+  let gel = 0, hil = 0;
+  FRAGEN.forEach(q => { const st = statusVon(q); if (st === 'geloest') gel++; else if (st === 'hilfe') hil++; });
+  const pct = Math.round((gel + hil) / total * 100);
+
+  const karten = THEMEN.map(t => {
+    const fs = fragenZu(t.nr);
+    const fertig = fs.filter(q => statusVon(q)).length;
+    const dots = fs.map(q => {
+      const st = statusVon(q);
+      return '<span class="qdot ' + (st === 'geloest' ? 'd-geloest' : st === 'hilfe' ? 'd-hilfe' : '') + '"></span>';
+    }).join('');
+    const badge = fertig === fs.length
+      ? '<span class="badge badge-done">✓ abgeschlossen</span>'
+      : fertig > 0 ? '<span class="badge badge-hilfe">' + fertig + '/' + fs.length + '</span>'
+      : '<span class="badge badge-open">offen</span>';
+    return '<button class="thema-card" onclick="oeffneThema(' + t.nr + ')">' +
+      '<span class="thema-nr">' + t.icon + ' Thema ' + t.nr + '</span>' +
+      '<span class="thema-titel">' + t.titel + '</span>' +
+      '<span class="thema-kurz">' + t.kurz + '</span>' +
+      '<span class="thema-fuss"><span class="qdots">' + dots + '</span>' + badge + '</span>' +
+      '</button>';
+  }).join('');
+
+  document.getElementById('app').innerHTML =
+    '<div class="home-header">' +
+      '<h1>Erwachsenenschutzrecht – Lernprogramm</h1>' +
+      '<p class="untertitel">ZGB Art. 360–456 · 11 Themen · 77 Fragen mit aufsteigendem Schwierigkeitsgrad · nach der Zusammenfassung Teil 1 + 2 (KV Business School Zürich)</p>' +
+      '<div class="home-stats">' +
+        '<div class="stat"><div class="stat-zahl">' + gel + '</div><div class="stat-label">selbständig gelöst</div></div>' +
+        '<div class="stat"><div class="stat-zahl">' + hil + '</div><div class="stat-label">mit Lösungshilfe</div></div>' +
+        '<div class="stat"><div class="stat-zahl">' + (total - gel - hil) + '</div><div class="stat-label">offen</div></div>' +
+      '</div>' +
+      '<div class="balken"><div style="width:' + pct + '%"></div></div>' +
+      '<div class="home-actions">' +
+        '<button class="btn" onclick="zeigeSpick()">📋 Spickzettel</button>' +
+        '<button class="btn btn-ghost" onclick="allesZuruecksetzen()">Fortschritt zurücksetzen</button>' +
+      '</div>' +
+    '</div>' +
+    '<p class="hinweis-methodik">Pro Thema 7 Fragen: Stufe 1–2 Grundwissen · Stufe 3–5 Verständnis · Stufe 6 Struktur &amp; Übersicht · Stufe 7 Fallanwendung. Grün = selbständig gelöst, Gelb = mit Lösungshilfe.</p>' +
+    '<div class="themen-grid">' + karten + '</div>';
+  window.scrollTo(0, 0);
+}
+
+function oeffneThema(nr) {
+  ansicht = { seite: 'thema', thema: nr, frage: 0 };
+  const fs = fragenZu(nr);
+  const erste = fs.findIndex(q => !statusVon(q));
+  if (erste > 0) ansicht.frage = erste;
+  render();
+}
+
+function allesZuruecksetzen() {
+  if (!confirm('Ganzen Fortschritt löschen?')) return;
+  store = { status: {} };
+  speichern();
+  Object.keys(session).forEach(k => delete session[k]);
+  render();
+}
+
+/* ---------- Fragenansicht ---------- */
+function renderThema() {
+  const t = THEMEN[ansicht.thema - 1];
+  const fs = fragenZu(t.nr);
+  const q = fs[ansicht.frage];
+  const st = sess(q);
+  const gespeichert = statusVon(q);
+
+  const nav = fs.map((f, i) => {
+    const s = statusVon(f);
+    const cls = ['fnav'];
+    if (i === ansicht.frage) cls.push('f-aktiv');
+    if (s === 'geloest') cls.push('f-geloest');
+    if (s === 'hilfe') cls.push('f-hilfe');
+    return '<button class="' + cls.join(' ') + '" onclick="geheZuFrage(' + i + ')" title="Frage ' + (i + 1) + '">' + (i + 1) + '</button>';
+  }).join('');
+
+  let inhalt = '';
+  if (q.typ === 'mc') inhalt = uiMC(q, st);
+  else if (q.typ === 'multi') inhalt = uiMulti(q, st);
+  else if (q.typ === 'zuordnen') inhalt = uiZuordnen(q, st);
+  else if (q.typ === 'reihenfolge') inhalt = uiReihenfolge(q, st);
+
+  const fertig = st.korrekt || gespeichert;
+  let feedback = '';
+  if (st.korrekt) feedback = '<div class="fb fb-ok">✓ Richtig' + (st.hilfe ? ' — mit Lösungshilfe gelöst.' : ' gelöst!') + '</div>';
+  else if (st.geprueft) feedback = '<div class="fb fb-bad">✗ Noch nicht richtig — ' + st.fbText + '</div>';
+  else if (gespeichert && !st.korrekt) feedback = '<div class="fb fb-info">Diese Frage hast du bereits ' + (gespeichert === 'geloest' ? 'selbständig gelöst' : 'mit Lösungshilfe gelöst') + '. Du kannst sie erneut bearbeiten.</div>';
+
+  const loesung = st.loesungOffen ? '<div class="solution-box"><h4>Lösung &amp; Erklärung</h4>' + loesungsInhalt(q) + q.erklaerung + '</div>' : '';
+
+  const weiter = ansicht.frage < fs.length - 1
+    ? '<button class="btn btn-primary" onclick="geheZuFrage(' + (ansicht.frage + 1) + ')">Nächste Frage →</button>'
+    : '<button class="btn btn-primary" onclick="zurUebersicht()">Thema abschliessen ✓</button>';
+
+  document.getElementById('app').innerHTML =
+    '<div class="top-bar">' +
+      '<button class="btn btn-ghost" onclick="zurUebersicht()">← Zur Übersicht</button>' +
+      '<button class="btn" onclick="zeigeSpick()">📋 Spickzettel</button>' +
+    '</div>' +
+    '<div class="thema-header">' +
+      '<div class="thema-kopf"><h2>' + t.icon + ' Thema ' + t.nr + ': ' + t.titel + '</h2><span class="badge badge-thema">Frage ' + (ansicht.frage + 1) + ' von ' + fs.length + '</span></div>' +
+      '<div class="frage-nav">' + nav + '</div>' +
+    '</div>' +
+    '<div class="frage-card">' +
+      '<div class="frage-head">' +
+        '<span><span class="frage-nrchip">Frage ' + (ansicht.frage + 1) + '</span> ' + sterne(q.stufe) + '</span>' +
+        '<span class="typ-label">' + TYP_LABEL[q.typ] + '</span>' +
+      '</div>' +
+      (q.sachverhalt ? '<div class="sachverhalt"><div class="sachverhalt-titel">Sachverhalt</div>' + q.sachverhalt + '</div>' : '') +
+      '<div class="frage-text">' + q.frage + '</div>' +
+      inhalt +
+      '<div class="frage-actions">' +
+        (!st.korrekt ? '<button class="btn btn-primary" onclick="pruefen()">Prüfen</button>' : '') +
+        (!st.loesungOffen ? '<button class="btn" onclick="zeigeLoesung()">Lösung anzeigen</button>' : '') +
+        (!st.korrekt ? '<button class="btn btn-ghost" onclick="frageZuruecksetzen()">Eingaben zurücksetzen</button>' : '') +
+        (fertig ? weiter : '') +
+      '</div>' +
+      feedback +
+      loesung +
+      artBadges(q.artikel) +
+    '</div>' +
+    '<div class="frage-actions" style="justify-content:space-between">' +
+      (ansicht.frage > 0 ? '<button class="btn" onclick="geheZuFrage(' + (ansicht.frage - 1) + ')">← Vorherige</button>' : '<span></span>') +
+      (ansicht.frage < fs.length - 1 ? '<button class="btn" onclick="geheZuFrage(' + (ansicht.frage + 1) + ')">Nächste →</button>' : '') +
+    '</div>';
+}
+
+function zurUebersicht() { ansicht = { seite: 'home', thema: 1, frage: 0 }; render(); }
+function geheZuFrage(i) { ansicht.frage = i; render(); window.scrollTo(0, 0); }
+
+/* ---------- UI-Bausteine pro Fragetyp ---------- */
+function uiMC(q, st) {
+  return '<div class="mc-liste">' + permFuer(st, q.optionen.length).map(i => {
+    const o = q.optionen[i];
+    const cls = ['mc-opt'];
+    if (st.geprueft || st.korrekt) {
+      if (st.korrekt && i === q.richtig) cls.push('mc-ok');
+      else if (!st.korrekt && st.sel === i && i !== q.richtig) cls.push('mc-bad');
+      else if (st.korrekt && i !== q.richtig) cls.push('mc-dim');
+    }
+    return '<label class="' + cls.join(' ') + '"><input type="radio" name="mc" ' + (st.sel === i ? 'checked' : '') + (st.korrekt ? ' disabled' : '') + ' onchange="waehleMC(' + i + ')"><span>' + o + '</span></label>';
+  }).join('') + '</div>';
+}
+function waehleMC(i) { const q = aktuelleFrage(); const st = sess(q); st.sel = i; st.geprueft = false; }
+
+function uiMulti(q, st) {
+  return '<div class="check-grid">' + permFuer(st, q.optionen.length).map(i => {
+    const o = q.optionen[i];
+    const cls = ['check-chip'];
+    if (st.geprueft || st.korrekt) {
+      const soll = q.richtig.includes(i), ist = st.set.has(i);
+      if (ist && soll) cls.push('chip-ok');
+      else if (ist && !soll) cls.push('chip-bad');
+      else if (!ist && soll && (st.korrekt || st.geprueft)) cls.push('chip-fehlt');
+    }
+    return '<label class="' + cls.join(' ') + '"><input type="checkbox" ' + (st.set.has(i) ? 'checked' : '') + (st.korrekt ? ' disabled' : '') + ' onchange="toggleMulti(' + i + ')"><span>' + o + '</span></label>';
+  }).join('') + '</div><p class="hint" style="margin:8px 0 0">Alle zutreffenden Antworten anklicken.</p>';
+}
+function toggleMulti(i) { const q = aktuelleFrage(); const st = sess(q); if (st.set.has(i)) st.set.delete(i); else st.set.add(i); st.geprueft = false; }
+
+function uiZuordnen(q, st) {
+  const zeilen = q.zeilen.map((z, i) => {
+    let cls = '';
+    if (st.geprueft || st.korrekt) cls = (st.zuord[i] === z.rechts) ? 'row-ok' : 'row-bad';
+    const opts = ['<option value="">– bitte wählen –</option>'].concat(
+      q.optionen.map(o => '<option value="' + esc(o) + '" ' + (st.zuord[i] === o ? 'selected' : '') + '>' + o + '</option>')
+    ).join('');
+    return '<tr class="' + cls + '"><td class="zeile-links">' + z.links + '</td><td><select ' + (st.korrekt ? 'disabled' : '') + ' onchange="waehleZuord(' + i + ', this.value)">' + opts + '</select></td></tr>';
+  }).join('');
+  return '<table class="aufgabe-tabelle"><thead><tr><th>Aussage</th><th>Zuordnung</th></tr></thead><tbody>' + zeilen + '</tbody></table>';
+}
+function waehleZuord(i, v) { const q = aktuelleFrage(); const st = sess(q); st.zuord[i] = v; st.geprueft = false; }
+
+function uiReihenfolge(q, st) {
+  const anzeige = q.anzeige || q.items.map((_, i) => i);
+  return '<p class="hint" style="margin:0 0 10px">Klicke die Einträge in der richtigen Reihenfolge an (1., 2., 3., …). Erneutes Klicken entfernt die Nummer.</p>' +
+    '<div class="reihe-liste">' + anzeige.map(idx => {
+      const pos = st.ordnung.indexOf(idx);
+      const cls = ['reihe-item'];
+      if (pos >= 0) cls.push('gewaehlt');
+      if (st.geprueft || st.korrekt) {
+        if (pos >= 0 && st.ordnung[pos] === idx && q.items[pos] === q.items[idx] && pos === idx) cls.push('reihe-ok');
+        else if (pos >= 0) cls.push(pos === idx ? 'reihe-ok' : 'reihe-bad');
+      }
+      return '<button class="' + cls.join(' ') + '" ' + (st.korrekt ? 'disabled' : '') + ' onclick="klickReihe(' + idx + ')"><span class="reihe-num">' + (pos >= 0 ? (pos + 1) + '.' : '') + '</span><span>' + q.items[idx] + '</span></button>';
+    }).join('') + '</div>';
+}
+function klickReihe(idx) {
+  const q = aktuelleFrage(); const st = sess(q);
+  const pos = st.ordnung.indexOf(idx);
+  if (pos >= 0) st.ordnung.splice(pos, 1); else st.ordnung.push(idx);
+  st.geprueft = false;
+  render();
+}
+
+function aktuelleFrage() { return fragenZu(ansicht.thema)[ansicht.frage]; }
+
+/* ---------- Prüfen & Lösung ---------- */
+function pruefen() {
+  const q = aktuelleFrage(); const st = sess(q);
+  let ok = false;
+
+  if (q.typ === 'mc') {
+    if (st.sel === null) { st.fbText = 'wähle zuerst eine Antwort aus.'; st.geprueft = true; render(); return; }
+    ok = st.sel === q.richtig;
+    st.fbText = 'die gewählte Antwort stimmt nicht. Überlege nochmals oder schau die Lösung an.';
+  } else if (q.typ === 'multi') {
+    const soll = new Set(q.richtig);
+    const richtigGewaehlt = [...st.set].filter(i => soll.has(i)).length;
+    const falschGewaehlt = [...st.set].filter(i => !soll.has(i)).length;
+    ok = richtigGewaehlt === soll.size && falschGewaehlt === 0;
+    st.fbText = richtigGewaehlt + ' von ' + soll.size + ' richtigen Antworten gewählt' + (falschGewaehlt ? ', ' + falschGewaehlt + ' falsche dabei' : '') + '.';
+  } else if (q.typ === 'zuordnen') {
+    const treffer = q.zeilen.filter((z, i) => st.zuord[i] === z.rechts).length;
+    ok = treffer === q.zeilen.length;
+    st.fbText = treffer + ' von ' + q.zeilen.length + ' Zuordnungen stimmen.';
+  } else if (q.typ === 'reihenfolge') {
+    if (st.ordnung.length < q.items.length) { st.fbText = 'nummeriere zuerst alle Einträge (' + st.ordnung.length + ' von ' + q.items.length + ').'; st.geprueft = true; render(); return; }
+    const treffer = st.ordnung.filter((idx, pos) => idx === pos).length;
+    ok = treffer === q.items.length;
+    st.fbText = treffer + ' von ' + q.items.length + ' Positionen stimmen.';
+  }
+
+  st.geprueft = true;
+  if (ok) {
+    st.korrekt = true;
+    const neu = st.hilfe ? 'hilfe' : 'geloest';
+    if (store.status[q.id] !== 'geloest' || neu === 'geloest') store.status[q.id] = neu;
+    speichern();
+  }
+  render();
+}
+
+function zeigeLoesung() {
+  const q = aktuelleFrage(); const st = sess(q);
+  if (!st.korrekt) st.hilfe = true;
+  st.loesungOffen = true;
+  render();
+}
+
+function loesungsInhalt(q) {
+  if (q.typ === 'mc') return '<p><b>Richtige Antwort:</b> ' + q.optionen[q.richtig] + '</p>';
+  if (q.typ === 'multi') return '<p><b>Richtige Antworten:</b></p><ul>' + q.richtig.map(i => '<li>' + q.optionen[i] + '</li>').join('') + '</ul>';
+  if (q.typ === 'zuordnen') return '<p><b>Richtige Zuordnung:</b></p><ul>' + q.zeilen.map(z => '<li>' + z.links + ' → <b>' + z.rechts + '</b></li>').join('') + '</ul>';
+  if (q.typ === 'reihenfolge') return '<p><b>Richtige Reihenfolge:</b></p><ol>' + q.items.map(t => '<li>' + t + '</li>').join('') + '</ol>';
+  return '';
+}
+
+function frageZuruecksetzen() {
+  const q = aktuelleFrage();
+  delete session[q.id];
+  render();
+}
+
+/* ---------- Spickzettel ---------- */
+function zeigeSpick() {
+  document.getElementById('modal').innerHTML =
+    '<div class="modal-hg" onclick="if(event.target===this)schliesseSpick()">' +
+      '<div class="modal-box">' +
+        '<button class="btn modal-schliessen" onclick="schliesseSpick()">✕ Schliessen</button>' +
+        '<h2>📋 Spickzettel Erwachsenenschutzrecht</h2>' + SPICK_HTML +
+      '</div>' +
+    '</div>';
+  document.body.style.overflow = 'hidden';
+}
+function schliesseSpick() {
+  document.getElementById('modal').innerHTML = '';
+  document.body.style.overflow = '';
+}
+
+const SPICK_HTML =
+  '<h3>Systematik im ZGB</h3>' +
+  '<table class="spick-tabelle"><tr><th>Titel</th><th>Inhalt</th><th>Artikel</th></tr>' +
+  '<tr><td>10. Titel</td><td>Eigene Vorsorge (Vorsorgeauftrag 360–369, Patientenverfügung 370–373) und Massnahmen von Gesetzes wegen (Vertretung 374–381, Wohn-/Pflegeeinrichtungen 382–387)</td><td>360–387</td></tr>' +
+  '<tr><td>11. Titel</td><td>Behördliche Massnahmen: Grundsätze (388–389), Beistandschaften (390–425), fürsorgerische Unterbringung (426–439)</td><td>388–439</td></tr>' +
+  '<tr><td>12. Titel</td><td>Organisation: Behörden/Zuständigkeit (440–442), Verfahren (443–450g), Verantwortlichkeit (454–456)</td><td>440–456</td></tr></table>' +
+
+  '<h3>Die 6 Beistandschaften (Art. 393–398 ZGB)</h3>' +
+  '<table class="spick-tabelle"><tr><th>Art.</th><th>Beistandschaft</th><th>Wann?</th><th>Wirkung auf Handlungsfähigkeit</th></tr>' +
+  '<tr><td>393</td><td>Begleitbeistandschaft</td><td>begleitende Unterstützung für bestimmte Angelegenheiten (mit Zustimmung der Person)</td><td>keine Einschränkung (Abs. 2)</td></tr>' +
+  '<tr><td>394</td><td>Vertretungsbeistandschaft</td><td>kann bestimmte Angelegenheiten nicht erledigen und niemanden rechtsgenügend bevollmächtigen</td><td>KESB <b>kann</b> einschränken (Abs. 2)</td></tr>' +
+  '<tr><td>395</td><td>Vermögensverwaltungsbeistandschaft</td><td>kann Einkommen/Vermögen nicht verwalten</td><td>KESB kann einschränken</td></tr>' +
+  '<tr><td>396</td><td>Mitwirkungsbeistandschaft</td><td>bestimmte Handlungen brauchen zum Schutz die Zustimmung des Beistands</td><td>von Gesetzes wegen eingeschränkt (Abs. 2)</td></tr>' +
+  '<tr><td>397</td><td>Kombinierte Beistandschaft</td><td>Kombination von Begleit-, Vertretungs- und Mitwirkungsbeistandschaft</td><td>je nach Kombination</td></tr>' +
+  '<tr><td>398</td><td>Umfassende Beistandschaft</td><td>besonders hilfsbedürftig, namentlich dauernd urteilsunfähig (frühere Vormundschaft)</td><td><b>entfällt von Gesetzes wegen</b> (Abs. 3)</td></tr></table>' +
+  '<p class="hint">⚠️ Keine umfassende Beistandschaft für demente Betagte — Regel: Vertretungsbeistandschaft mit Vermögensverwaltung (Art. 394 i.V.m. 395 ZGB).</p>' +
+
+  '<h3>Grundsätze der Massnahmen (Art. 388/389 ZGB)</h3>' +
+  '<table class="spick-tabelle"><tr><th>Grundsatz</th><th>Bedeutung</th></tr>' +
+  '<tr><td>Subsidiarität</td><td><b>ob</b> die Behörde eingreift: nur wenn Familie, Umfeld, private/öffentliche Dienste und eigene Vorsorge nicht genügen (389 Abs. 1)</td></tr>' +
+  '<tr><td>Komplementarität</td><td><b>wie</b> die Massnahme ausgestaltet wird: auf Fähigkeiten aufbauen, ergänzen statt ersetzen</td></tr>' +
+  '<tr><td>Verhältnismässigkeit</td><td>geeignet, erforderlich, ausgewogen; Anpassung an veränderte Verhältnisse (389 Abs. 2)</td></tr>' +
+  '<tr><td>Wahrung der Selbstbestimmung</td><td>Autonomie so weit wie möglich erhalten und fördern (388 Abs. 2)</td></tr></table>' +
+
+  '<h3>Eingriffspyramide (kleinster → grösster Eingriff)</h3>' +
+  '<p>Vorsorgeauftrag / Patientenverfügung → gesetzliche Vertretungsrechte → Anordnungen der KESB (392) → Begleitbeistandschaft (393) → Vertretungsbeistandschaft (394) / Vermögensverwaltung (395) → Mitwirkungsbeistandschaft (396) → kombinierte Beistandschaft (397) → <b>umfassende Beistandschaft (398)</b></p>' +
+
+  '<h3>Vorsorgeauftrag vs. Patientenverfügung</h3>' +
+  '<table class="spick-tabelle"><tr><th></th><th>Vorsorgeauftrag (360 ff.)</th><th>Patientenverfügung (370 ff.)</th></tr>' +
+  '<tr><td>Wer kann errichten?</td><td><b>handlungsfähige</b> Person</td><td><b>urteilsfähige</b> Person</td></tr>' +
+  '<tr><td>Beauftragte</td><td>natürliche <b>oder juristische</b> Person</td><td>nur natürliche Person</td></tr>' +
+  '<tr><td>Form</td><td>eigenhändig (A–Z von Hand, datiert, unterzeichnet) <b>oder</b> öffentliche Beurkundung (361)</td><td>einfache Schriftlichkeit: schriftlich, datiert, unterzeichnet — Text darf vorgedruckt/Computer sein (371)</td></tr>' +
+  '<tr><td>Inhalt</td><td>Personensorge, Vermögenssorge, Vertretung im Rechtsverkehr</td><td>Zustimmung/Ablehnung medizinischer Massnahmen; Vertretungsperson</td></tr>' +
+  '<tr><td>Wirksamkeit</td><td>bei Urteilsunfähigkeit, nach <b>Validierung durch die KESB</b> (363)</td><td>direkt; Arzt prüft via Versichertenkarte (372)</td></tr>' +
+  '<tr><td>Widerruf</td><td>jederzeit: Errichtungsform oder Vernichtung (362)</td><td>jederzeit widerruf- und abänderbar</td></tr></table>' +
+
+  '<h3>Kaskade der Vertretungsberechtigten (Art. 378 ZGB)</h3>' +
+  '<p>1. Person gemäss PV/VA → 2. Beistand mit Vertretungsrecht → 3. Ehegatte/eingetr. Partner (gemeinsamer Haushalt oder Beistand) → 4. Person im gemeinsamen Haushalt → 5. Nachkommen → 6. Eltern → 7. Geschwister (je: Beistand leisten) → sonst: <b>KESB</b></p>' +
+
+  '<h3>Fürsorgerische Unterbringung (FU)</h3>' +
+  '<table class="spick-tabelle"><tr><th>Voraussetzungen (426)</th></tr>' +
+  '<tr><td>1. Schwächezustand: <b>psychische Störung</b> (Psychosen, Demenz, Sucht), <b>geistige Behinderung</b> (IQ &lt; 69) oder <b>schwere Verwahrlosung</b> · 2. Behandlungs-/Betreuungsbedürftigkeit · 3. geeignete Einrichtung · 4. Verhältnismässigkeit/Subsidiarität. <b>Urteilsunfähigkeit ist NICHT Voraussetzung!</b></td></tr></table>' +
+  '<table class="spick-tabelle"><tr><th>Merkmal</th><th>FU durch KESB (428)</th><th>FU durch Arzt (429)</th></tr>' +
+  '<tr><td>Dauer</td><td>unbestimmt, periodische Überprüfung (431: nach 6 Mt., nochmals 6 Mt., dann mind. jährlich)</td><td>max. <b>6 Wochen</b>, danach KESB-Entscheid</td></tr>' +
+  '<tr><td>Entlassung</td><td>KESB</td><td>die Einrichtung (429 Abs. 3)</td></tr>' +
+  '<tr><td>Verfahren</td><td>Anhörung im Kollegium; bei psychischer Störung Sachverständigengutachten</td><td>persönliche Untersuchung + Anhörung, schriftlicher Entscheid mit RM-Belehrung</td></tr>' +
+  '<tr><td>Rechtsschutz</td><td>Art. 450 ff.: Frist 10 Tage, keine aufschiebende Wirkung</td><td>Art. 439: Einzelgericht am Ort der Einrichtung, Frist 10 Tage, keine aufschiebende Wirkung</td></tr></table>' +
+  '<p class="hint">Zurückbehaltung freiwillig Eingetretener (427): psychische Störung + Selbst-/ernsthafte Fremdgefährdung → max. <b>72 Stunden</b>. Behandlung psychischer Störungen in der Klinik: Behandlungsplan (433), keine Stellvertretung (380); ohne Zustimmung nur nach 434, Notfall 435.</p>' +
+
+  '<h3>Ehe vs. Konkubinat (Kernpunkte)</h3>' +
+  '<table class="spick-tabelle"><tr><th>Aspekt</th><th>Ehe</th><th>Konkubinat</th></tr>' +
+  '<tr><td>Gesetzliche Regelung</td><td>Ehe-/Ehegüterrecht</td><td>keine — einfache Gesellschaft (530 ff. OR) auf Vermögensfragen</td></tr>' +
+  '<tr><td>Beistandsrecht (Spital/Arzt)</td><td>ja</td><td>nein — schriftliche Erklärung nötig</td></tr>' +
+  '<tr><td>Steuern</td><td>gemeinsam (Progressionsnachteil)</td><td>einzeln (Progressionsvorteil); Erbschaftssteuer oft höchster Tarif</td></tr>' +
+  '<tr><td>Erbrecht</td><td>Erb- und Pflichtteilsanspruch</td><td>kein Anspruch — Testament nötig (seit 1.1.2023 grössere freie Quote)</td></tr>' +
+  '<tr><td>AHV</td><td>Plafonierung; Witwen-/Witwerrente</td><td>volle Einzelrenten; keine Hinterlassenenrente</td></tr>' +
+  '<tr><td>Elterliche Sorge</td><td colspan="2">seit 1.7.2014 gemeinsame Sorge als Regelfall — unabhängig vom Zivilstand (298a: gemeinsame Erklärung)</td></tr></table>' +
+  '<p class="hint">Eingetragene Partnerschaft: seit «Ehe für alle» (1.7.2022) keine Neueintragungen; Umwandlung in Ehe möglich. Wirkungen: Gütertrennung als Grundsatz, gemeinsame Besteuerung, beim Tod wie Witwe/Witwer, keine erleichterte Einbürgerung.</p>';
+
+/* ---------- Router ---------- */
+function render() {
+  if (ansicht.seite === 'home') renderHome(); else renderThema();
+}
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,2013 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Güterrecht – Lernprogramm güterrechtliche Auseinandersetzung</title>
+<style>
+:root {
+  --navy: #1b3a5c;
+  --navy-dunkel: #12283f;
+  --blau: #2563a8;
+  --blau-hell: #e8f0f9;
+  --gold: #b8860b;
+  --gruen: #15803d;
+  --gruen-hell: #ecfdf3;
+  --rot: #b91c1c;
+  --rot-hell: #fef2f2;
+  --grau: #5b6b7b;
+  --grau-hell: #f4f6f8;
+  --rand: #d7dfe8;
+  --schatten: 0 1px 3px rgba(18, 40, 63, .10), 0 4px 14px rgba(18, 40, 63, .06);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; padding: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", sans-serif;
+  color: #1d2b3a; background: #eef2f6;
+  font-size: 16px; line-height: 1.55;
+}
+#app { max-width: 1080px; margin: 0 auto; padding: 24px 20px 80px; }
+h1 { font-size: 1.7rem; color: var(--navy); margin: 0 0 4px; line-height: 1.25; }
+h2 { font-size: 1.2rem; color: var(--navy); margin: 0 0 10px; }
+h3 { font-size: 1.05rem; color: var(--navy); margin: 18px 0 8px; }
+h4 { font-size: 1rem; color: var(--navy); margin: 16px 0 6px; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  font: inherit; font-size: .95rem; font-weight: 600;
+  padding: 10px 18px; border-radius: 10px; cursor: pointer;
+  border: 1.5px solid var(--rand); background: #fff; color: var(--navy);
+  transition: all .15s;
+}
+.btn:hover { border-color: var(--blau); box-shadow: var(--schatten); }
+.btn-primary { background: var(--navy); border-color: var(--navy); color: #fff; }
+.btn-primary:hover { background: var(--blau); border-color: var(--blau); }
+.btn-ghost { border-color: transparent; background: transparent; color: var(--grau); }
+.btn-ghost:hover { color: var(--navy); border-color: var(--rand); box-shadow: none; }
+
+/* ---------- Startseite ---------- */
+.home-header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--blau) 100%);
+  color: #fff; border-radius: 16px; padding: 32px 32px 26px; box-shadow: var(--schatten);
+}
+.home-header h1 { color: #fff; font-size: 1.9rem; }
+.untertitel { margin: 4px 0 20px; opacity: .85; }
+.home-stats { display: flex; gap: 28px; margin-bottom: 20px; flex-wrap: wrap; }
+.stat { background: rgba(255,255,255,.12); border-radius: 12px; padding: 12px 22px; }
+.stat-zahl { font-size: 1.5rem; font-weight: 700; }
+.stat-label { font-size: .82rem; opacity: .85; }
+.home-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.home-actions .btn { border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.95); }
+.home-actions .btn-primary { background: var(--gold); border-color: var(--gold); color: #fff; }
+.home-actions .btn-primary:hover { background: #d09a0c; }
+.home-actions .btn-ghost { background: transparent; color: rgba(255,255,255,.8); }
+.home-actions .btn-ghost:hover { color: #fff; border-color: rgba(255,255,255,.5); }
+.alle-fertig { font-size: 1.1rem; font-weight: 700; }
+.hinweis-methodik { color: var(--grau); font-size: .88rem; margin: 16px 4px 20px; }
+
+.case-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(235px, 1fr)); gap: 14px; }
+.case-card {
+  font: inherit; text-align: left; cursor: pointer;
+  background: #fff; border: 1.5px solid var(--rand); border-radius: 14px;
+  padding: 16px 16px 14px; transition: all .15s; display: flex; flex-direction: column; gap: 4px;
+}
+.case-card:hover { border-color: var(--blau); box-shadow: var(--schatten); transform: translateY(-2px); }
+.case-nr { font-size: .78rem; font-weight: 700; color: var(--grau); text-transform: uppercase; letter-spacing: .05em; }
+.case-titel { font-weight: 700; color: var(--navy); font-size: 1.02rem; line-height: 1.3; }
+.case-sterne { color: var(--gold); font-size: .95rem; letter-spacing: .1em; }
+.stern-leer { color: #d5dbe2; }
+.case-status { margin-top: 6px; }
+
+.badge { display: inline-block; font-size: .76rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+.badge-done { background: var(--gruen-hell); color: var(--gruen); border: 1px solid #bbe7cb; }
+.badge-progress { background: #fff8e6; color: #92640a; border: 1px solid #f0dca4; }
+.badge-open { background: var(--grau-hell); color: var(--grau); border: 1px solid var(--rand); }
+.badge-aufloesung { background: var(--blau-hell); color: var(--blau); border: 1px solid #c4d8ee; }
+.badge-schuld { background: var(--rot-hell); color: var(--rot); border: 1px solid #f3c6c6; }
+.badge-forderung { background: var(--blau-hell); color: var(--blau); border: 1px solid #c4d8ee; }
+
+/* ---------- Fallansicht ---------- */
+.case-top { display: flex; justify-content: space-between; margin-bottom: 10px; }
+.case-header { background: #fff; border-radius: 14px; padding: 20px 24px; box-shadow: var(--schatten); border-left: 6px solid var(--navy); }
+.case-kopf { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: baseline; }
+.case-meta { display: flex; gap: 12px; align-items: center; }
+.lernziel { margin: 10px 0 0; color: var(--grau); font-size: .95rem; }
+
+.sachverhalt { background: #fffdf5; border: 1.5px solid #ead9a8; border-radius: 14px; padding: 18px 24px; margin-top: 14px; }
+.sachverhalt h2 { color: #7c5e10; font-size: 1.02rem; text-transform: uppercase; letter-spacing: .04em; }
+.posten-liste { margin: 10px 0 0; padding-left: 22px; }
+.posten-liste li { margin-bottom: 5px; }
+.hint { color: var(--grau); font-size: .9em; }
+
+/* Lösungsblatt (füllt sich von Phase zu Phase) */
+.arbeitsblatt {
+  background: #fff; border: 1.5px solid var(--rand); border-left: 6px solid var(--gold);
+  border-radius: 14px; margin-top: 14px; box-shadow: var(--schatten);
+}
+.arbeitsblatt summary {
+  cursor: pointer; font-weight: 700; color: var(--navy); padding: 13px 20px;
+  list-style: none; user-select: none;
+}
+.arbeitsblatt summary::-webkit-details-marker { display: none; }
+.arbeitsblatt summary::before { content: '▸ '; color: var(--gold); }
+.arbeitsblatt[open] summary::before { content: '▾ '; }
+.arbeitsblatt summary:hover { color: var(--blau); }
+.ab-stand { font-weight: 600; color: var(--grau); font-size: .88rem; }
+.ab-inhalt { padding: 0 20px 16px; }
+.ab-inhalt h4 { margin: 14px 0 6px; }
+.ab-tabelle td, .ab-tabelle th { padding: 7px 9px; font-size: .9rem; }
+.ab-leer { color: #b6c2cd; }
+.ab-schuld { color: var(--rot); }
+.ab-platzhalter { color: var(--grau); font-size: .92rem; margin: 0; }
+
+/* Stepper */
+.stepper { display: flex; align-items: center; margin: 20px 0 14px; overflow-x: auto; padding: 4px 2px; }
+.step {
+  font: inherit; display: flex; flex-direction: column; align-items: center; gap: 5px;
+  background: none; border: none; cursor: pointer; min-width: 108px; padding: 6px 4px; border-radius: 10px;
+}
+.step:disabled { cursor: not-allowed; opacity: .45; }
+.step:not(:disabled):hover { background: var(--blau-hell); }
+.step-nr {
+  width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: #fff; border: 2px solid var(--rand); font-weight: 700; color: var(--grau);
+}
+.step-active .step-nr { background: var(--navy); border-color: var(--navy); color: #fff; }
+.step-done .step-nr { background: var(--gruen); border-color: var(--gruen); color: #fff; }
+.step-label { font-size: .72rem; color: var(--grau); text-align: center; line-height: 1.2; max-width: 120px; }
+.step-active .step-label { color: var(--navy); font-weight: 700; }
+.step-line { flex: 1; height: 2px; background: var(--rand); min-width: 8px; }
+
+/* Phasen-Karte */
+.phase-card { background: #fff; border-radius: 14px; padding: 22px 26px; box-shadow: var(--schatten); }
+.phase-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.phase-nr { background: var(--navy); color: #fff; border-radius: 8px; padding: 2px 10px; font-size: .85rem; margin-right: 6px; }
+.phase-frage { color: var(--grau); margin: 8px 0 16px; }
+.phase-done-banner { background: var(--gruen-hell); color: var(--gruen); border: 1px solid #bbe7cb; border-radius: 10px; padding: 10px 14px; font-weight: 600; margin-bottom: 14px; }
+
+.art {
+  display: inline-block; background: var(--blau-hell); color: var(--blau);
+  border: 1px solid #c4d8ee; border-radius: 6px; padding: 1px 8px;
+  font-size: .8rem; font-weight: 600; cursor: help; white-space: nowrap; margin: 1px 0;
+}
+.art-zeile { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px; }
+
+/* Aufgaben-Tabellen */
+.aufgabe-tabelle { width: 100%; border-collapse: collapse; margin: 6px 0 10px; }
+.aufgabe-tabelle th {
+  text-align: left; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em;
+  color: var(--grau); padding: 8px 10px; border-bottom: 2px solid var(--rand);
+}
+.aufgabe-tabelle td { padding: 10px; border-bottom: 1px solid var(--grau-hell); vertical-align: middle; }
+.aufgabe-tabelle tr:last-child td { border-bottom: none; }
+.aufgabe-tabelle input[type="text"] {
+  font: inherit; padding: 9px 12px; border: 1.5px solid var(--rand); border-radius: 8px;
+  width: 170px; max-width: 100%; text-align: right; background: #fff;
+}
+.aufgabe-tabelle input[type="text"]:focus { outline: none; border-color: var(--blau); box-shadow: 0 0 0 3px rgba(37, 99, 168, .15); }
+.aufgabe-tabelle select {
+  font: inherit; font-size: .92rem; padding: 9px 10px; border: 1.5px solid var(--rand); border-radius: 8px;
+  max-width: 100%; background: #fff;
+}
+.aufgabe-tabelle select:focus { outline: none; border-color: var(--blau); box-shadow: 0 0 0 3px rgba(37, 99, 168, .15); }
+.select-richtung { margin-bottom: 6px; display: block; }
+.input-betrag { display: block; }
+.zeile-inaktiv td { color: #9aa7b4; }
+.inaktiv-info { font-style: italic; font-size: .9rem; }
+
+.row-ok td { background: var(--gruen-hell); }
+.row-ok td:first-child { box-shadow: inset 4px 0 0 var(--gruen); }
+.row-bad td { background: var(--rot-hell); }
+.row-bad td:first-child { box-shadow: inset 4px 0 0 var(--rot); }
+
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg-opt input { position: absolute; opacity: 0; pointer-events: none; }
+.seg-opt span {
+  display: inline-block; padding: 7px 13px; border: 1.5px solid var(--rand); border-radius: 999px;
+  font-size: .88rem; font-weight: 600; color: var(--grau); cursor: pointer; transition: all .12s; background: #fff;
+}
+.seg-opt input:checked + span { background: var(--navy); border-color: var(--navy); color: #fff; }
+.seg-opt input:focus-visible + span { box-shadow: 0 0 0 3px rgba(37, 99, 168, .3); }
+.seg-opt input:disabled + span { cursor: default; opacity: .75; }
+.seg-opt span:hover { border-color: var(--blau); }
+
+.sektion { margin-bottom: 18px; }
+.sektion-info { color: var(--grau); font-size: .92rem; margin: 4px 0 8px; }
+.sektion-memo { background: var(--blau-hell); border-radius: 10px; padding: 12px 16px; }
+.sektion-memo ul { margin: 6px 0 0; padding-left: 20px; }
+.memo-liste { margin: 4px 0 10px; padding-left: 20px; }
+
+/* Feedback & Lösung */
+.phase-actions { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+.fb { border-radius: 10px; padding: 12px 16px; font-weight: 600; margin-top: 14px; }
+.fb-ok { background: var(--gruen-hell); color: var(--gruen); border: 1px solid #bbe7cb; }
+.fb-bad { background: var(--rot-hell); color: var(--rot); border: 1px solid #f3c6c6; }
+.fb-info { background: var(--blau-hell); color: var(--blau); border: 1px solid #c4d8ee; }
+
+.solution-box { background: var(--grau-hell); border: 1.5px solid var(--rand); border-radius: 12px; padding: 16px 20px; margin-top: 16px; }
+.solution-box > h3 { margin-top: 0; }
+.loesung-tabelle { width: 100%; border-collapse: collapse; margin: 8px 0; background: #fff; border-radius: 8px; overflow: hidden; font-size: .93rem; }
+.loesung-tabelle th { text-align: left; background: var(--navy); color: #fff; padding: 8px 10px; font-size: .82rem; }
+.loesung-tabelle td { padding: 9px 10px; border-bottom: 1px solid var(--grau-hell); vertical-align: top; }
+.loesung-tabelle tr:nth-child(even) td { background: #f8fafc; }
+.zeile-total td { background: var(--blau-hell) !important; border-top: 2px solid var(--blau); }
+.zeile-zwischen td { border-top: 1.5px dashed var(--rand); }
+.nowrap { white-space: nowrap; }
+.mw-tabelle td, .mw-tabelle th { text-align: right; }
+.mw-tabelle td:first-child, .mw-tabelle th:first-child { text-align: left; }
+.mw-erkl { font-size: .9rem; color: var(--grau); }
+.schutz { cursor: help; }
+.massen-tabelle td { font-size: .88rem; }
+.mt-scroll { overflow-x: auto; }
+.massen-tabelle { min-width: 640px; }
+.eg-saldo { color: var(--grau); }
+.memo-erkl { font-size: .9rem; color: var(--grau); }
+
+.merkbox {
+  background: #fffdf5; border: 1.5px solid #ead9a8; border-left: 5px solid var(--gold);
+  border-radius: 10px; padding: 10px 14px; margin-top: 12px; font-size: .93rem;
+}
+.endbox {
+  background: var(--gruen-hell); border: 1.5px solid #bbe7cb; border-left: 5px solid var(--gruen);
+  border-radius: 10px; padding: 12px 16px; margin-top: 12px; font-size: 1.02rem;
+}
+.phase-nav { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+
+/* Abschluss */
+.abschluss { text-align: center; padding: 40px 26px; }
+.abschluss h2 { font-size: 1.5rem; }
+.abschluss-ende { font-size: 1.08rem; }
+.abschluss-score { color: var(--grau); }
+.abschluss .phase-nav { justify-content: center; margin-top: 24px; }
+
+/* Spickzettel */
+dialog#spick-dialog {
+  border: none; border-radius: 16px; padding: 0; max-width: 760px; width: calc(100vw - 40px);
+  max-height: 85vh; box-shadow: 0 10px 40px rgba(18, 40, 63, .3);
+}
+dialog#spick-dialog::backdrop { background: rgba(18, 40, 63, .5); }
+.spick { padding: 24px 28px; overflow-y: auto; max-height: 85vh; }
+.spick-head { display: flex; justify-content: space-between; align-items: center; }
+.spick-head h2 { margin: 0; }
+.spick-phasen li { margin-bottom: 6px; }
+.spick-tabelle { width: 100%; border-collapse: collapse; margin: 6px 0 14px; font-size: .92rem; }
+.spick-tabelle td { border: 1px solid var(--rand); padding: 8px 10px; vertical-align: top; }
+.spick-tabelle tr:nth-child(even) td { background: var(--grau-hell); }
+.spick-liste li { margin-bottom: 4px; }
+
+@media (max-width: 640px) {
+  #app { padding: 14px 10px 60px; }
+  .phase-card, .case-header { padding: 16px 14px; }
+  .aufgabe-tabelle input[type="text"] { width: 130px; }
+  .step { min-width: 84px; }
+  .step-label { display: none; }
+}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+'use strict';
+/* ============================================================
+   Solver für die güterrechtliche Auseinandersetzung
+   (Errungenschaftsbeteiligung, Art. 196 ff. ZGB)
+   Berechnet aus einer Falldefinition sämtliche Lösungswerte
+   der Phasen 3–6. Läuft in Node (Validierung) und im Browser.
+   ============================================================ */
+
+const MASSEN = ['EG_F', 'ER_F', 'ER_M', 'EG_M'];
+const MASSE_LABEL = {
+  EG_F: 'Eigengut Ehefrau',
+  ER_F: 'Errungenschaft Ehefrau',
+  ER_M: 'Errungenschaft Ehemann',
+  EG_M: 'Eigengut Ehemann',
+};
+const MASSE_KURZ = { EG_F: 'EG F', ER_F: 'ER F', ER_M: 'ER M', EG_M: 'EG M' };
+
+function gatte(masse) { return masse.endsWith('_F') ? 'F' : 'M'; }
+
+function chf(n) {
+  const neg = n < 0;
+  const s = Math.round(Math.abs(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+  return (neg ? '–' : '') + s;
+}
+
+/*
+Falldefinition (pro Posten):
+  id, name           – Bezeichnung
+  owner              – Phase 1: 'F' | 'M' | 'MF' | 'NONE'
+  masse              – Phase 2: 'EG_F'|'ER_F'|'ER_M'|'EG_M'|'MIT_ER'|'NONE'
+                       (MIT_ER = Miteigentum, je ½ in beide Errungenschaften)
+  phase2Label        – abweichender Lösungstext für Phase 2 (optional)
+  wert               – massgeblicher Wert (Lösung Phase 3); bei Schuld: Schuldbetrag (positiv)
+  schuld             – true: Passivum (wird von der Masse abgezogen)
+  bewertbar          – false: in Phase 3 keine Eingabe (z. B. Gelegenheitsgeschenke)
+  nurForderung       – true: kein Eintrag in der Massentabelle (nur Merkposten/Phase 6)
+  phase6             – {glaeubiger:'F'|'M', betrag, art, grund}: Forderung zwischen den
+                       Ehegatten, wird erst in Phase 6 verrechnet (Kursmethode)
+  hinzurechnung      – {ziel:'ER_M'|'ER_F', betrag?}: Hinzurechnung nach Art. 208 ZGB
+  keineHinzurechnung – {zielFrage:'ER_M'|'ER_F'}: Distraktor, korrekte Hinzurechnung = 0
+  mehrwert           – {beitraege:[{masse, betrag}], endwert, hauptmasse}:
+                       Finanzierung aus mehreren Massen; Solver verteilt
+                       Mehr-/Minderwert nach Art. 206 / 209 Abs. 3 ZGB
+  why1, why2, why3   – Erklärungstexte, art2/art3 – Gesetzesartikel
+*/
+
+function solveMehrwert(p) {
+  const mw = p.mehrwert;
+  const basis = mw.beitraege.reduce((s, b) => s + b.betrag, 0);
+  const faktor = mw.endwert / basis;
+  const eigentuemer = gatte(mw.hauptmasse);
+  let rows;
+  if (faktor >= 1) {
+    rows = mw.beitraege.map(b => ({ masse: b.masse, beitrag: b.betrag, anteil: b.betrag * faktor, geschuetzt: false }));
+  } else {
+    // Minderwert: Massen des anderen Ehegatten sind nach Art. 206 Abs. 1 ZGB
+    // geschützt (mindestens Nennwert); den Verlust tragen die Massen des
+    // Eigentümer-Ehegatten im Verhältnis ihrer Beiträge (Art. 209 Abs. 3 ZGB).
+    const eigene = mw.beitraege.filter(b => gatte(b.masse) === eigentuemer);
+    const fremde = mw.beitraege.filter(b => gatte(b.masse) !== eigentuemer);
+    const fremdNennwert = fremde.reduce((s, b) => s + b.betrag, 0);
+    const rest = mw.endwert - fremdNennwert;
+    const eigBasis = eigene.reduce((s, b) => s + b.betrag, 0);
+    rows = mw.beitraege.map(b => gatte(b.masse) !== eigentuemer
+      ? { masse: b.masse, beitrag: b.betrag, anteil: b.betrag, geschuetzt: true }
+      : { masse: b.masse, beitrag: b.betrag, anteil: rest * b.betrag / eigBasis, geschuetzt: false });
+  }
+  return { rows, basis, faktor };
+}
+
+function artFuerBeitrag(row, hauptmasse, faktor) {
+  const eigentuemer = gatte(hauptmasse);
+  if (gatte(row.masse) !== eigentuemer) return 'Art. 206 Abs. 1 ZGB';
+  if (faktor === 1) return 'Art. 209 Abs. 1 ZGB';
+  return 'Art. 209 Abs. 3 ZGB';
+}
+
+function solveCase(c) {
+  const pos = { EG_F: [], ER_F: [], ER_M: [], EG_M: [] };
+  const memo = [];           // Phase-6-Forderungen zwischen den Ehegatten
+  const mehrwerte = [];      // Daten für Phase-4-Eingaben (Anteile)
+  const hinzurechnungen = [];// Daten für Phase-4-Eingaben (Art. 208), inkl. Distraktoren
+
+  for (const p of c.posten) {
+    if (p.phase6) {
+      memo.push({
+        postenId: p.id, label: p.phase6.grund || p.name,
+        glaeubiger: p.phase6.glaeubiger, betrag: p.phase6.betrag,
+        art: p.phase6.art || 'Art. 209 Abs. 1 ZGB',
+      });
+    }
+    if (p.mehrwert) {
+      const { rows, basis, faktor } = solveMehrwert(p);
+      let fremdSum = 0;
+      for (const r of rows) {
+        if (r.masse === p.mehrwert.hauptmasse) continue;
+        fremdSum += r.anteil;
+        const art = artFuerBeitrag(r, p.mehrwert.hauptmasse, faktor);
+        pos[r.masse].push({ label: `${p.name}: Anteil (${art})`, betrag: r.anteil });
+        if (gatte(r.masse) !== gatte(p.mehrwert.hauptmasse)) {
+          memo.push({
+            postenId: p.id,
+            label: `${p.name}: Anteil ${MASSE_LABEL[r.masse]}`,
+            glaeubiger: gatte(r.masse), betrag: r.anteil, art,
+          });
+        }
+      }
+      const eigenAnteil = p.mehrwert.endwert - fremdSum;
+      pos[p.mehrwert.hauptmasse].push({
+        label: `${p.name}: Wert CHF ${chf(p.mehrwert.endwert)} ./. Anteile der übrigen Massen`,
+        betrag: eigenAnteil,
+      });
+      mehrwerte.push({
+        postenId: p.id, name: p.name, rows, basis, faktor,
+        endwert: p.mehrwert.endwert, hauptmasse: p.mehrwert.hauptmasse,
+      });
+      continue;
+    }
+    if (p.hinzurechnung) {
+      const betrag = p.hinzurechnung.betrag != null ? p.hinzurechnung.betrag : p.wert;
+      pos[p.hinzurechnung.ziel].push({ label: `${p.name}: Hinzurechnung (Art. 208 ZGB)`, betrag });
+      hinzurechnungen.push({ postenId: p.id, name: p.name, ziel: p.hinzurechnung.ziel, betrag });
+      continue;
+    }
+    if (p.keineHinzurechnung) {
+      hinzurechnungen.push({ postenId: p.id, name: p.name, ziel: p.keineHinzurechnung.zielFrage, betrag: 0 });
+      continue;
+    }
+    if (p.nurForderung || p.masse === 'NONE' || !p.masse) continue;
+
+    const w = p.schuld ? -p.wert : p.wert;
+    if (p.masse === 'MIT_ER') {
+      pos.ER_F.push({ label: `${p.name} (½ Miteigentum)`, betrag: w / 2 });
+      pos.ER_M.push({ label: `${p.name} (½ Miteigentum)`, betrag: w / 2 });
+    } else {
+      pos[p.masse].push({ label: p.name, betrag: w });
+    }
+  }
+
+  const saldo = {};
+  for (const m of MASSEN) saldo[m] = pos[m].reduce((s, x) => s + x.betrag, 0);
+
+  const vorschlagM = Math.max(0, saldo.ER_M);
+  const vorschlagF = Math.max(0, saldo.ER_F);
+  const rueckschlagM = saldo.ER_M < 0;
+  const rueckschlagF = saldo.ER_F < 0;
+  const anspruchF = vorschlagM / 2;   // Ehefrau erhält ½ des Vorschlags des Ehemannes
+  const anspruchM = vorschlagF / 2;   // Ehemann erhält ½ des Vorschlags der Ehefrau
+  const nettoAnF = anspruchF - anspruchM;            // > 0: Ehemann zahlt Ehefrau
+  const forderungenAnF = memo.reduce((s, x) => s + (x.glaeubiger === 'F' ? x.betrag : -x.betrag), 0);
+  const endAnF = nettoAnF + forderungenAnF;
+
+  return {
+    pos, memo, mehrwerte, hinzurechnungen, saldo,
+    vorschlagM, vorschlagF, rueckschlagM, rueckschlagF,
+    anspruchM, anspruchF, nettoAnF, forderungenAnF, endAnF,
+  };
+}
+
+
+'use strict';
+/* ============================================================
+   20 Übungsfälle zur güterrechtlichen Auseinandersetzung
+   (Errungenschaftsbeteiligung), aufsteigender Schwierigkeitsgrad.
+   Methodik und Zitierweise folgen der Vorlesung HF Recht
+   (KV Business School Zürich) bzw. der Kurszusammenfassung.
+   ============================================================ */
+
+const CASES = [
+
+/* ============ FALL 1 ============ */
+{
+  id: 1, titel: 'Zwei Löhne, ein Ring', stufe: 1, aufloesung: 'Scheidung',
+  lernziel: 'Grundzuordnung: Arbeitserwerb vs. Erbschaft vs. persönlicher Gebrauch – und die Grundrechnung der Vorschlagsteilung.',
+  intro: `Anna und Beat lassen sich nach zwölf Jahren Ehe scheiden. Einen Ehevertrag haben sie nie geschlossen. Folgende Vermögenswerte sind zu beurteilen:`,
+  posten: [
+    { id: 'p1', name: 'Sparkonto Beat (Lohnersparnisse)', hint: 'CHF 60\'000, während der Ehe aus Lohn angespart',
+      owner: 'M', why1: 'Das Konto lautet auf Beat und wurde von ihm geäufnet – Mannesgut.',
+      masse: 'ER_M', why2: 'Lohn ist Arbeitserwerb und damit Errungenschaft: während der Ehe entgeltlich erworben.', art2: ['Art. 197 Abs. 1 ZGB', 'Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 60000, why3: 'Kontoguthaben werden zum Nennwert eingesetzt (CHF 60\'000).', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Konto aus Erbschaft der Grossmutter (Beat)', hint: 'CHF 20\'000, während der Ehe geerbt',
+      owner: 'M', why1: 'Beat hat geerbt – der Wert gehört ihm, also Mannesgut.',
+      masse: 'EG_M', why2: 'Erbschaften sind unentgeltlicher Erwerb und damit Eigengut – auch wenn sie während der Ehe anfallen. Das ist ein klassischer Stolperstein: entscheidend ist die Unentgeltlichkeit, nicht der Zeitpunkt.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 20000, why3: 'Nennwert des Kontoguthabens: CHF 20\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p3', name: 'Sparkonto Anna (Lohnersparnisse)', hint: 'CHF 40\'000, während der Ehe aus Lohn angespart',
+      owner: 'F', why1: 'Annas Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb der Ehefrau → Errungenschaft Ehefrau.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 40000, why3: 'Nennwert: CHF 40\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p4', name: 'Brillantring (Geschenk von Beat an Anna)', hint: 'CHF 5\'000, nur Anna trägt ihn',
+      owner: 'F', why1: 'Der Ring wurde Anna geschenkt und dient nur ihr – Frauengut.',
+      masse: 'EG_F', why2: 'Gegenstände zum ausschliesslich persönlichen Gebrauch sind Eigengut (Art. 198 Ziff. 1 ZGB). Zudem wurde der Ring geschenkt, also unentgeltlich erworben (Art. 198 Ziff. 2 ZGB). Beide Wege führen zum Eigengut der Ehefrau.', art2: ['Art. 198 Ziff. 1 ZGB', 'Art. 198 Ziff. 2 ZGB'],
+      wert: 5000, why3: 'Verkehrswert des Rings: CHF 5\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note5: 'Merke: Jeder Ehegatte (oder seine Erben) erhält die Hälfte des Vorschlags des <b>anderen</b> (Art. 215 Abs. 1 ZGB) – nicht des eigenen! Die beiden Forderungen werden verrechnet; übrig bleibt die halbe Differenz der Vorschläge.',
+  note6: 'Es bestehen keine weiteren Forderungen zwischen den Ehegatten. Die Ausgleichszahlung entspricht deshalb direkt dem Ergebnis aus Phase 5. Die Eigengüter (CHF 20\'000 bei Beat, CHF 5\'000 bei Anna) bleiben unangetastet – sie werden nie geteilt.',
+},
+
+/* ============ FALL 2 ============ */
+{
+  id: 2, titel: 'Dividenden aus dem Erbe', stufe: 1, aufloesung: 'Scheidung',
+  lernziel: 'Erträge des Eigenguts sind Errungenschaft (Art. 197 Abs. 2 Ziff. 4 ZGB) – und bewertet wird zum Verkehrswert, nicht zum Kaufpreis.',
+  intro: `Clara und David lassen sich scheiden. Clara hat während der Ehe ein Aktiendepot von ihrem Vater geerbt; die Dividenden hat sie auf einem separaten Konto gesammelt. David kaufte sich vor vier Jahren aus seinem Lohn ein Auto. Zu beurteilen sind:`,
+  posten: [
+    { id: 'p1', name: 'Aktiendepot Clara (geerbt)', hint: 'Verkehrswert CHF 80\'000',
+      owner: 'F', why1: 'Clara hat das Depot geerbt – Frauengut.',
+      masse: 'EG_F', why2: 'Erbschaft = unentgeltlicher Erwerb = Eigengut, auch während der Ehe.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 80000, why3: 'Massgebend ist der aktuelle Verkehrswert der Aktien: CHF 80\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Dividendenkonto Clara', hint: 'CHF 12\'000 gesammelte Dividenden aus dem geerbten Depot',
+      owner: 'F', why1: 'Die Dividenden flossen Clara zu – Frauengut.',
+      masse: 'ER_F', why2: 'Der Klassiker: Die Erträge des Eigenguts fallen in die Errungenschaft – nicht ins Eigengut! Das geerbte Depot ist Eigengut, die daraus fliessenden Dividenden sind Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 4 ZGB'],
+      wert: 12000, why3: 'Nennwert des Kontos: CHF 12\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p3', name: 'Auto David', hint: 'Kaufpreis CHF 30\'000 (aus Lohn), heutiger Verkehrswert CHF 18\'000',
+      owner: 'M', why1: 'Davids Auto – Mannesgut.',
+      masse: 'ER_M', why2: 'Das Auto wurde mit Lohn (Errungenschaft) gekauft – als Ersatzanschaffung für Errungenschaft bleibt es Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 5 ZGB'],
+      wert: 18000, why3: 'Falle: Nicht der Kaufpreis (CHF 30\'000) zählt, sondern der Verkehrswert im Zeitpunkt der Auseinandersetzung: CHF 18\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p4', name: 'Voreheliches Sparkonto David', hint: 'CHF 25\'000, bereits vor der Heirat vorhanden',
+      owner: 'M', why1: 'Davids Konto – Mannesgut.',
+      masse: 'EG_M', why2: 'Vermögenswerte, die einem Ehegatten zu Beginn des Güterstandes gehören, sind Eigengut («mitgebracht»).', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 25000, why3: 'Nennwert: CHF 25\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p5', name: 'Lohnkonto David', hint: 'CHF 22\'000',
+      owner: 'M', why1: 'Davids Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 22000, why3: 'Nennwert: CHF 22\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note5: 'Clara behält ihr geerbtes Depot (Eigengut) vollständig – aber die Dividenden daraus muss sie als Errungenschaft teilen.',
+},
+
+/* ============ FALL 3 ============ */
+{
+  id: 3, titel: 'Genugtuung, Bonus und die Beweislast', stufe: 1, aufloesung: 'Scheidung',
+  lernziel: 'Genugtuung ist Eigengut; bei unbewiesener Herkunft gilt die Vermutung der Errungenschaft (Art. 200 Abs. 3 ZGB).',
+  intro: `Eva und Felix lassen sich scheiden. Eva erhielt nach einem Verkehrsunfall eine Genugtuung. Felix bekam letztes Jahr einen Bonus und von seinen Eltern eine Schenkung. Auf einem älteren Konto von Eva liegen CHF 24'000 – woher das Geld stammt, kann sie nicht mehr belegen. Felix bezog zudem während einer Krankheit IV-Taggelder.`,
+  posten: [
+    { id: 'p1', name: 'Genugtuungszahlung Eva', hint: 'CHF 30\'000 nach Verkehrsunfall',
+      owner: 'F', why1: 'Die Genugtuung wurde Eva persönlich zugesprochen – Frauengut.',
+      masse: 'EG_F', why2: 'Genugtuungsansprüche sind von Gesetzes wegen Eigengut – sie gleichen höchstpersönliche Beeinträchtigungen aus.', art2: ['Art. 198 Ziff. 3 ZGB'],
+      wert: 30000, why3: 'Nennwert: CHF 30\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Bonus Felix', hint: 'CHF 15\'000 vom Arbeitgeber',
+      owner: 'M', why1: 'Felix\' Bonus – Mannesgut.',
+      masse: 'ER_M', why2: 'Der Bonus ist Arbeitserwerb wie der Lohn → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 15000, why3: 'Nennwert: CHF 15\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p3', name: 'Schenkung der Eltern an Felix', hint: 'CHF 50\'000, während der Ehe erhalten',
+      owner: 'M', why1: 'Die Schenkung ging an Felix – Mannesgut.',
+      masse: 'EG_M', why2: 'Schenkungen sind unentgeltlicher Erwerb und damit Eigengut – der Zeitpunkt (während der Ehe) spielt keine Rolle.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 50000, why3: 'Nennwert: CHF 50\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p4', name: 'Konto Eva (Herkunft nicht belegbar)', hint: 'CHF 24\'000; Eva behauptet, es sei «altes Erspartes», kann dies aber nicht beweisen',
+      owner: 'F', why1: 'Das Konto lautet auf Eva und gehört unbestritten ihr – Frauengut. (Unklar ist nur die Massenzuordnung, nicht das Eigentum.)',
+      masse: 'ER_F', why2: 'Wer Eigengut behauptet, trägt die Beweislast. Gelingt der Beweis nicht, gilt die gesetzliche Vermutung: Alles Vermögen eines Ehegatten gilt bis zum Beweis des Gegenteils als Errungenschaft. Faustregel: Im Zweifel Errungenschaft.', art2: ['Art. 200 Abs. 3 ZGB'],
+      wert: 24000, why3: 'Nennwert: CHF 24\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p5', name: 'IV-Taggelder Felix (angespart)', hint: 'CHF 9\'000 während Krankheit bezogen',
+      owner: 'M', why1: 'Die Taggelder wurden Felix ausbezahlt – Mannesgut.',
+      masse: 'ER_M', why2: 'Entschädigungen wegen Arbeitsunfähigkeit haben Lohnersatzcharakter und sind Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 3 ZGB'],
+      wert: 9000, why3: 'Nennwert: CHF 9\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note5: 'Spezialität dieses Falls: Beide Vorschläge sind gleich hoch (je CHF 24\'000). Die gegenseitigen Beteiligungsforderungen heben sich vollständig auf – niemand schuldet dem anderen etwas.',
+  note6: 'Da sich die Ansprüche exakt decken und keine weiteren Forderungen bestehen, fliesst kein Geld. Jeder behält sein Eigengut (Eva die Genugtuung, Felix die Schenkung).',
+},
+
+/* ============ FALL 4 ============ */
+{
+  id: 4, titel: 'Die Ferienschulden', stufe: 2, aufloesung: 'Scheidung',
+  lernziel: 'Schulden belasten die Masse, mit der sie sachlich zusammenhängen – im Zweifel die Errungenschaft (Art. 209 Abs. 2 ZGB).',
+  intro: `Gina und Hugo lassen sich scheiden. Hugo hat für die letzten Familienferien einen Kredit von CHF 10'000 aufgenommen, der noch offen ist. Daneben bestehen folgende Werte:`,
+  posten: [
+    { id: 'p1', name: 'Lohnkonto Hugo', hint: 'CHF 70\'000',
+      owner: 'M', why1: 'Hugos Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 70000, why3: 'Nennwert: CHF 70\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Offene Kreditschuld Hugo (Familienferien)', hint: 'CHF 10\'000 noch offen', schuld: true,
+      owner: 'M', why1: 'Hugo hat den Kredit aufgenommen – die Schuld gehört zu seinem Vermögen (er haftet dafür mit seinem gesamten Vermögen, Art. 202 ZGB).',
+      masse: 'ER_M', why2: 'Jede Schuld belastet die Gütermasse, mit der sie sachlich zusammenhängt – im Zweifel die Errungenschaft. Ferien sind laufender Lebensaufwand, finanziert aus dem Erwerbseinkommen → die Schuld belastet die Errungenschaft Hugos.', art2: ['Art. 209 Abs. 2 ZGB', 'Art. 202 ZGB'],
+      p2opts: [
+        { key: 'ER_M', label: 'Schuld der Errungenschaft Ehemann' },
+        { key: 'EG_M', label: 'Schuld des Eigenguts Ehemann' },
+        { key: 'MIT', label: 'Schuld beider Ehegatten je hälftig' },
+        { key: 'NONE', label: 'Nicht zu berücksichtigen' },
+      ], p2key: 'ER_M',
+      wert: 10000, why3: 'Die Schuld wird mit ihrem Nennwert (CHF 10\'000) als Passivum eingesetzt – sie mindert den Saldo der Errungenschaft Hugos.', art3: ['Art. 209 Abs. 2 ZGB'] },
+    { id: 'p3', name: 'Geerbtes Motorrad Hugo', hint: 'Verkehrswert CHF 8\'000',
+      owner: 'M', why1: 'Hugos Motorrad – Mannesgut.',
+      masse: 'EG_M', why2: 'Erbschaft = unentgeltlich = Eigengut.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 8000, why3: 'Verkehrswert: CHF 8\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p4', name: 'Lohnkonto Gina', hint: 'CHF 44\'000',
+      owner: 'F', why1: 'Ginas Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 44000, why3: 'Nennwert: CHF 44\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p5', name: 'Voreheliche Möbel Gina', hint: 'Verkehrswert CHF 6\'000',
+      owner: 'F', why1: 'Ginas Möbel – Frauengut.',
+      masse: 'EG_F', why2: 'In die Ehe mitgebracht → Eigengut.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 6000, why3: 'Verkehrswert: CHF 6\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note4: 'Die Kreditschuld von CHF 10\'000 wird vom Saldo der Errungenschaft Hugos abgezogen: CHF 70\'000 − 10\'000 = 60\'000.',
+  note5: 'Der Vorschlag ist der <b>Aktivüberschuss</b> der Errungenschaft – also nach Abzug der Schulden (Art. 210 Abs. 1 ZGB).',
+},
+
+/* ============ FALL 5 ============ */
+{
+  id: 5, titel: 'Der Rückschlag', stufe: 2, aufloesung: 'Scheidung',
+  lernziel: 'Ein negativer Saldo der Errungenschaft (Rückschlag) wird nie geteilt – der Vorschlag beträgt dann 0 (Art. 210 Abs. 2 ZGB).',
+  intro: `Iris und Jan lassen sich scheiden. Jan hat über seine Verhältnisse gelebt: Seinen Lohnersparnissen von CHF 20'000 stehen Konsumkreditschulden von CHF 35'000 gegenüber (Elektronik, Reisen). Daneben hat Jan während der Ehe CHF 40'000 geerbt, die unangetastet auf einem separaten Konto liegen.`,
+  posten: [
+    { id: 'p1', name: 'Lohnkonto Jan', hint: 'CHF 20\'000',
+      owner: 'M', why1: 'Jans Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 20000, why3: 'Nennwert: CHF 20\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Konsumkreditschulden Jan', hint: 'CHF 35\'000 offen (Elektronik, Reisen)', schuld: true,
+      owner: 'M', why1: 'Jans Schulden – sie betreffen sein Vermögen (Art. 202 ZGB: Er haftet allein dafür).',
+      masse: 'ER_M', why2: 'Konsumschulden für den laufenden Lebensaufwand hängen sachlich mit der Errungenschaft zusammen (im Zweifel gilt ohnehin: Errungenschaft).', art2: ['Art. 209 Abs. 2 ZGB'],
+      p2opts: [
+        { key: 'ER_M', label: 'Schuld der Errungenschaft Ehemann' },
+        { key: 'EG_M', label: 'Schuld des Eigenguts Ehemann' },
+        { key: 'ER_F', label: 'Schuld der Errungenschaft Ehefrau' },
+        { key: 'MIT', label: 'Schuld beider Ehegatten je hälftig' },
+      ], p2key: 'ER_M',
+      wert: 35000, why3: 'Nennwert der offenen Schuld: CHF 35\'000 als Passivum der Errungenschaft Jans.', art3: ['Art. 209 Abs. 2 ZGB'] },
+    { id: 'p3', name: 'Geerbtes Konto Jan', hint: 'CHF 40\'000, unangetastet',
+      owner: 'M', why1: 'Jans Erbschaft – Mannesgut.',
+      masse: 'EG_M', why2: 'Erbschaft = Eigengut. Wichtig: Das Eigengut wird nicht zur Deckung des Rückschlags der Errungenschaft herangezogen – die Massen werden getrennt betrachtet.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 40000, why3: 'Nennwert: CHF 40\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p4', name: 'Sparkonto Iris (Lohn)', hint: 'CHF 52\'000',
+      owner: 'F', why1: 'Iris\' Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 52000, why3: 'Nennwert: CHF 52\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p5', name: 'Schmuck Iris', hint: 'Verkehrswert CHF 4\'000, nur von ihr getragen',
+      owner: 'F', why1: 'Iris\' Schmuck – Frauengut.',
+      masse: 'EG_F', why2: 'Persönlicher Gebrauch → Eigengut.', art2: ['Art. 198 Ziff. 1 ZGB'],
+      wert: 4000, why3: 'Verkehrswert: CHF 4\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note4: 'Die Errungenschaft Jans ist negativ: CHF 20\'000 − 35\'000 = <b>−15\'000</b>. Das nennt man Rückschlag. Geben Sie den Saldo mit Minuszeichen ein.',
+  note5: 'Der Rückschlag wird <b>nicht</b> ausgeglichen (Art. 210 Abs. 2 ZGB) – Jans Vorschlag beträgt schlicht CHF 0. Iris muss seinen Verlust nicht mittragen. Aber Achtung: Jan erhält trotzdem die Hälfte von Iris\' Vorschlag! Seine Schulden trägt er allein (z. B. aus seinem Eigengut).',
+  note6: 'Iris schuldet Jan die Hälfte ihres Vorschlags. Dass Jan Schulden hat, ändert daran nichts – sein Rückschlag bleibt sein Problem, ihr Vorschlag wird trotzdem geteilt.',
+},
+
+/* ============ FALL 6 ============ */
+{
+  id: 6, titel: 'Das gemeinsame Haus', stufe: 2, aufloesung: 'Scheidung',
+  lernziel: 'Miteigentum: Der Wert wird je hälftig den Errungenschaften beider zugeordnet; bewertet wird zum aktuellen Verkehrswert.',
+  intro: `Karin und Luca lassen sich scheiden. Vor acht Jahren kauften sie gemeinsam (Miteigentum je ½) ein Wohnhaus für CHF 900'000, vollständig finanziert aus ihren laufenden Löhnen. Das Haus ist heute CHF 1'200'000 wert.`,
+  posten: [
+    { id: 'p1', name: 'Wohnhaus (Miteigentum je ½)', hint: 'Kauf CHF 900\'000, heutiger Verkehrswert CHF 1\'200\'000, aus beiden Löhnen finanziert',
+      owner: 'MF', why1: 'Beide haben gemeinsam gekauft (Miteigentum je ½) – das Haus ist Frauen- und Mannesgut.',
+      masse: 'MIT_ER', why2: 'Finanziert aus laufendem Arbeitserwerb beider → der Wert fällt je zur Hälfte in die Errungenschaft der Ehefrau und die Errungenschaft des Ehemannes.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB', 'Art. 197 Abs. 2 Ziff. 5 ZGB'],
+      wert: 1200000, why3: 'Massgebend ist der Verkehrswert im Zeitpunkt der Auseinandersetzung (CHF 1\'200\'000), nicht der Kaufpreis. Je hälftig: CHF 600\'000 pro Errungenschaft.', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Lohnkonto Luca', hint: 'CHF 30\'000',
+      owner: 'M', why1: 'Lucas Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 30000, why3: 'Nennwert: CHF 30\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p3', name: 'Lohnkonto Karin', hint: 'CHF 20\'000',
+      owner: 'F', why1: 'Karins Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 20000, why3: 'Nennwert: CHF 20\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p4', name: 'Geerbte Uhrensammlung Luca', hint: 'Verkehrswert CHF 25\'000',
+      owner: 'M', why1: 'Lucas Sammlung – Mannesgut.',
+      masse: 'EG_M', why2: 'Erbschaft → Eigengut.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 25000, why3: 'Verkehrswert: CHF 25\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p5', name: 'Voreheliches Konto Karin', hint: 'CHF 15\'000',
+      owner: 'F', why1: 'Karins Konto – Frauengut.',
+      masse: 'EG_F', why2: 'Mitgebracht → Eigengut.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 15000, why3: 'Nennwert: CHF 15\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note4: 'Das Haus erscheint mit je CHF 600\'000 in beiden Errungenschaften. Die Wertsteigerung von CHF 300\'000 kommt so automatisch beiden je hälftig zugute.',
+  note6: 'Physisch wird das Haus verkauft oder einem Ehegatten (gegen Auszahlung) zugewiesen – güterrechtlich ist nur der Wertausgleich von CHF 5\'000 geschuldet.',
+},
+
+/* ============ FALL 7 ============ */
+{
+  id: 7, titel: 'Das Fallbeispiel aus dem Unterricht', stufe: 2, aufloesung: 'Scheidung',
+  lernziel: 'Das durchgehende Kursbeispiel: Ersatzforderungen zwischen den Ehegatten werden erst in Phase 6 verrechnet.',
+  intro: `Dieser Fall entspricht exakt dem durchgehenden Fallbeispiel der Vorlesung. Franziska und Markus lassen sich scheiden. Zu beurteilen sind sechs Positionen: eine Spielkonsole (durch Markus' Lohn bezahlt, er spielt darauf), Franziskas Auto (vor der Ehe gekauft, zurzeit verliehen), Halsketten (von Markus geerbt, aber nur Franziska trug sie), Damenschuhe (durch Franziskas Lohn bezahlt), das gemeinsam gekaufte Wohnhaus (aus laufendem Erwerb beider finanziert) sowie Spielschulden von Markus, die Franziska mit ihrem Erbvorbezug bezahlt hat.`,
+  posten: [
+    { id: 'p1', name: 'Spielkonsole', hint: 'CHF 100, durch Lohn von Markus bezahlt',
+      owner: 'M', why1: 'Markus hat sie bezahlt und benutzt sie – Mannesgut.',
+      masse: 'ER_M', why2: 'Mit Lohn (Arbeitserwerb) bezahlt → Errungenschaft des Ehemannes.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB', 'Art. 197 Abs. 2 Ziff. 5 ZGB'],
+      wert: 100, why3: 'Verkehrswert: CHF 100.', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Auto Franziska (verliehen)', hint: 'CHF 2\'000, vor der Ehe gekauft',
+      owner: 'F', why1: 'Franziskas Auto – Frauengut. Dass es gerade verliehen ist, ändert nichts: Sie kann es von jedermann herausverlangen (Rücknahme, Art. 205 Abs. 1 ZGB).',
+      masse: 'EG_F', why2: 'Bereits vor der Ehe gekauft → mitgebrachtes Vermögen → Eigengut.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 2000, why3: 'Verkehrswert CHF 2\'000. Der Wert wird eingesetzt, obwohl das Auto verliehen ist – es gehört weiterhin zum Vermögen.', art3: ['Art. 211 ZGB', 'Art. 205 Abs. 1 ZGB'] },
+    { id: 'p3', name: 'Halsketten (von Markus geerbt, von Franziska getragen)', hint: 'CHF 3\'000',
+      owner: 'F', why1: 'Die Ketten dienten ausschliesslich Franziska – Frauengut (Zuordnung nach Gebrauch).',
+      masse: 'EG_F', why2: 'Als Gegenstand zum ausschliesslich persönlichen Gebrauch der Ehefrau gehören die Ketten zu ihrem Eigengut (Art. 198 Ziff. 1 ZGB). Weil Markus sie geerbt hatte (ursprünglich sein Eigengut), erhält sein Eigengut dafür eine Ersatzforderung von CHF 3\'000.', art2: ['Art. 198 Ziff. 1 ZGB'],
+      p2opts: [
+        { key: 'EG_F', label: 'Eigengut Ehefrau – mit Ersatzforderung des Eigenguts Ehemann' },
+        { key: 'EG_M', label: 'Eigengut Ehemann (er hat sie geerbt)' },
+        { key: 'ER_F', label: 'Errungenschaft Ehefrau' },
+        { key: 'MIT', label: 'Miteigentum beider Ehegatten' },
+      ], p2key: 'EG_F',
+      phase6: { glaeubiger: 'M', betrag: 3000, art: '', grund: 'Ersatzforderung Halsketten (EG Ehemann gegen EG Ehefrau)' },
+      wert: 3000, why3: 'Verkehrswert: CHF 3\'000. Die Ketten stehen im Eigengut Franziskas; die Ersatzforderung von Markus wird als Merkposten notiert und in Phase 6 verrechnet.', art3: ['Art. 211 ZGB'] },
+    { id: 'p4', name: 'Damenschuhe', hint: 'CHF 1\'500, durch Lohn von Franziska bezahlt',
+      owner: 'F', why1: 'Franziskas Schuhe – Frauengut.',
+      masse: 'ER_F', why2: 'Gemäss Kurslösung: mit Lohn bezahlt → Errungenschaft der Ehefrau (Ersatzanschaffung für Errungenschaft). (Bei sehr persönlichen Gegenständen wäre auch Art. 198 Ziff. 1 ZGB diskutierbar – die Vorlesung ordnet die Schuhe nach der Finanzierung der Errungenschaft zu.)', art2: ['Art. 197 Abs. 2 Ziff. 5 ZGB'],
+      wert: 1500, why3: 'Verkehrswert: CHF 1\'500.', art3: ['Art. 211 ZGB'] },
+    { id: 'p5', name: 'Wohnhaus (gemeinsam gekauft)', hint: 'CHF 2\'250\'000, aus laufendem Erwerb beider finanziert',
+      owner: 'MF', why1: 'Gemeinsam gekauft – Frauen- und Mannesgut (Miteigentum).',
+      masse: 'MIT_ER', why2: 'Aus laufendem Erwerb beider finanziert → je hälftig Errungenschaft der Ehefrau und des Ehemannes (je CHF 1\'125\'000).', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 2250000, why3: 'Verkehrswert CHF 2\'250\'000, je CHF 1\'125\'000 pro Errungenschaft.', art3: ['Art. 211 ZGB'] },
+    { id: 'p6', name: 'Spielschulden Markus – von Franziska bezahlt', hint: 'CHF 40\'000, bezahlt aus Franziskas Erbvorbezug', nurForderung: true,
+      owner: 'F', why1: 'Die Schulden sind bezahlt – übrig bleibt Franziskas Rückforderung gegen Markus. Diese Forderung ist ein Vermögenswert Franziskas: Frauengut.',
+      masse: 'EG_F', why2: 'Franziska hat die Schulden aus ihrem Erbvorbezug – also aus ihrem Eigengut (unentgeltlicher Erwerb) – getilgt. Ihr Eigengut erhält dafür eine Ersatzforderung von CHF 40\'000 gegen die Errungenschaft von Markus (die Spielschuld hängt sachlich mit ihm zusammen, Art. 209 Abs. 2 ZGB).', art2: ['Art. 209 Abs. 1 ZGB', 'Art. 209 Abs. 2 ZGB', 'Art. 198 Ziff. 2 ZGB'],
+      p2opts: [
+        { key: 'EG_F', label: 'Eigengut Ehefrau – Ersatzforderung gegen die Errungenschaft Ehemann' },
+        { key: 'ER_F', label: 'Errungenschaft Ehefrau – Ersatzforderung gegen den Ehemann' },
+        { key: 'ER_M', label: 'Schuld der Errungenschaft Ehemann gegenüber Dritten' },
+        { key: 'NONE', label: 'Nicht zu berücksichtigen (Schuld ist ja bezahlt)' },
+      ], p2key: 'EG_F',
+      phase6: { glaeubiger: 'F', betrag: 40000, art: 'Art. 209 Abs. 1 ZGB', grund: 'Ersatzforderung Spielschulden (EG Ehefrau gegen ER Ehemann)' },
+      wert: 40000, why3: 'Die Forderung wird zum Nennwert (CHF 40\'000) eingesetzt und als Merkposten für Phase 6 notiert.', art3: ['Art. 211 ZGB'] },
+  ],
+  note4: 'Nach der Kurslösung fliessen die beiden Ersatzforderungen (Halsketten CHF 3\'000, Spielschulden CHF 40\'000) <b>nicht</b> in die Errungenschafts-Salden ein – sie werden als Merkposten notiert und erst in Phase 6 verrechnet. Die getilgte Spielschuld mindert die Errungenschaft von Markus also nicht nochmals: Es existiert keine offene Schuld mehr, sondern nur noch die Ersatzforderung Franziskas.',
+  note5: 'Schneller Weg: Statt beide Hälften einzeln zu rechnen, genügt die halbe Differenz der Vorschläge: (1\'126\'500 − 1\'125\'100) : 2 = CHF 700 zugunsten von Markus.',
+  note6: 'Reihenfolge der Kurslösung: Zuerst werden die gegenseitigen Ersatzforderungen saldiert (40\'000 − 3\'000 = 37\'000 zugunsten Franziska), dann wird die Vorschlagsbeteiligung (CHF 700 zugunsten Markus) abgezogen. Endergebnis: Franziska hat eine Forderung von CHF 36\'300. Jeder behält seine Gegenstände; der Ausgleich erfolgt in Geld.',
+},
+
+/* ============ FALL 8 ============ */
+{
+  id: 8, titel: 'Die Erbschaft im neuen Auto', stufe: 3, aufloesung: 'Scheidung',
+  lernziel: 'Ersatzforderung zwischen den Massen desselben Ehegatten (Art. 209 Abs. 1 ZGB) – ohne Wertveränderung.',
+  intro: `Mara und Nico lassen sich scheiden. Nico kaufte während der Ehe ein Auto für CHF 60'000: CHF 36'000 stammten aus seinen Lohnersparnissen, CHF 24'000 aus einer Erbschaft. Das Auto ist heute noch CHF 60'000 wert (Liebhaberstück, wertstabil).`,
+  posten: [
+    { id: 'p1', name: 'Auto Nico', hint: 'Kauf CHF 60\'000 (36\'000 aus Lohn + 24\'000 aus Erbschaft), heutiger Wert CHF 60\'000',
+      owner: 'M', why1: 'Nicos Auto – Mannesgut.',
+      masse: 'ER_M', phase2Label: 'Errungenschaft Ehemann – mit Ersatzforderung des Eigenguts Ehemann (Art. 209 Abs. 1 ZGB)',
+      why2: 'Der Hauptbeitrag (CHF 36\'000 von 60\'000) stammt aus der Errungenschaft → das Auto wird als Ganzes der Errungenschaft Nicos zugeordnet. Weil sein Eigengut CHF 24\'000 beigesteuert hat, erhält das Eigengut eine Ersatzforderung gegen die Errungenschaft (Art. 209 Abs. 1 ZGB). Diese Ersatzforderung besteht zwischen zwei Massen desselben Ehegatten – es fliesst kein Geld zwischen den Ehegatten.', art2: ['Art. 209 Abs. 1 ZGB', 'Art. 197 Abs. 2 Ziff. 5 ZGB'],
+      p2opts: [
+        { key: 'ER_M', label: 'Errungenschaft Ehemann – mit Ersatzforderung des Eigenguts Ehemann' },
+        { key: 'EG_M', label: 'Eigengut Ehemann – mit Ersatzforderung der Errungenschaft Ehemann' },
+        { key: 'ER_M2', label: 'Errungenschaft Ehemann (vollständig, ohne Ersatzforderung)' },
+        { key: 'MIT', label: 'Miteigentum beider Ehegatten' },
+      ], p2key: 'ER_M',
+      mehrwert: { beitraege: [ { masse: 'ER_M', betrag: 36000 }, { masse: 'EG_M', betrag: 24000 } ], endwert: 60000, hauptmasse: 'ER_M' },
+      wert: 60000, why3: 'Verkehrswert heute: CHF 60\'000. Da sich der Wert nicht verändert hat, entsprechen die Anteile genau den ursprünglichen Beiträgen (kein Mehr-/Minderwert).', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Lohnkonto Nico', hint: 'CHF 14\'000',
+      owner: 'M', why1: 'Nicos Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 14000, why3: 'Nennwert: CHF 14\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p3', name: 'Sparkonto Mara (Lohn)', hint: 'CHF 38\'000',
+      owner: 'F', why1: 'Maras Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 38000, why3: 'Nennwert: CHF 38\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p4', name: 'Geerbtes Klavier Mara', hint: 'Verkehrswert CHF 12\'000',
+      owner: 'F', why1: 'Maras Klavier – Frauengut.',
+      masse: 'EG_F', why2: 'Erbschaft → Eigengut.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 12000, why3: 'Verkehrswert: CHF 12\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note4: 'Das Auto (CHF 60\'000) steht in der Errungenschaft Nicos, aber sein Eigengut hat eine Ersatzforderung von CHF 24\'000 (Art. 209 Abs. 1 ZGB): Errungenschaft 60\'000 − 24\'000 = 36\'000; Eigengut +24\'000. So landet wertmässig genau das in jeder Masse, was sie beigesteuert hat.',
+  note5: 'Die Ersatzforderung wirkt sich direkt auf den Vorschlag aus: Ohne sie müsste Nico CHF 24\'000 mehr Errungenschaft teilen, obwohl das Geld aus seiner Erbschaft stammt.',
+},
+
+/* ============ FALL 9 ============ */
+{
+  id: 9, titel: 'Die grosszügige Schenkung', stufe: 3, aufloesung: 'Scheidung',
+  lernziel: 'Hinzurechnung nach Art. 208 Abs. 1 Ziff. 1 ZGB – und die Ausnahme der üblichen Gelegenheitsgeschenke.',
+  intro: `Olivia und Paul lassen sich scheiden (Klageeinreichung: März 2026). Im Oktober 2024 – also rund eineinhalb Jahre vor der Klage – schenkte Paul seiner Schwester CHF 30'000 aus seinen Lohnersparnissen, ohne Olivia zu fragen. Daneben machte Paul seinem Patenkind über die Jahre übliche Geburtstagsgeschenke von insgesamt rund CHF 800.`,
+  posten: [
+    { id: 'p1', name: 'Schenkung an die Schwester (Okt. 2024)', hint: 'CHF 30\'000 aus Lohnersparnissen, ohne Zustimmung Olivias',
+      owner: 'NONE', why1: 'Das Geld ist verschenkt – es befindet sich nicht mehr im Vermögen der Ehegatten. (Es wird aber in Phase 4 rechnerisch hinzugerechnet!)',
+      masse: 'NONE', phase2Label: 'Nicht mehr vorhanden – aber Hinzurechnung zur Errungenschaft Ehemann (Art. 208 ZGB)',
+      why2: 'Unentgeltliche Zuwendungen, die ein Ehegatte in den letzten fünf Jahren vor Auflösung des Güterstandes ohne Zustimmung des anderen gemacht hat, werden der Errungenschaft rechnerisch hinzugerechnet (Art. 208 Abs. 1 Ziff. 1 ZGB). Die Schenkung stammte aus Lohnersparnissen (Errungenschaft) und erfolgte ohne Zustimmung → Hinzurechnung zur Errungenschaft Pauls.', art2: ['Art. 208 Abs. 1 Ziff. 1 ZGB'],
+      p2opts: [
+        { key: 'NONE', label: 'Nicht mehr im Vermögen – aber Hinzurechnung zur Errungenschaft Ehemann (Art. 208 ZGB)' },
+        { key: 'ER_M', label: 'Errungenschaft Ehemann (das Geld zählt ganz normal zum Bestand)' },
+        { key: 'NONE2', label: 'Nicht zu berücksichtigen – verschenkt ist verschenkt' },
+        { key: 'EG_M', label: 'Eigengut Ehemann' },
+      ], p2key: 'NONE',
+      hinzurechnung: { ziel: 'ER_M' },
+      wert: 30000, why3: 'Hinzugerechnet wird der Wert der Zuwendung: CHF 30\'000.', art3: ['Art. 208 Abs. 1 Ziff. 1 ZGB'] },
+    { id: 'p2', name: 'Geburtstagsgeschenke ans Patenkind', hint: 'über die Jahre insgesamt ca. CHF 800', bewertbar: false,
+      owner: 'NONE', why1: 'Auch diese Geschenke sind weg – nicht mehr im Vermögen.',
+      masse: 'NONE', phase2Label: 'Nicht zu berücksichtigen – übliche Gelegenheitsgeschenke werden nicht hinzugerechnet',
+      why2: 'Übliche Gelegenheitsgeschenke sind von der Hinzurechnung ausgenommen (Art. 208 Abs. 1 Ziff. 1 ZGB: «ausgenommen die üblichen Gelegenheitsgeschenke»). Kleine Geburtstagsgeschenke ans Patenkind sind sozialüblich → keine Hinzurechnung.', art2: ['Art. 208 Abs. 1 Ziff. 1 ZGB'],
+      p2opts: [
+        { key: 'NONE', label: 'Nicht zu berücksichtigen – übliche Gelegenheitsgeschenke' },
+        { key: 'HINZU', label: 'Hinzurechnung zur Errungenschaft Ehemann (Art. 208 ZGB)' },
+        { key: 'ER_M', label: 'Errungenschaft Ehemann' },
+      ], p2key: 'NONE',
+      keineHinzurechnung: { zielFrage: 'ER_M' },
+      why3: 'Keine Bewertung nötig – Gelegenheitsgeschenke werden nicht hinzugerechnet.' },
+    { id: 'p3', name: 'Lohnkonto Paul', hint: 'CHF 26\'000',
+      owner: 'M', why1: 'Pauls Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 26000, why3: 'Nennwert: CHF 26\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p4', name: 'Lohnkonto Olivia', hint: 'CHF 40\'000',
+      owner: 'F', why1: 'Olivias Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 40000, why3: 'Nennwert: CHF 40\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p5', name: 'Voreheliche Briefmarkensammlung Paul', hint: 'Verkehrswert CHF 10\'000',
+      owner: 'M', why1: 'Pauls Sammlung – Mannesgut.',
+      masse: 'EG_M', why2: 'Mitgebracht → Eigengut.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 10000, why3: 'Verkehrswert: CHF 10\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note4: 'Die Hinzurechnung ist eine <b>rechnerische</b> Operation: Das verschenkte Geld kommt nicht zurück, aber es wird der Errungenschaft Pauls so hinzugerechnet, als wäre es noch da: 26\'000 + 30\'000 = 56\'000. Die Geburtstagsgeschenke (CHF 800) werden <b>nicht</b> hinzugerechnet (übliche Gelegenheitsgeschenke).',
+  note5: 'Ohne die Hinzurechnung könnte ein Ehegatte den Vorschlag durch Schenkungen an Dritte künstlich verkleinern – Art. 208 ZGB schützt den anderen Ehegatten davor.',
+},
+
+/* ============ FALL 10 ============ */
+{
+  id: 10, titel: 'Verschleudert und verspätet', stufe: 3, aufloesung: 'Scheidung',
+  lernziel: 'Vermögensentäusserung in Schmälerungsabsicht (Art. 208 Abs. 1 Ziff. 2 ZGB) und der massgebliche Auflösungszeitpunkt (Art. 204 Abs. 2 ZGB).',
+  intro: `Rita und Sven: Die Scheidungsklage wurde am 1. Februar 2026 eingereicht. Im Januar 2026 – als die Scheidung bereits absehbar war – «verkaufte» Sven seinen Sportwagen (Verkehrswert CHF 45'000) für symbolische CHF 5'000 an einen Kollegen, «damit Rita nichts davon bekommt». Der Erlös liegt auf seinem Lohnkonto. Seit Februar 2026 fliesst Svens Lohn auf ein separates neues Konto (Stand: CHF 12'000). Rita besitzt eine geerbte Ferienwohnung, die sie während der Ehe vermietete.`,
+  posten: [
+    { id: 'p1', name: 'Sportwagen – weit unter Wert «verkauft» (Jan. 2026)', hint: 'Verkehrswert CHF 45\'000, «Verkaufspreis» CHF 5\'000',
+      owner: 'NONE', why1: 'Der Wagen ist veräussert – nicht mehr im Vermögen der Ehegatten. (Rechnerische Hinzurechnung folgt in Phase 4.)',
+      masse: 'NONE', phase2Label: 'Nicht mehr vorhanden – Hinzurechnung der Differenz zur Errungenschaft Ehemann (Art. 208 ZGB)',
+      why2: 'Sven hat Vermögen in der offensichtlichen Absicht entäussert, Ritas Beteiligungsanspruch zu schmälern → Hinzurechnung nach Art. 208 Abs. 1 Ziff. 2 ZGB. Hinzugerechnet wird die Vermögenseinbusse: Verkehrswert CHF 45\'000 − erhaltene CHF 5\'000 = CHF 40\'000 (die CHF 5\'000 Erlös liegen ja noch auf dem Lohnkonto).', art2: ['Art. 208 Abs. 1 Ziff. 2 ZGB'],
+      p2opts: [
+        { key: 'NONE', label: 'Nicht mehr im Vermögen – Hinzurechnung der Wertdifferenz zur Errungenschaft Ehemann (Art. 208 ZGB)' },
+        { key: 'ER_M', label: 'Errungenschaft Ehemann (der Wagen zählt mit vollem Wert zum Bestand)' },
+        { key: 'NONE2', label: 'Nicht zu berücksichtigen – der Verkauf ist gültig' },
+      ], p2key: 'NONE',
+      hinzurechnung: { ziel: 'ER_M', betrag: 40000 },
+      wert: 40000, why3: 'Hinzugerechnet wird die Differenz zwischen Verkehrswert und Gegenleistung: 45\'000 − 5\'000 = CHF 40\'000.', art3: ['Art. 208 Abs. 1 Ziff. 2 ZGB', 'Art. 211 ZGB'] },
+    { id: 'p2', name: 'Lohnkonto Sven (inkl. CHF 5\'000 «Erlös»)', hint: 'CHF 25\'000',
+      owner: 'M', why1: 'Svens Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb (und Ersatz für den veräusserten Wagen) → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 25000, why3: 'Nennwert: CHF 25\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p3', name: 'Neues Lohnkonto Sven (Löhne ab Februar 2026)', hint: 'CHF 12\'000, alles nach Klageeinreichung verdient',
+      owner: 'M', why1: 'Svens Konto – Mannesgut.',
+      masse: 'NONE', phase2Label: 'Nicht zu berücksichtigen – nach dem massgeblichen Auflösungszeitpunkt erworben',
+      why2: 'Bei Scheidung wird die Auflösung des Güterstandes auf den Tag der Klageeinreichung zurückbezogen (Art. 204 Abs. 2 ZGB). Was Sven nach dem 1. Februar 2026 verdient, ist keine Errungenschaft mehr und bleibt ausserhalb der Auseinandersetzung.', art2: ['Art. 204 Abs. 2 ZGB'],
+      p2opts: [
+        { key: 'NONE', label: 'Nicht zu berücksichtigen – nach der Klageeinreichung erworben (Art. 204 Abs. 2 ZGB)' },
+        { key: 'ER_M', label: 'Errungenschaft Ehemann – während der Ehe verdient' },
+        { key: 'EG_M', label: 'Eigengut Ehemann' },
+      ], p2key: 'NONE', bewertbar: false,
+      why3: 'Keine Bewertung – der Wert gehört nicht in die Auseinandersetzung (Art. 204 Abs. 2 ZGB).' },
+    { id: 'p4', name: 'Sparkonto Rita (Lohn)', hint: 'CHF 33\'000',
+      owner: 'F', why1: 'Ritas Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 33000, why3: 'Nennwert: CHF 33\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p5', name: 'Geerbte Ferienwohnung Rita', hint: 'Verkehrswert CHF 200\'000',
+      owner: 'F', why1: 'Ritas Wohnung – Frauengut.',
+      masse: 'EG_F', why2: 'Erbschaft → Eigengut.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 200000, why3: 'Verkehrswert: CHF 200\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p6', name: 'Gesammelte Mietzinserträge aus der Ferienwohnung', hint: 'CHF 15\'000 (während der Ehe vereinnahmt)',
+      owner: 'F', why1: 'Die Mietzinsen flossen Rita zu – Frauengut.',
+      masse: 'ER_F', why2: 'Mietzinsen sind Erträge des Eigenguts → Errungenschaft (nicht Eigengut!).', art2: ['Art. 197 Abs. 2 Ziff. 4 ZGB'],
+      wert: 15000, why3: 'Nennwert: CHF 15\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note4: 'Errungenschaft Sven: 25\'000 (Konto) + 40\'000 (Hinzurechnung Sportwagen) = 65\'000. Errungenschaft Rita: 33\'000 + 15\'000 (Mieterträge) = 48\'000. Das neue Lohnkonto (CHF 12\'000) bleibt komplett draussen.',
+  note5: 'Svens Manöver nützt ihm nichts: Dank Art. 208 ZGB wird gerechnet, als wäre der Sportwagen noch da. (Reicht sein Vermögen zur Deckung nicht, könnte Rita sogar auf den Kollegen greifen – Art. 220 ZGB, hier nicht nötig.)',
+},
+
+/* ============ FALL 11 ============ */
+{
+  id: 11, titel: 'Die Hinzurechnung rettet den Vorschlag', stufe: 3, aufloesung: 'Scheidung',
+  lernziel: 'Rechenreihenfolge: Erst Hinzurechnung, dann Saldo – eine Hinzurechnung kann aus einem Rückschlag einen Vorschlag machen.',
+  intro: `Tanja und Urs lassen sich scheiden. Urs hat CHF 10'000 Lohnersparnisse, aber noch CHF 22'000 offene Leasing- und Konsumschulden. Vor zwei Jahren schenkte er zudem seinem Bruder CHF 20'000 aus seinem Ersparten, ohne Tanja zu fragen. Tanja hat CHF 36'000 gespart und nach einem Unfall eine Genugtuung von CHF 10'000 erhalten.`,
+  posten: [
+    { id: 'p1', name: 'Lohnkonto Urs', hint: 'CHF 10\'000',
+      owner: 'M', why1: 'Urs\' Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 10000, why3: 'Nennwert: CHF 10\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Offene Leasing-/Konsumschulden Urs', hint: 'CHF 22\'000', schuld: true,
+      owner: 'M', why1: 'Urs\' Schulden – er haftet dafür (Art. 202 ZGB).',
+      masse: 'ER_M', why2: 'Konsumschulden aus dem laufenden Lebensaufwand belasten die Errungenschaft (im Zweifel Errungenschaft).', art2: ['Art. 209 Abs. 2 ZGB'],
+      p2opts: [
+        { key: 'ER_M', label: 'Schuld der Errungenschaft Ehemann' },
+        { key: 'EG_M', label: 'Schuld des Eigenguts Ehemann' },
+        { key: 'MIT', label: 'Schuld beider Ehegatten je hälftig' },
+      ], p2key: 'ER_M',
+      wert: 22000, why3: 'Nennwert der Schuld: CHF 22\'000 (Passivum).', art3: ['Art. 209 Abs. 2 ZGB'] },
+    { id: 'p3', name: 'Schenkung an den Bruder (vor 2 Jahren)', hint: 'CHF 20\'000 aus Lohnersparnissen, ohne Zustimmung Tanjas',
+      owner: 'NONE', why1: 'Verschenkt – nicht mehr im Vermögen. (Hinzurechnung in Phase 4.)',
+      masse: 'NONE', phase2Label: 'Nicht mehr vorhanden – Hinzurechnung zur Errungenschaft Ehemann (Art. 208 ZGB)',
+      why2: 'Unentgeltliche Zuwendung innert der letzten fünf Jahre ohne Zustimmung der Ehefrau → Hinzurechnung zur Errungenschaft (Art. 208 Abs. 1 Ziff. 1 ZGB).', art2: ['Art. 208 Abs. 1 Ziff. 1 ZGB'],
+      p2opts: [
+        { key: 'NONE', label: 'Nicht mehr im Vermögen – Hinzurechnung zur Errungenschaft Ehemann (Art. 208 ZGB)' },
+        { key: 'NONE2', label: 'Nicht zu berücksichtigen – verschenkt ist verschenkt' },
+        { key: 'EG_M', label: 'Eigengut Ehemann' },
+      ], p2key: 'NONE',
+      hinzurechnung: { ziel: 'ER_M' },
+      wert: 20000, why3: 'Hinzugerechnet wird der volle Wert der Schenkung: CHF 20\'000.', art3: ['Art. 208 Abs. 1 Ziff. 1 ZGB'] },
+    { id: 'p4', name: 'Sparkonto Tanja (Lohn)', hint: 'CHF 36\'000',
+      owner: 'F', why1: 'Tanjas Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 36000, why3: 'Nennwert: CHF 36\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p5', name: 'Genugtuung Tanja', hint: 'CHF 10\'000',
+      owner: 'F', why1: 'Tanjas Genugtuung – Frauengut.',
+      masse: 'EG_F', why2: 'Genugtuungsansprüche sind Eigengut.', art2: ['Art. 198 Ziff. 3 ZGB'],
+      wert: 10000, why3: 'Nennwert: CHF 10\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note4: 'Errungenschaft Urs: 10\'000 − 22\'000 = −12\'000 (Zwischensaldo) <b>+ 20\'000 Hinzurechnung = +8\'000</b>. Die Hinzurechnung macht aus dem Rückschlag einen Vorschlag! Ohne Art. 208 ZGB hätte Urs\' Schenkung den teilbaren Vorschlag auf 0 gedrückt.',
+  note5: 'Urs\' Vorschlag beträgt CHF 8\'000 (kein Rückschlag mehr dank Hinzurechnung). Tanja: CHF 36\'000.',
+},
+
+/* ============ FALL 12 ============ */
+{
+  id: 12, titel: 'Das Darlehen unter Ehegatten', stufe: 3, aufloesung: 'Scheidung',
+  lernziel: 'Offene Forderungen zwischen den Ehegatten werden in Phase 6 verrechnet (vgl. Art. 205 Abs. 3 ZGB).',
+  intro: `Vera und Walter lassen sich scheiden. Vera hatte Walter vor drei Jahren CHF 25'000 aus ihrem geerbten Vermögen geliehen, damit er seine vorehelichen Schulden tilgen konnte. Das Darlehen ist noch offen. Vera besitzt zudem ein geerbtes Wertschriftendepot; die Dividenden sammelt sie separat.`,
+  posten: [
+    { id: 'p1', name: 'Darlehen Vera an Walter (offen)', hint: 'CHF 25\'000 aus Veras Erbschaft, für Walters voreheliche Schulden', nurForderung: true,
+      owner: 'F', why1: 'Die Darlehensforderung ist ein Vermögenswert Veras – Frauengut.',
+      masse: 'EG_F', why2: 'Das Darlehen stammt aus Veras Erbschaft → die Forderung gehört zu ihrem Eigengut (Ersatzanschaffung: An die Stelle des Geldes tritt die Forderung, Art. 198 Ziff. 4 ZGB). Walters getilgte Schulden waren vorehelich, betreffen also sein Eigengut. Bei der Auflösung regeln die Ehegatten ihre gegenseitigen Schulden (Art. 205 Abs. 3 ZGB) – die Forderung wird in Phase 6 verrechnet.', art2: ['Art. 198 Ziff. 4 ZGB', 'Art. 205 Abs. 3 ZGB'],
+      p2opts: [
+        { key: 'EG_F', label: 'Eigengut Ehefrau – Forderung gegen den Ehemann (Verrechnung in Phase 6)' },
+        { key: 'ER_F', label: 'Errungenschaft Ehefrau – Forderung gegen den Ehemann' },
+        { key: 'NONE', label: 'Nicht zu berücksichtigen – Darlehen unter Ehegatten sind güterrechtlich irrelevant' },
+        { key: 'EG_M', label: 'Eigengut Ehemann' },
+      ], p2key: 'EG_F',
+      phase6: { glaeubiger: 'F', betrag: 25000, art: 'Art. 205 Abs. 3 ZGB', grund: 'Offenes Darlehen (EG Ehefrau gegen EG Ehemann)' },
+      wert: 25000, why3: 'Die Forderung wird zum Nennwert eingesetzt: CHF 25\'000 (Merkposten für Phase 6).', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Lohnkonto Walter', hint: 'CHF 48\'000',
+      owner: 'M', why1: 'Walters Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 48000, why3: 'Nennwert: CHF 48\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p3', name: 'Lohnkonto Vera', hint: 'CHF 30\'000',
+      owner: 'F', why1: 'Veras Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 30000, why3: 'Nennwert: CHF 30\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p4', name: 'Geerbtes Depot Vera', hint: 'Verkehrswert CHF 60\'000',
+      owner: 'F', why1: 'Veras Depot – Frauengut.',
+      masse: 'EG_F', why2: 'Erbschaft → Eigengut.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 60000, why3: 'Aktueller Verkehrswert: CHF 60\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p5', name: 'Dividendenkonto Vera', hint: 'CHF 6\'000 Dividenden aus dem geerbten Depot',
+      owner: 'F', why1: 'Veras Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Erträge des Eigenguts → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 4 ZGB'],
+      wert: 6000, why3: 'Nennwert: CHF 6\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note4: 'Das offene Darlehen berührt die Errungenschaften nicht: Es lief von Veras Eigengut an Walters Eigengut (voreheliche Schulden). Es wird als Merkposten notiert und in Phase 6 beglichen.',
+  note6: 'Zur Vorschlagsbeteiligung kommt das offene Darlehen hinzu: Walter schuldet Vera zusätzlich CHF 25\'000 (Art. 205 Abs. 3 ZGB).',
+},
+
+/* ============ FALL 13 ============ */
+{
+  id: 13, titel: 'Das Rustico im Tessin', stufe: 4, aufloesung: 'Scheidung',
+  lernziel: 'Mehrwertanteil zwischen den Ehegatten (Art. 206 Abs. 1 ZGB): Wer zum Vermögenswert des anderen beiträgt, partizipiert am konjunkturellen Mehrwert.',
+  intro: `Yvonne und Zeno lassen sich scheiden. Yvonne erbte während der Ehe ein heruntergekommenes Rustico im Tessin (Wert beim Erbgang: CHF 150'000). Zeno renovierte es weitgehend selbst und wendete dafür Material und Arbeit im Wert von CHF 50'000 aus seinen Lohnersparnissen auf. Frisch renoviert war das Haus CHF 200'000 wert; kurz vor der Scheidung wurde es für CHF 240'000 verkauft – der Erlös liegt auf einem Konto von Yvonne.`,
+  posten: [
+    { id: 'p1', name: 'Rustico (verkauft für CHF 240\'000)', hint: 'Erbwert 150\'000 + Investition Zeno 50\'000 (aus Lohn); Verkaufserlös 240\'000',
+      owner: 'F', why1: 'Das Rustico war Yvonnes Alleineigentum (geerbt) – Frauengut. Der Verkaufserlös trat an seine Stelle.',
+      masse: 'EG_F', phase2Label: 'Eigengut Ehefrau – die Errungenschaft des Ehemannes hat eine Ersatzforderung mit Mehrwertanteil (Art. 206 ZGB)',
+      why2: 'Das Rustico ist geerbt → Eigengut Yvonnes (Art. 198 Ziff. 2 ZGB); der Erlös ist Ersatzanschaffung dafür (Art. 198 Ziff. 4 ZGB). Zeno hat aus seiner Errungenschaft ohne Gegenleistung zur Verbesserung beigetragen → seine Errungenschaft partizipiert anteilig am Mehrwert (Art. 206 Abs. 1 ZGB) – «über Kreuz», weil Massen verschiedener Ehegatten betroffen sind.', art2: ['Art. 198 Ziff. 2 ZGB', 'Art. 206 Abs. 1 ZGB'],
+      p2opts: [
+        { key: 'EG_F', label: 'Eigengut Ehefrau – mit Ersatzforderung (inkl. Mehrwertanteil) der Errungenschaft Ehemann' },
+        { key: 'EG_F2', label: 'Eigengut Ehefrau (vollständig – Zeno hat freiwillig geholfen)' },
+        { key: 'MIT', label: 'Miteigentum beider – beide haben investiert' },
+        { key: 'ER_F', label: 'Errungenschaft Ehefrau' },
+      ], p2key: 'EG_F',
+      mehrwert: { beitraege: [ { masse: 'EG_F', betrag: 150000 }, { masse: 'ER_M', betrag: 50000 } ], endwert: 240000, hauptmasse: 'EG_F' },
+      wert: 240000, why3: 'Massgebend ist der tatsächlich erzielte Verkaufserlös: CHF 240\'000. (Wert nach Renovation: 150\'000 + 50\'000 = 200\'000; konjunktureller Mehrwert: +40\'000.)', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Lohnkonto Zeno', hint: 'CHF 20\'000',
+      owner: 'M', why1: 'Zenos Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 20000, why3: 'Nennwert: CHF 20\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p3', name: 'Lohnkonto Yvonne', hint: 'CHF 35\'000',
+      owner: 'F', why1: 'Yvonnes Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 35000, why3: 'Nennwert: CHF 35\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p4', name: 'Schmuck Yvonne', hint: 'Verkehrswert CHF 5\'000',
+      owner: 'F', why1: 'Yvonnes Schmuck – Frauengut.',
+      masse: 'EG_F', why2: 'Persönlicher Gebrauch → Eigengut.', art2: ['Art. 198 Ziff. 1 ZGB'],
+      wert: 5000, why3: 'Verkehrswert: CHF 5\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note4: 'Mehrwertrechnung Rustico: Beiträge 150\'000 (EG Yvonne) : 50\'000 (ER Zeno) = 3 : 1. Verkaufserlös 240\'000 → Mehrwert +40\'000 wird 3:1 verteilt (+30\'000 / +10\'000). Anteile: EG Yvonne 180\'000, ER Zeno 60\'000. Der Anteil Zenos ist eine <b>Forderung seiner Errungenschaft gegen Yvonne</b> – sie fliesst in seinen Vorschlag ein und wird in Phase 6 bezahlt.',
+  note5: 'Achtung: Zenos Errungenschaft enthält die Rustico-Forderung (60\'000) plus Kontoguthaben (20\'000) = 80\'000. Yvonne partizipiert daran hälftig über die Vorschlagsbeteiligung.',
+  note6: 'Yvonne schuldet Zeno die Rustico-Ersatzforderung von CHF 60\'000 (der Erlös liegt bei ihr); Zeno schuldet Yvonne den Vorschlagsausgleich. Verrechnet ergibt sich eine Zahlung von Yvonne an Zeno.',
+},
+
+/* ============ FALL 14 ============ */
+{
+  id: 14, titel: 'Die Eigentumswohnung', stufe: 4, aufloesung: 'Scheidung',
+  lernziel: 'Mehrwertbeteiligung zwischen den Massen desselben Ehegatten (Art. 209 Abs. 3 ZGB).',
+  intro: `Aline und Bruno lassen sich scheiden. Bruno kaufte während der Ehe eine Eigentumswohnung für CHF 500'000: CHF 300'000 stammten aus seinen Lohnersparnissen, CHF 200'000 aus einer Erbschaft. Die Wohnung ist heute CHF 600'000 wert.`,
+  posten: [
+    { id: 'p1', name: 'Eigentumswohnung Bruno', hint: 'Kauf 500\'000 (300\'000 Lohn + 200\'000 Erbschaft), heute CHF 600\'000',
+      owner: 'M', why1: 'Brunos Alleineigentum – Mannesgut.',
+      masse: 'ER_M', phase2Label: 'Errungenschaft Ehemann – das Eigengut Ehemann ist mit Ersatzforderung und Mehrwertanteil beteiligt (Art. 209 Abs. 1 und 3 ZGB)',
+      why2: 'Der grössere Beitrag (CHF 300\'000 von 500\'000) stammt aus der Errungenschaft → die Wohnung wird der Errungenschaft Brunos zugeordnet. Das Eigengut hat für seinen Beitrag von CHF 200\'000 eine Ersatzforderung – und weil beide Massen <i>desselben</i> Ehegatten beteiligt sind, nimmt das Eigengut auch am Mehrwert teil (Art. 209 Abs. 3 ZGB): Gewinn UND Verlust werden intern anteilig getragen.', art2: ['Art. 209 Abs. 1 ZGB', 'Art. 209 Abs. 3 ZGB'],
+      p2opts: [
+        { key: 'ER_M', label: 'Errungenschaft Ehemann – Eigengut Ehemann mit Ersatzforderung inkl. Mehrwertanteil' },
+        { key: 'ER_M2', label: 'Errungenschaft Ehemann (vollständig, ohne Beteiligung des Eigenguts)' },
+        { key: 'EG_M', label: 'Eigengut Ehemann – Errungenschaft mit Ersatzforderung' },
+        { key: 'MIT', label: 'Miteigentum beider Ehegatten' },
+      ], p2key: 'ER_M',
+      mehrwert: { beitraege: [ { masse: 'ER_M', betrag: 300000 }, { masse: 'EG_M', betrag: 200000 } ], endwert: 600000, hauptmasse: 'ER_M' },
+      wert: 600000, why3: 'Massgebend ist der heutige Verkehrswert: CHF 600\'000 (nicht der Kaufpreis von 500\'000).', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Lohnkonto Bruno', hint: 'CHF 15\'000',
+      owner: 'M', why1: 'Brunos Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 15000, why3: 'Nennwert: CHF 15\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p3', name: 'Sparkonto Aline (Lohn)', hint: 'CHF 55\'000',
+      owner: 'F', why1: 'Alines Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 55000, why3: 'Nennwert: CHF 55\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p4', name: 'Voreheliches Konto Aline', hint: 'CHF 20\'000',
+      owner: 'F', why1: 'Alines Konto – Frauengut.',
+      masse: 'EG_F', why2: 'Mitgebracht → Eigengut.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 20000, why3: 'Nennwert: CHF 20\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note4: 'Mehrwertrechnung Wohnung: Beiträge 300\'000 (ER) : 200\'000 (EG) = 3 : 2. Wert heute 600\'000, Mehrwert +100\'000 → +60\'000 (ER) / +40\'000 (EG). Anteile: ER 360\'000, EG 240\'000. In der Massentabelle: Wohnung 600\'000 in der Errungenschaft ./. Ersatzforderung Eigengut 240\'000 → Nettoanteil ER 360\'000; Eigengut +240\'000. Alles spielt sich <b>innerhalb</b> von Brunos Vermögen ab – zwischen den Ehegatten fliesst deswegen (noch) kein Geld.',
+  note5: 'Der Mehrwertanteil des Eigenguts reduziert Brunos teilbaren Vorschlag: Ohne die Beteiligung des Eigenguts müsste er 600\'000 statt 360\'000 (Wohnungsanteil) teilen.',
+},
+
+/* ============ FALL 15 ============ */
+{
+  id: 15, titel: 'Die Segelyacht verliert', stufe: 4, aufloesung: 'Scheidung',
+  lernziel: 'Minderwert zwischen den Massen desselben Ehegatten: Beide Massen tragen den Verlust anteilig (Art. 209 Abs. 3 ZGB).',
+  intro: `Corinne und Dario lassen sich scheiden. Dario kaufte während der Ehe eine gebrauchte Segelyacht für CHF 80'000: CHF 50'000 aus Lohnersparnissen, CHF 30'000 aus einer Erbschaft. Die Yacht ist heute nur noch CHF 48'000 wert.`,
+  posten: [
+    { id: 'p1', name: 'Segelyacht Dario', hint: 'Kauf 80\'000 (50\'000 Lohn + 30\'000 Erbschaft), heute noch CHF 48\'000',
+      owner: 'M', why1: 'Darios Yacht – Mannesgut.',
+      masse: 'ER_M', phase2Label: 'Errungenschaft Ehemann – Eigengut Ehemann anteilig beteiligt (trägt den Minderwert mit, Art. 209 Abs. 3 ZGB)',
+      why2: 'Hauptbeitrag aus der Errungenschaft (50\'000 von 80\'000) → Zuordnung zur Errungenschaft. Das Eigengut ist mit CHF 30\'000 beteiligt. Zwischen den Massen desselben Ehegatten wird der Minderwert <b>anteilig getragen</b> (Art. 209 Abs. 3 ZGB) – anders als bei Art. 206 ZGB gibt es hier keinen Schutz vor Verlust!', art2: ['Art. 209 Abs. 3 ZGB'],
+      p2opts: [
+        { key: 'ER_M', label: 'Errungenschaft Ehemann – Eigengut anteilig am Minderwert beteiligt' },
+        { key: 'ER_M2', label: 'Errungenschaft Ehemann – Eigengut erhält den vollen Nennwert (30\'000) zurück' },
+        { key: 'EG_M', label: 'Eigengut Ehemann – Errungenschaft erhält den Nennwert zurück' },
+      ], p2key: 'ER_M',
+      mehrwert: { beitraege: [ { masse: 'ER_M', betrag: 50000 }, { masse: 'EG_M', betrag: 30000 } ], endwert: 48000, hauptmasse: 'ER_M' },
+      wert: 48000, why3: 'Massgebend ist der heutige Verkehrswert: CHF 48\'000. Der Minderwert von 32\'000 wird in Phase 4 im Verhältnis 5 : 3 auf die beteiligten Massen verteilt.', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Lohnkonto Dario', hint: 'CHF 26\'000',
+      owner: 'M', why1: 'Darios Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 26000, why3: 'Nennwert: CHF 26\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p3', name: 'Sparkonto Corinne (Lohn)', hint: 'CHF 60\'000',
+      owner: 'F', why1: 'Corinnes Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 60000, why3: 'Nennwert: CHF 60\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p4', name: 'Geerbte Münzsammlung Corinne', hint: 'Verkehrswert CHF 22\'000',
+      owner: 'F', why1: 'Corinnes Sammlung – Frauengut.',
+      masse: 'EG_F', why2: 'Erbschaft → Eigengut.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 22000, why3: 'Verkehrswert: CHF 22\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note4: 'Minderwertrechnung Yacht: Beiträge 50\'000 : 30\'000 = 5 : 3. Wert heute 48\'000 (Faktor 0.6) → ER-Anteil 30\'000, EG-Anteil 18\'000. Beide Massen tragen den Verlust proportional – das Eigengut bekommt nur 18\'000 statt 30\'000. In der Massentabelle: Yacht 48\'000 in der ER ./. Anteil EG 18\'000 = 30\'000.',
+  note5: 'Vergleichen Sie mit Art. 206 ZGB: Hätte <i>Corinne</i> die 30\'000 beigesteuert, wäre sie geschützt und bekäme mindestens ihren Nennwert zurück. Innerhalb der Massen desselben Ehegatten (Art. 209 Abs. 3 ZGB) gibt es diesen Schutz nicht.',
+},
+
+/* ============ FALL 16 ============ */
+{
+  id: 16, titel: 'Das Gemälde verdoppelt sich', stufe: 4, aufloesung: 'Scheidung',
+  lernziel: 'Drei Massen an einem Gegenstand: Art. 206 ZGB (über Kreuz) und Art. 209 Abs. 3 ZGB (intern) kombiniert – bei Mehrwert.',
+  intro: `Elena und Fabio lassen sich scheiden. Fabio kaufte während der Ehe ein Gemälde für CHF 40'000, finanziert mit CHF 20'000 aus seiner Errungenschaft (Lohnersparnisse) und je CHF 10'000 aus seinem und Elenas Eigengut. Der Maler wurde berühmt – das Gemälde ist heute CHF 80'000 wert.`,
+  posten: [
+    { id: 'p1', name: 'Gemälde Fabio', hint: 'Kauf 40\'000 (20\'000 ER Fabio + 10\'000 EG Fabio + 10\'000 EG Elena), heute CHF 80\'000',
+      owner: 'M', why1: 'Fabio hat das Gemälde gekauft, es gehört ihm – Mannesgut. (Elena hat nur Geld beigesteuert, ist aber nicht Eigentümerin geworden.)',
+      masse: 'ER_M', phase2Label: 'Errungenschaft Ehemann – Eigengut Ehemann (Art. 209 Abs. 3) und Eigengut Ehefrau (Art. 206) sind mit Mehrwertanteil beteiligt',
+      why2: 'Hauptbeitrag aus der Errungenschaft Fabios → Zuordnung zur Errungenschaft Ehemann. Alle beitragenden Massen partizipieren am Mehrwert im Verhältnis ihrer Beiträge (20 : 10 : 10 = 2 : 1 : 1): das Eigengut Fabios <i>intern</i> nach Art. 209 Abs. 3 ZGB, das Eigengut Elenas <i>über Kreuz</i> nach Art. 206 Abs. 1 ZGB (Beitrag ohne Gegenleistung an einen Vermögenswert des anderen).', art2: ['Art. 209 Abs. 3 ZGB', 'Art. 206 Abs. 1 ZGB'],
+      p2opts: [
+        { key: 'ER_M', label: 'Errungenschaft Ehemann – EG Ehemann (Art. 209 Abs. 3) und EG Ehefrau (Art. 206) mit Mehrwertanteil beteiligt' },
+        { key: 'ER_M2', label: 'Errungenschaft Ehemann – die Eigengüter erhalten nur ihre Nennwerte (je 10\'000) zurück' },
+        { key: 'MIT', label: 'Miteigentum Elena/Fabio im Verhältnis der Beiträge' },
+      ], p2key: 'ER_M',
+      mehrwert: { beitraege: [ { masse: 'ER_M', betrag: 20000 }, { masse: 'EG_M', betrag: 10000 }, { masse: 'EG_F', betrag: 10000 } ], endwert: 80000, hauptmasse: 'ER_M' },
+      wert: 80000, why3: 'Massgebend ist der heutige Verkehrswert: CHF 80\'000. Der Mehrwert von +40\'000 wird in Phase 4 im Verhältnis 2 : 1 : 1 verteilt.', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Lohnkonto Fabio', hint: 'CHF 18\'000',
+      owner: 'M', why1: 'Fabios Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 18000, why3: 'Nennwert: CHF 18\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p3', name: 'Lohnkonto Elena', hint: 'CHF 42\'000',
+      owner: 'F', why1: 'Elenas Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 42000, why3: 'Nennwert: CHF 42\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p4', name: 'Erbschaftskonto Elena (Rest)', hint: 'CHF 30\'000 (nach der Investition ins Gemälde)',
+      owner: 'F', why1: 'Elenas Konto – Frauengut.',
+      masse: 'EG_F', why2: 'Erbschaft → Eigengut.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 30000, why3: 'Nennwert: CHF 30\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note4: 'Mehrwertrechnung Gemälde (wie Kurs-Fall 1): Beiträge 2:1:1, Mehrwert +40\'000 → ER Fabio +20\'000 (Anteil 40\'000), EG Fabio +10\'000 (Anteil 20\'000), EG Elena +10\'000 (Anteil 20\'000, Art. 206 Abs. 1 ZGB). Massentabelle: Gemälde 80\'000 in der ER Fabio ./. 20\'000 (EG Fabio) ./. 20\'000 (EG Elena) = 40\'000.',
+  note6: 'Elenas Gemälde-Anteil (CHF 20\'000) ist eine Forderung gegen Fabio und wird in Phase 6 zur Vorschlagsbeteiligung addiert.',
+},
+
+/* ============ FALL 17 ============ */
+{
+  id: 17, titel: 'Das Gemälde stürzt ab', stufe: 4, aufloesung: 'Scheidung',
+  lernziel: 'Minderwert bei drei Massen: Der beitragende Ehegatte ist geschützt (Art. 206 ZGB – mindestens Nennwert); den Verlust tragen die Massen des Eigentümers (Art. 209 Abs. 3 ZGB).',
+  intro: `Gabriela und Henrik lassen sich scheiden. Henrik kaufte während der Ehe ein Gemälde für CHF 40'000, finanziert mit CHF 20'000 aus seiner Errungenschaft und je CHF 10'000 aus seinem und Gabrielas Eigengut. Der Maler ist nicht mehr gefragt – das Gemälde ist nur noch CHF 25'000 wert.`,
+  posten: [
+    { id: 'p1', name: 'Gemälde Henrik', hint: 'Kauf 40\'000 (20\'000 ER Henrik + 10\'000 EG Henrik + 10\'000 EG Gabriela), heute CHF 25\'000',
+      owner: 'M', why1: 'Henriks Gemälde – Mannesgut.',
+      masse: 'ER_M', phase2Label: 'Errungenschaft Ehemann – EG Ehefrau geschützt (Nennwert, Art. 206), EG Ehemann trägt den Verlust anteilig mit (Art. 209 Abs. 3)',
+      why2: 'Zuordnung zur Errungenschaft Henriks (Hauptbeitrag). Beim Minderwert zeigt sich der zentrale Unterschied: Gabrielas Eigengut ist nach Art. 206 Abs. 1 ZGB <b>geschützt</b> – sie erhält mindestens ihren Nennwert (CHF 10\'000) zurück («Schutz der Loyalität»). Den ganzen Verlust tragen die Massen Henriks anteilig (Art. 209 Abs. 3 ZGB).', art2: ['Art. 206 Abs. 1 ZGB', 'Art. 209 Abs. 3 ZGB'],
+      p2opts: [
+        { key: 'ER_M', label: 'Errungenschaft Ehemann – EG Ehefrau geschützt (Nennwert), EG Ehemann trägt Verlust anteilig' },
+        { key: 'ER_M2', label: 'Errungenschaft Ehemann – alle drei Massen tragen den Verlust anteilig (2:1:1)' },
+        { key: 'ER_M3', label: 'Errungenschaft Ehemann – alle Massen erhalten ihre Nennwerte zurück' },
+      ], p2key: 'ER_M',
+      mehrwert: { beitraege: [ { masse: 'ER_M', betrag: 20000 }, { masse: 'EG_M', betrag: 10000 }, { masse: 'EG_F', betrag: 10000 } ], endwert: 25000, hauptmasse: 'ER_M' },
+      wert: 25000, why3: 'Massgebend ist der heutige Verkehrswert: CHF 25\'000. Die Verteilung des Minderwerts folgt in Phase 4.', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Lohnkonto Henrik', hint: 'CHF 40\'000',
+      owner: 'M', why1: 'Henriks Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 40000, why3: 'Nennwert: CHF 40\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p3', name: 'Lohnkonto Gabriela', hint: 'CHF 26\'000',
+      owner: 'F', why1: 'Gabrielas Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 26000, why3: 'Nennwert: CHF 26\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p4', name: 'Voreheliches Auto Gabriela', hint: 'Verkehrswert CHF 9\'000',
+      owner: 'F', why1: 'Gabrielas Auto – Frauengut.',
+      masse: 'EG_F', why2: 'Mitgebracht → Eigengut.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 9000, why3: 'Verkehrswert: CHF 9\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note4: 'Minderwertrechnung (wie Kurs-Fall 2): Gabriela geschützt → Anteil 10\'000 (Nennwert). Rest: 25\'000 − 10\'000 = 15\'000 für Henriks Massen im Verhältnis 20:10 = 2:1 → ER 10\'000, EG 5\'000. Verluste: ER −10\'000, EG −5\'000, EG Gabriela ±0. Massentabelle: Gemälde 25\'000 in ER Henrik ./. 10\'000 (EG Gabriela) ./. 5\'000 (EG Henrik) = 10\'000.',
+  note6: 'Gabrielas geschützter Anteil (CHF 10\'000) ist eine Forderung gegen Henrik → Phase 6.',
+},
+
+/* ============ FALL 18 ============ */
+{
+  id: 18, titel: 'Haus, Erbe und alte Schulden', stufe: 5, aufloesung: 'Scheidung',
+  lernziel: 'Kombination: Miteigentum, Erträge des Eigenguts, offene Drittschuld und getilgte Schulden des Partners.',
+  intro: `Isabelle und Joel lassen sich nach 15 Jahren scheiden. Sie kauften vor Jahren gemeinsam (Miteigentum je ½) ein Haus für CHF 800'000, vollständig aus ihren laufenden Löhnen bezahlt; heute ist es CHF 1'000'000 wert. Joel brachte Steuerschulden von CHF 30'000 in die Ehe, die Isabelle kurz nach der Hochzeit aus ihrem vorehelichen Ersparten bezahlte. Isabelle erbte während der Ehe CHF 70'000; die Zinsen (CHF 4'000) sammelte sie separat. Joel hat noch eine offene Zahnarztrechnung über CHF 5'000.`,
+  posten: [
+    { id: 'p1', name: 'Wohnhaus (Miteigentum je ½)', hint: 'Kauf 800\'000 aus beiden Löhnen; heute CHF 1\'000\'000',
+      owner: 'MF', why1: 'Miteigentum je ½ – Frauen- und Mannesgut.',
+      masse: 'MIT_ER', why2: 'Aus laufendem Arbeitserwerb beider finanziert → je hälftig in beide Errungenschaften (je CHF 500\'000).', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 1000000, why3: 'Verkehrswert heute: CHF 1\'000\'000 (nicht der Kaufpreis) → je 500\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Joels voreheliche Steuerschulden – von Isabelle bezahlt', hint: 'CHF 30\'000, bezahlt aus Isabelles vorehelichem Ersparten', nurForderung: true,
+      owner: 'F', why1: 'Die Schuld ist getilgt; übrig ist Isabelles Rückforderung – ein Vermögenswert Isabelles (Frauengut).',
+      masse: 'EG_F', why2: 'Isabelle zahlte aus vorehelichem Erspartem = aus ihrem Eigengut (Art. 198 Ziff. 2 ZGB). Joels Steuerschulden waren vorehelich → sie betreffen sein Eigengut. Ihr Eigengut hat somit eine Ersatzforderung gegen Joel, die in Phase 6 verrechnet wird (Art. 205 Abs. 3 ZGB: Regelung gegenseitiger Schulden).', art2: ['Art. 198 Ziff. 2 ZGB', 'Art. 205 Abs. 3 ZGB', 'Art. 209 Abs. 2 ZGB'],
+      p2opts: [
+        { key: 'EG_F', label: 'Eigengut Ehefrau – Ersatzforderung gegen den Ehemann (Phase 6)' },
+        { key: 'ER_F', label: 'Errungenschaft Ehefrau – Ersatzforderung gegen den Ehemann' },
+        { key: 'NONE', label: 'Nicht zu berücksichtigen – die Schuld ist bezahlt' },
+        { key: 'ER_M', label: 'Schuld der Errungenschaft Ehemann' },
+      ], p2key: 'EG_F',
+      phase6: { glaeubiger: 'F', betrag: 30000, art: 'Art. 205 Abs. 3 ZGB', grund: 'Ersatzforderung getilgte Steuerschulden (EG Ehefrau gegen EG Ehemann)' },
+      wert: 30000, why3: 'Nennwert der Forderung: CHF 30\'000 (Merkposten für Phase 6).', art3: ['Art. 211 ZGB'] },
+    { id: 'p3', name: 'Lohnkonto Joel', hint: 'CHF 45\'000',
+      owner: 'M', why1: 'Joels Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 45000, why3: 'Nennwert: CHF 45\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p4', name: 'Lohnkonto Isabelle', hint: 'CHF 25\'000',
+      owner: 'F', why1: 'Isabelles Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 25000, why3: 'Nennwert: CHF 25\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p5', name: 'Erbschaftskonto Isabelle', hint: 'CHF 70\'000',
+      owner: 'F', why1: 'Isabelles Konto – Frauengut.',
+      masse: 'EG_F', why2: 'Erbschaft → Eigengut.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 70000, why3: 'Nennwert: CHF 70\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p6', name: 'Zinskonto Isabelle (Zinsen aus der Erbschaft)', hint: 'CHF 4\'000',
+      owner: 'F', why1: 'Isabelles Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Zinsen sind Erträge des Eigenguts → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 4 ZGB'],
+      wert: 4000, why3: 'Nennwert: CHF 4\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p7', name: 'Offene Zahnarztrechnung Joel', hint: 'CHF 5\'000', schuld: true,
+      owner: 'M', why1: 'Joels Schuld.',
+      masse: 'ER_M', why2: 'Laufende Lebenshaltungskosten → die Schuld belastet im Zweifel die Errungenschaft (Art. 209 Abs. 2 ZGB).', art2: ['Art. 209 Abs. 2 ZGB'],
+      p2opts: [
+        { key: 'ER_M', label: 'Schuld der Errungenschaft Ehemann' },
+        { key: 'EG_M', label: 'Schuld des Eigenguts Ehemann' },
+        { key: 'MIT', label: 'Schuld beider je hälftig' },
+      ], p2key: 'ER_M',
+      wert: 5000, why3: 'Nennwert der offenen Schuld: CHF 5\'000 (Passivum der ER Joel).', art3: ['Art. 209 Abs. 2 ZGB'] },
+  ],
+  note4: 'ER Joel: 500\'000 (½ Haus) + 45\'000 − 5\'000 (Zahnarzt) = 540\'000. ER Isabelle: 500\'000 + 25\'000 + 4\'000 (Zinsen) = 529\'000. Die getilgten Steuerschulden erscheinen nur als Merkposten (Phase 6) – sie liefen von Eigengut zu Eigengut und berühren die Errungenschaften nicht.',
+  note6: 'Verrechnung: Ersatzforderung Isabelle (30\'000) plus Vorschlagsausgleich (5\'500) – beide zu ihren Gunsten.',
+},
+
+/* ============ FALL 19 ============ */
+{
+  id: 19, titel: 'Der Todesfall', stufe: 5, aufloesung: 'Tod', erbenM: true,
+  lernziel: 'Auflösung durch Tod: Die güterrechtliche Auseinandersetzung erfolgt zwischen dem überlebenden Ehegatten und den Erben – vor der Erbteilung.',
+  intro: `Leo stirbt unerwartet; er hinterlässt seine Ehefrau Klara und zwei Kinder. Bevor der Nachlass verteilt werden kann, muss die güterrechtliche Auseinandersetzung durchgeführt werden (Auflösung des Güterstandes im Todeszeitpunkt, Art. 204 Abs. 1 ZGB). Leo kaufte während der Ehe ein Familienauto für CHF 40'000 (CHF 28'000 aus Lohn, CHF 12'000 aus einer Erbschaft; heutiger Wert unverändert CHF 40'000). Acht Monate vor seinem Tod schenkte er seinem Neffen CHF 16'000 aus Lohnersparnissen, ohne Klara zu fragen.`,
+  posten: [
+    { id: 'p1', name: 'Familienauto Leo', hint: 'Kauf 40\'000 (28\'000 Lohn + 12\'000 Erbschaft), Wert heute CHF 40\'000',
+      owner: 'M', why1: 'Leos Auto – Mannesgut (fällt güterrechtlich in seine Massen, danach in den Nachlass).',
+      masse: 'ER_M', phase2Label: 'Errungenschaft Ehemann – mit Ersatzforderung des Eigenguts Ehemann (Art. 209 Abs. 1 ZGB)',
+      why2: 'Hauptbeitrag aus der Errungenschaft (28\'000 von 40\'000) → Errungenschaft; das Eigengut hat eine Ersatzforderung von CHF 12\'000 (Art. 209 Abs. 1 ZGB). Kein Mehr-/Minderwert, da der Wert unverändert ist.', art2: ['Art. 209 Abs. 1 ZGB'],
+      p2opts: [
+        { key: 'ER_M', label: 'Errungenschaft Ehemann – mit Ersatzforderung des Eigenguts Ehemann' },
+        { key: 'ER_M2', label: 'Errungenschaft Ehemann (vollständig)' },
+        { key: 'EG_M', label: 'Eigengut Ehemann – mit Ersatzforderung der Errungenschaft' },
+      ], p2key: 'ER_M',
+      mehrwert: { beitraege: [ { masse: 'ER_M', betrag: 28000 }, { masse: 'EG_M', betrag: 12000 } ], endwert: 40000, hauptmasse: 'ER_M' },
+      wert: 40000, why3: 'Verkehrswert: CHF 40\'000. Anteile = Beiträge (keine Wertveränderung): ER 28\'000, EG 12\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Lohnkonto Leo', hint: 'CHF 34\'000',
+      owner: 'M', why1: 'Leos Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 34000, why3: 'Nennwert: CHF 34\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p3', name: 'Schenkung an den Neffen (8 Monate vor dem Tod)', hint: 'CHF 16\'000 aus Lohnersparnissen, ohne Zustimmung Klaras',
+      owner: 'NONE', why1: 'Verschenkt – nicht mehr im Vermögen. (Hinzurechnung folgt.)',
+      masse: 'NONE', phase2Label: 'Nicht mehr vorhanden – Hinzurechnung zur Errungenschaft Ehemann (Art. 208 ZGB)',
+      why2: 'Unentgeltliche Zuwendung innert der letzten fünf Jahre vor Auflösung (hier: vor dem Tod) ohne Zustimmung der Ehefrau → Hinzurechnung zur Errungenschaft (Art. 208 Abs. 1 Ziff. 1 ZGB). Die Hinzurechnung gilt auch bei Auflösung durch Tod!', art2: ['Art. 208 Abs. 1 Ziff. 1 ZGB'],
+      p2opts: [
+        { key: 'NONE', label: 'Nicht mehr im Vermögen – Hinzurechnung zur Errungenschaft Ehemann (Art. 208 ZGB)' },
+        { key: 'NONE2', label: 'Nicht zu berücksichtigen – mit dem Tod erlöschen solche Ansprüche' },
+        { key: 'EG_M', label: 'Eigengut Ehemann' },
+      ], p2key: 'NONE',
+      hinzurechnung: { ziel: 'ER_M' },
+      wert: 16000, why3: 'Hinzugerechnet wird der Wert der Zuwendung: CHF 16\'000.', art3: ['Art. 208 Abs. 1 Ziff. 1 ZGB'] },
+    { id: 'p4', name: 'Geerbte Standuhr Leo', hint: 'Verkehrswert CHF 6\'000',
+      owner: 'M', why1: 'Leos Uhr – Mannesgut.',
+      masse: 'EG_M', why2: 'Erbschaft → Eigengut.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 6000, why3: 'Verkehrswert: CHF 6\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p5', name: 'Lohnkonto Klara', hint: 'CHF 30\'000',
+      owner: 'F', why1: 'Klaras Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 30000, why3: 'Nennwert: CHF 30\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p6', name: 'Genugtuung Klara (früherer Unfall)', hint: 'CHF 12\'000',
+      owner: 'F', why1: 'Klaras Genugtuung – Frauengut.',
+      masse: 'EG_F', why2: 'Genugtuung → Eigengut.', art2: ['Art. 198 Ziff. 3 ZGB'],
+      wert: 12000, why3: 'Nennwert: CHF 12\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note4: 'ER Leo: 28\'000 (Auto-Anteil) + 34\'000 + 16\'000 (Hinzurechnung) = 78\'000. Sein EG: 12\'000 (Auto-Ersatzforderung) + 6\'000 = 18\'000.',
+  note5: 'Bei Auflösung durch Tod steht die Vorschlagsbeteiligung dem überlebenden Ehegatten bzw. den Erben zu (Art. 215 Abs. 1 ZGB: «Jedem Ehegatten oder seinen Erben …»). Klara erhält die Hälfte von Leos Vorschlag; die Erben erhalten die Hälfte von Klaras Vorschlag.',
+  note6: 'Der Nachlass Leos besteht anschliessend aus seinem Eigengut plus seinem halben Vorschlag plus der Hälfte von Klaras Vorschlag abzüglich der Zahlung an Klara – erst dieser Nachlass wird dann erbrechtlich (Klara + Kinder) geteilt. Die güterrechtliche Auseinandersetzung geht der Erbteilung immer voraus!',
+},
+
+/* ============ FALL 20 ============ */
+{
+  id: 20, titel: 'Die Meisterprüfung', stufe: 5, aufloesung: 'Scheidung',
+  lernziel: 'Alles kombiniert: Mehrwert über Kreuz und intern, Hinzurechnung, offene Schulden, Rückschlag und mehrstufige Verrechnung.',
+  intro: `Mia und Noah lassen sich scheiden. Noah kaufte während der Ehe ein Haus (Alleineigentum) für CHF 600'000: CHF 350'000 aus seinen Lohnersparnissen, CHF 150'000 aus seiner Erbschaft und CHF 100'000 aus Mias Erbvorbezug. Das Haus ist heute CHF 900'000 wert. Ein Jahr vor der Klage verschenkte Noah zudem seinen Oldtimer (Verkehrswert CHF 25'000, aus Lohn bezahlt) an einen Kollegen – ohne Mias Zustimmung. Noah hat CHF 15'000 offene Kreditkartenschulden (Lebenshaltung). Mia hat CHF 16'000 Lohnersparnisse, aber CHF 40'000 Konsumschulden. Sie besitzt ein geerbtes Aktiendepot (CHF 90'000); die Dividenden (CHF 6'000) liegen separat. Ihr Schmuck ist CHF 7'000 wert.`,
+  posten: [
+    { id: 'p1', name: 'Haus Noah (Alleineigentum)', hint: 'Kauf 600\'000 (350\'000 Lohn Noah + 150\'000 Erbschaft Noah + 100\'000 Erbvorbezug Mia), heute CHF 900\'000',
+      owner: 'M', why1: 'Noahs Alleineigentum – Mannesgut. Mia hat Geld beigesteuert, ist aber nicht (Mit-)Eigentümerin.',
+      masse: 'ER_M', phase2Label: 'Errungenschaft Ehemann – EG Ehemann (Art. 209 Abs. 3) und EG Ehefrau (Art. 206) mit Mehrwertanteil beteiligt',
+      why2: 'Hauptbeitrag (350\'000 von 600\'000) aus der Errungenschaft Noahs → Zuordnung dorthin. Sein Eigengut (150\'000) partizipiert intern nach Art. 209 Abs. 3 ZGB; Mias Eigengut (100\'000, Erbvorbezug = unentgeltlicher Erwerb, Art. 198 Ziff. 2 ZGB) partizipiert über Kreuz nach Art. 206 Abs. 1 ZGB – jeweils inkl. Mehrwertanteil im Verhältnis 350 : 150 : 100 = 7 : 3 : 2.', art2: ['Art. 209 Abs. 3 ZGB', 'Art. 206 Abs. 1 ZGB'],
+      p2opts: [
+        { key: 'ER_M', label: 'Errungenschaft Ehemann – EG Ehemann (Art. 209 Abs. 3) und EG Ehefrau (Art. 206) mit Mehrwertanteil beteiligt' },
+        { key: 'ER_M2', label: 'Errungenschaft Ehemann – die Eigengüter erhalten nur die Nennwerte (150\'000 / 100\'000) zurück' },
+        { key: 'MIT', label: 'Miteigentum Mia/Noah im Verhältnis 2 : 10' },
+      ], p2key: 'ER_M',
+      mehrwert: { beitraege: [ { masse: 'ER_M', betrag: 350000 }, { masse: 'EG_M', betrag: 150000 }, { masse: 'EG_F', betrag: 100000 } ], endwert: 900000, hauptmasse: 'ER_M' },
+      wert: 900000, why3: 'Massgebend ist der heutige Verkehrswert: CHF 900\'000 (Faktor 1.5 gegenüber dem Kaufpreis). Verteilung in Phase 4.', art3: ['Art. 211 ZGB'] },
+    { id: 'p2', name: 'Lohnkonto Noah', hint: 'CHF 20\'000',
+      owner: 'M', why1: 'Noahs Konto – Mannesgut.',
+      masse: 'ER_M', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 20000, why3: 'Nennwert: CHF 20\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p3', name: 'Offene Kreditkartenschulden Noah', hint: 'CHF 15\'000 (Lebenshaltung)', schuld: true,
+      owner: 'M', why1: 'Noahs Schulden (Art. 202 ZGB).',
+      masse: 'ER_M', why2: 'Lebenshaltungsschulden → im Zweifel Errungenschaft (Art. 209 Abs. 2 ZGB).', art2: ['Art. 209 Abs. 2 ZGB'],
+      p2opts: [
+        { key: 'ER_M', label: 'Schuld der Errungenschaft Ehemann' },
+        { key: 'EG_M', label: 'Schuld des Eigenguts Ehemann' },
+        { key: 'MIT', label: 'Schuld beider je hälftig' },
+      ], p2key: 'ER_M',
+      wert: 15000, why3: 'Nennwert: CHF 15\'000 (Passivum ER Noah).', art3: ['Art. 209 Abs. 2 ZGB'] },
+    { id: 'p4', name: 'Oldtimer – verschenkt an Kollegen (1 Jahr vor Klage)', hint: 'Verkehrswert CHF 25\'000, aus Lohn bezahlt, ohne Zustimmung Mias verschenkt',
+      owner: 'NONE', why1: 'Verschenkt – nicht mehr im Vermögen. (Hinzurechnung!)',
+      masse: 'NONE', phase2Label: 'Nicht mehr vorhanden – Hinzurechnung zur Errungenschaft Ehemann (Art. 208 ZGB)',
+      why2: 'Unentgeltliche Zuwendung innert fünf Jahren ohne Zustimmung → Hinzurechnung zur Errungenschaft Noahs (Art. 208 Abs. 1 Ziff. 1 ZGB). (Der Oldtimer war aus Lohn bezahlt = Errungenschaft.)', art2: ['Art. 208 Abs. 1 Ziff. 1 ZGB'],
+      p2opts: [
+        { key: 'NONE', label: 'Nicht mehr im Vermögen – Hinzurechnung zur Errungenschaft Ehemann (Art. 208 ZGB)' },
+        { key: 'NONE2', label: 'Nicht zu berücksichtigen – verschenkt ist verschenkt' },
+        { key: 'ER_M', label: 'Errungenschaft Ehemann (zählt normal zum Bestand)' },
+      ], p2key: 'NONE',
+      hinzurechnung: { ziel: 'ER_M' },
+      wert: 25000, why3: 'Hinzugerechnet wird der Verkehrswert im Zeitpunkt der Zuwendung: CHF 25\'000.', art3: ['Art. 208 Abs. 1 Ziff. 1 ZGB'] },
+    { id: 'p5', name: 'Lohnkonto Mia', hint: 'CHF 16\'000',
+      owner: 'F', why1: 'Mias Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Arbeitserwerb → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 1 ZGB'],
+      wert: 16000, why3: 'Nennwert: CHF 16\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p6', name: 'Konsumschulden Mia', hint: 'CHF 40\'000 offen', schuld: true,
+      owner: 'F', why1: 'Mias Schulden (Art. 202 ZGB).',
+      masse: 'ER_F', why2: 'Konsumschulden → im Zweifel Errungenschaft (Art. 209 Abs. 2 ZGB).', art2: ['Art. 209 Abs. 2 ZGB'],
+      p2opts: [
+        { key: 'ER_F', label: 'Schuld der Errungenschaft Ehefrau' },
+        { key: 'EG_F', label: 'Schuld des Eigenguts Ehefrau' },
+        { key: 'MIT', label: 'Schuld beider je hälftig' },
+      ], p2key: 'ER_F',
+      wert: 40000, why3: 'Nennwert: CHF 40\'000 (Passivum ER Mia).', art3: ['Art. 209 Abs. 2 ZGB'] },
+    { id: 'p7', name: 'Geerbtes Aktiendepot Mia', hint: 'Verkehrswert CHF 90\'000',
+      owner: 'F', why1: 'Mias Depot – Frauengut.',
+      masse: 'EG_F', why2: 'Erbschaft → Eigengut.', art2: ['Art. 198 Ziff. 2 ZGB'],
+      wert: 90000, why3: 'Verkehrswert: CHF 90\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p8', name: 'Dividendenkonto Mia', hint: 'CHF 6\'000 aus dem geerbten Depot',
+      owner: 'F', why1: 'Mias Konto – Frauengut.',
+      masse: 'ER_F', why2: 'Erträge des Eigenguts → Errungenschaft.', art2: ['Art. 197 Abs. 2 Ziff. 4 ZGB'],
+      wert: 6000, why3: 'Nennwert: CHF 6\'000.', art3: ['Art. 211 ZGB'] },
+    { id: 'p9', name: 'Schmuck Mia', hint: 'Verkehrswert CHF 7\'000',
+      owner: 'F', why1: 'Mias Schmuck – Frauengut.',
+      masse: 'EG_F', why2: 'Persönlicher Gebrauch → Eigengut.', art2: ['Art. 198 Ziff. 1 ZGB'],
+      wert: 7000, why3: 'Verkehrswert: CHF 7\'000.', art3: ['Art. 211 ZGB'] },
+  ],
+  note4: 'Mehrwertrechnung Haus: Beiträge 7:3:2, Faktor 1.5 → Anteile ER Noah 525\'000, EG Noah 225\'000, EG Mia 150\'000 (Summe 900\'000 ✓). ER Noah gesamt: 525\'000 + 20\'000 − 15\'000 + 25\'000 (Hinzurechnung) = 555\'000. ER Mia: 16\'000 + 6\'000 − 40\'000 = <b>−18\'000 → Rückschlag!</b>',
+  note5: 'Mias Rückschlag wird nicht ausgeglichen (Art. 210 Abs. 2 ZGB) → ihr Vorschlag = 0, Noahs Anspruch = 0. Mia erhält die Hälfte von Noahs Vorschlag: 555\'000 : 2 = 277\'500.',
+  note6: 'Zusätzlich schuldet Noah Mia deren Haus-Anteil von CHF 150\'000 (Art. 206 ZGB, das Haus bleibt ja bei ihm). Total: 277\'500 + 150\'000 = 427\'500. Mias Konsumschulden bleiben ihr Problem – sie muss sie aus ihrem Eigengut oder der erhaltenen Zahlung tilgen.',
+},
+
+];
+
+
+'use strict';
+/* ============================================================
+   UI-Logik des Lernprogramms
+   ============================================================ */
+
+/* ---------- Konstanten ---------- */
+const PHASEN = [
+  { n: 1, titel: 'Trennung von Frauen- und Mannesgut', art: 'Art. 205 f. ZGB',
+    frage: 'Wem gehört der Vermögenswert – Frau oder Mann? (Noch ohne Rücksicht auf Eigengut/Errungenschaft.)' },
+  { n: 2, titel: 'Aussonderung: Eigengut oder Errungenschaft?', art: 'Art. 207 / 209 ZGB',
+    frage: 'Ordnen Sie jeden Vermögenswert innerhalb des jeweiligen Ehegatten der richtigen Gütermasse zu.' },
+  { n: 3, titel: 'Bewertung der Vermögenswerte', art: 'Art. 207 Abs. 1 / 211 ZGB',
+    frage: 'Mit welchem Betrag ist jede Position einzusetzen? (Schulden und Forderungen als positive Beträge.)' },
+  { n: 4, titel: 'Hinzurechnung & Massentabelle', art: 'Art. 208 / 209 ZGB',
+    frage: 'Berechnen Sie Mehr-/Minderwertanteile und Hinzurechnungen und ermitteln Sie die Salden der beiden Errungenschaften.' },
+  { n: 5, titel: 'Beteiligung am Vorschlag', art: 'Art. 210 / 215 Abs. 1 / 216 Abs. 1 ZGB',
+    frage: 'Ermitteln Sie die Vorschläge, die gegenseitigen Ansprüche und die Ausgleichszahlung.' },
+  { n: 6, titel: 'Erfüllung der Ansprüche', art: 'Art. 215 f. / 218 ZGB',
+    frage: 'Verrechnen Sie alle Forderungen und bestimmen Sie, wer wem am Ende wie viel bezahlt.' },
+];
+
+const OWNER_OPTS = [
+  { key: 'F', label: 'Frauengut' },
+  { key: 'M', label: 'Mannesgut' },
+  { key: 'MF', label: 'Beide (Miteigentum)' },
+  { key: 'NONE', label: 'Nicht (mehr) im Vermögen' },
+];
+
+const P2_STD_OPTS = [
+  { key: 'EG_F', label: 'Eigengut Ehefrau' },
+  { key: 'ER_F', label: 'Errungenschaft Ehefrau' },
+  { key: 'ER_M', label: 'Errungenschaft Ehemann' },
+  { key: 'EG_M', label: 'Eigengut Ehemann' },
+  { key: 'MIT_ER', label: 'Je ½ Errungenschaft Ehefrau und Ehemann (Miteigentum)' },
+  { key: 'NONE', label: 'Nicht zu berücksichtigen' },
+];
+
+const GESETZ = {
+  'Art. 197 Abs. 1': 'Errungenschaft sind die Vermögenswerte, die ein Ehegatte während der Dauer des Güterstandes entgeltlich erwirbt.',
+  'Art. 197 Abs. 2 Ziff. 1': 'Zur Errungenschaft gehört insbesondere der Arbeitserwerb (Lohn, Honorar, Bonus).',
+  'Art. 197 Abs. 2 Ziff. 2': 'Zur Errungenschaft gehören die Leistungen von Personalfürsorge-, Sozialversicherungs- und Sozialfürsorgeeinrichtungen.',
+  'Art. 197 Abs. 2 Ziff. 3': 'Zur Errungenschaft gehören Entschädigungen wegen Arbeitsunfähigkeit (z. B. Taggelder).',
+  'Art. 197 Abs. 2 Ziff. 4': 'Zur Errungenschaft gehören die Erträge des Eigengutes (Zinsen, Dividenden, Mietzinsen).',
+  'Art. 197 Abs. 2 Ziff. 5': 'Zur Errungenschaft gehören Ersatzanschaffungen für Errungenschaft.',
+  'Art. 198 Ziff. 1': 'Eigengut sind Gegenstände, die einem Ehegatten ausschliesslich zum persönlichen Gebrauch dienen.',
+  'Art. 198 Ziff. 2': 'Eigengut sind Vermögenswerte, die einem Ehegatten zu Beginn des Güterstandes gehören oder ihm später durch Erbgang oder sonst unentgeltlich zufallen.',
+  'Art. 198 Ziff. 3': 'Eigengut sind Genugtuungsansprüche.',
+  'Art. 198 Ziff. 4': 'Eigengut sind Ersatzanschaffungen für Eigengut.',
+  'Art. 200 Abs. 3': 'Alles Vermögen eines Ehegatten gilt bis zum Beweis des Gegenteils als Errungenschaft.',
+  'Art. 202': 'Jeder Ehegatte haftet für seine Schulden mit seinem gesamten Vermögen.',
+  'Art. 204 Abs. 2': 'Bei Scheidung, Trennung, Ungültigerklärung oder gerichtlicher Gütertrennung wird die Auflösung des Güterstandes auf den Tag der Klageeinreichung zurückbezogen.',
+  'Art. 204 Abs. 1': 'Der Güterstand wird mit dem Tod eines Ehegatten oder mit der Vereinbarung eines andern Güterstandes aufgelöst.',
+  'Art. 205 Abs. 1': 'Jeder Ehegatte nimmt seine Vermögenswerte zurück, die sich im Besitz des andern befinden.',
+  'Art. 205 Abs. 3': 'Die Ehegatten regeln ihre gegenseitigen Schulden.',
+  'Art. 206 Abs. 1': 'Hat ein Ehegatte zum Erwerb, zur Verbesserung oder zur Erhaltung eines Vermögenswertes des andern ohne entsprechende Gegenleistung beigetragen, so hat er bei Mehrwert eine anteilige Forderung – bei Wertverlust erhält er mindestens den Nennwert zurück.',
+  'Art. 207': 'Errungenschaft und Eigengut jedes Ehegatten werden nach ihrem Bestand im Zeitpunkt der Auflösung des Güterstandes ausgeschieden.',
+  'Art. 208 Abs. 1 Ziff. 1': 'Zur Errungenschaft hinzugerechnet werden unentgeltliche Zuwendungen der letzten fünf Jahre vor Auflösung ohne Zustimmung des andern (ausgenommen übliche Gelegenheitsgeschenke).',
+  'Art. 208 Abs. 1 Ziff. 2': 'Hinzugerechnet werden Vermögensentäusserungen, die ein Ehegatte vornahm, um den Beteiligungsanspruch des andern zu schmälern.',
+  'Art. 208': 'Hinzurechnung: unentgeltliche Zuwendungen der letzten 5 Jahre ohne Zustimmung sowie Entäusserungen in Schmälerungsabsicht werden der Errungenschaft rechnerisch hinzugerechnet.',
+  'Art. 209 Abs. 1': 'Sind Schulden der Errungenschaft aus dem Eigengut oder umgekehrt bezahlt worden, so besteht bei der Auseinandersetzung eine Ersatzforderung.',
+  'Art. 209 Abs. 2': 'Eine Schuld belastet die Vermögensmasse, mit welcher sie sachlich zusammenhängt – im Zweifel die Errungenschaft.',
+  'Art. 209 Abs. 3': 'Hat eine Vermögensmasse zum Erwerb, zur Verbesserung oder zur Erhaltung eines Vermögenswertes der anderen Masse beigetragen, nimmt sie anteilig am Mehr- oder Minderwert teil.',
+  'Art. 210 Abs. 1': 'Der Vorschlag ist, was vom Gesamtwert der Errungenschaft (inkl. Hinzurechnungen und Ersatzforderungen) nach Abzug der Schulden verbleibt.',
+  'Art. 210 Abs. 2': 'Ein Rückschlag (negativer Saldo) wird nicht berücksichtigt – er wird nie geteilt.',
+  'Art. 210': 'Vorschlag = Aktivüberschuss der Errungenschaft; ein Rückschlag wird nicht berücksichtigt.',
+  'Art. 211': 'Die Vermögensgegenstände sind zu ihrem Verkehrswert einzusetzen.',
+  'Art. 215 Abs. 1': 'Jedem Ehegatten oder seinen Erben steht die Hälfte des Vorschlags des andern zu.',
+  'Art. 215': 'Jedem Ehegatten oder seinen Erben steht die Hälfte des Vorschlags des andern zu; die Forderungen werden verrechnet.',
+  'Art. 216 Abs. 1': 'Durch Ehevertrag kann eine andere Beteiligung am Vorschlag vereinbart werden (gesetzlicher Normalfall: hälftig).',
+  'Art. 218': 'Bringt die sofortige Zahlung den verpflichteten Ehegatten in ernstliche Schwierigkeiten, kann er Zahlungsfristen verlangen (Zahlungsaufschub).',
+};
+
+function gesetzText(artikel) {
+  let key = artikel.replace(/\s*ZGB\s*$/, '').trim();
+  if (GESETZ[key]) return GESETZ[key];
+  const keys = Object.keys(GESETZ).sort((a, b) => b.length - a.length);
+  for (const k of keys) if (key.startsWith(k)) return GESETZ[k];
+  return '';
+}
+
+/* ---------- Hilfsfunktionen ---------- */
+const $ = sel => document.querySelector(sel);
+const app = () => $('#app');
+
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+function parseNum(str) {
+  if (str == null) return NaN;
+  let s = String(str).trim();
+  if (s === '') return NaN;
+  s = s.replace(/chf/i, '').trim();
+  s = s.replace(/[\s'’`´ ]/g, '');
+  s = s.replace(/–|−/g, '-');
+  if (/^-?\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, '');       // 1.000.000 → Tausenderpunkte
+  s = s.replace(',', '.');
+  if (/^-?\d+\.00?$/.test(s)) s = s.replace(/\.\d+$/, '');             // 500.00 → 500
+  const n = Number(s);
+  return n;
+}
+
+function sterne(stufe) { return '★'.repeat(stufe) + '<span class="stern-leer">' + '★'.repeat(5 - stufe) + '</span>'; }
+
+function artBadges(arr) {
+  if (!arr || !arr.length) return '';
+  return arr.map(a => `<span class="art" title="${esc(gesetzText(a))}">${esc(a)}</span>`).join(' ');
+}
+
+function gatteName(c, g) {
+  if (g === 'F') return 'Ehefrau';
+  return (c.erbenM ? 'Ehemann (bzw. seine Erben)' : 'Ehemann');
+}
+
+/* ---------- Persistenz ---------- */
+const LS_KEY = 'gueterrecht-lernprogramm-v1';
+let store = { cases: {}, last: null };
+try { const raw = localStorage.getItem(LS_KEY); if (raw) store = JSON.parse(raw); } catch (e) {}
+function save() { try { localStorage.setItem(LS_KEY, JSON.stringify(store)); } catch (e) {} }
+function caseProg(id) {
+  if (!store.cases[id]) store.cases[id] = { phases: {} };
+  return store.cases[id];
+}
+function phaseDone(id, n) { const p = caseProg(id).phases[n]; return !!(p && p.done); }
+function caseDone(id) { for (let n = 1; n <= 6; n++) if (!phaseDone(id, n)) return false; return true; }
+function caseScore(id) {
+  const cp = caseProg(id); let c = 0, t = 0;
+  for (let n = 1; n <= 6; n++) { const p = cp.phases[n]; if (p && p.tried) { c += p.correct; t += p.total; } }
+  return t ? { c, t, pct: Math.round(100 * c / t) } : null;
+}
+
+/* ---------- Startseite ---------- */
+function renderHome() {
+  const doneCount = CASES.filter(c => caseDone(c.id)).length;
+  let totC = 0, totT = 0;
+  CASES.forEach(c => { const s = caseScore(c.id); if (s) { totC += s.c; totT += s.t; } });
+  const cards = CASES.map(c => {
+    const done = caseDone(c.id);
+    const sc = caseScore(c.id);
+    const started = Object.keys(caseProg(c.id).phases).length > 0;
+    const status = done
+      ? `<span class="badge badge-done">✓ gelöst${sc ? ' · ' + sc.pct + '%' : ''}</span>`
+      : started ? `<span class="badge badge-progress">in Arbeit</span>`
+      : `<span class="badge badge-open">offen</span>`;
+    return `<button class="case-card" data-case="${c.id}">
+      <div class="case-nr">Fall ${c.id}</div>
+      <div class="case-titel">${esc(c.titel)}</div>
+      <div class="case-sterne">${sterne(c.stufe)}</div>
+      <div class="case-status">${status}</div>
+    </button>`;
+  }).join('');
+  const next = CASES.find(c => !caseDone(c.id));
+  app().innerHTML = `
+    <header class="home-header">
+      <h1>Güterrechtliche Auseinandersetzung</h1>
+      <p class="untertitel">Interaktives Lernprogramm · Errungenschaftsbeteiligung (Art. 196–220 ZGB) · 20 Fälle in 6 Phasen</p>
+      <div class="home-stats">
+        <div class="stat"><div class="stat-zahl">${doneCount} / 20</div><div class="stat-label">Fälle gelöst</div></div>
+        <div class="stat"><div class="stat-zahl">${totT ? Math.round(100 * totC / totT) + '%' : '–'}</div><div class="stat-label">Trefferquote (1. Versuch)</div></div>
+      </div>
+      <div class="home-actions">
+        ${next ? `<button class="btn btn-primary" data-case="${next.id}">${Object.keys(caseProg(next.id).phases).length ? 'Weiterlernen' : 'Loslegen'}: Fall ${next.id}</button>` : '<span class="alle-fertig">🎉 Alle Fälle gelöst!</span>'}
+        <button class="btn" id="btn-spick">📖 Spickzettel</button>
+        <button class="btn btn-ghost" id="btn-reset">Fortschritt zurücksetzen</button>
+      </div>
+    </header>
+    <p class="hinweis-methodik">Methodik und Zitierweise folgen der Vorlesung (HF Recht, KV Business School Zürich). Nach jeder Phase wird sofort geprüft – Zahlen können mit oder ohne Tausendertrennzeichen eingegeben werden (z.&nbsp;B. 12'000 oder 12000), negative Beträge mit Minuszeichen.</p>
+    <div class="case-grid">${cards}</div>
+    ${spickzettelHtml()}`;
+  app().querySelectorAll('[data-case]').forEach(el => el.addEventListener('click', () => openCase(+el.dataset.case)));
+  $('#btn-spick').addEventListener('click', () => $('#spick-dialog').showModal());
+  $('#btn-reset').addEventListener('click', () => {
+    if (confirm('Wirklich den gesamten Fortschritt löschen?')) { store = { cases: {}, last: null }; save(); renderHome(); }
+  });
+  wireSpick();
+}
+
+function spickzettelHtml() {
+  return `<dialog id="spick-dialog"><div class="spick">
+    <div class="spick-head"><h2>📖 Spickzettel</h2><button class="btn btn-ghost" id="spick-close">Schliessen ✕</button></div>
+    <h3>Die sechs Phasen</h3>
+    <ol class="spick-phasen">
+      <li><b>Trennung von Frauen- und Mannesgut</b> <span class="art">Art. 205 f. ZGB</span></li>
+      <li><b>Aussonderung Eigengut / Errungenschaft</b> je Ehegatte <span class="art">Art. 207 ZGB</span> <span class="art">Art. 209 ZGB</span></li>
+      <li><b>Bewertung zum Verkehrswert</b> <span class="art">Art. 207 Abs. 1 ZGB</span> <span class="art">Art. 211 ZGB</span></li>
+      <li><b>Hinzurechnung</b> (Ersatzforderungen, frühere Zuwendungen) <span class="art">Art. 208 ZGB</span></li>
+      <li><b>Beteiligung am Vorschlag</b> (hälftige Teilung) <span class="art">Art. 210 ZGB</span> <span class="art">Art. 215 Abs. 1 ZGB</span></li>
+      <li><b>Erfüllung der Ansprüche</b> (Verrechnung, Zahlung) <span class="art">Art. 215 f. ZGB</span> <span class="art">Art. 218 ZGB</span></li>
+    </ol>
+    <h3>Errungenschaft oder Eigengut?</h3>
+    <table class="spick-tabelle">
+      <tr><td>Vorehelich, geerbt, geschenkt, persönlicher Gebrauch, Genugtuung</td><td>→ <b>Eigengut</b> (Art. 198 ZGB)</td></tr>
+      <tr><td>Während der Ehe entgeltlich erworben (Lohn, Bonus, Ersatzanschaffung)</td><td>→ <b>Errungenschaft</b> (Art. 197 ZGB)</td></tr>
+      <tr><td>Ertrag / Frucht aus Eigengut (Zins, Dividende, Mietzins)</td><td>→ <b>Errungenschaft</b> (Art. 197 Abs. 2 Ziff. 4 ZGB)</td></tr>
+      <tr><td>Zweifel / kein Beweis</td><td>→ Vermutung <b>Errungenschaft</b> (Art. 200 Abs. 3 ZGB)</td></tr>
+    </table>
+    <h3>Formeln</h3>
+    <table class="spick-tabelle">
+      <tr><td>Vorschlag</td><td>Aktivsaldo der Errungenschaft (nach Hinzurechnung und Abzug der Schulden); negativ = Rückschlag → zählt als 0 (Art. 210 Abs. 2 ZGB)</td></tr>
+      <tr><td>Beteiligungsanspruch</td><td>½ des Vorschlags des <b>anderen</b> (Art. 215 Abs. 1 ZGB)</td></tr>
+      <tr><td>Netto-Ausgleich (schnell)</td><td>(Vorschlag A − Vorschlag B) : 2</td></tr>
+      <tr><td>Mehr-/Minderwertanteil</td><td>Beitrag der Masse ÷ Gesamtbeiträge × aktueller Wert des Gegenstandes</td></tr>
+    </table>
+    <h3>Mehrwert: Art. 206 oder Art. 209 Abs. 3 ZGB?</h3>
+    <table class="spick-tabelle">
+      <tr><td><b>Art. 206</b> – «über Kreuz»<br>(Masse des einen → Gegenstand des <i>anderen</i> Ehegatten)</td><td>Mehrwert: anteilig dabei.<br>Minderwert: geschützt – mindestens Nennwert zurück.</td></tr>
+      <tr><td><b>Art. 209 Abs. 3</b> – «intern»<br>(Eigengut ↔ Errungenschaft <i>desselben</i> Ehegatten)</td><td>Mehrwert <b>und</b> Minderwert anteilig.</td></tr>
+    </table>
+    <h3>Häufige Fallstricke</h3>
+    <ul class="spick-liste">
+      <li>Erträge des Eigenguts sind <b>Errungenschaft</b> – nicht Eigengut.</li>
+      <li>Schenkung/Erbschaft während der Ehe ist <b>Eigengut</b> (unentgeltlich).</li>
+      <li>Ein <b>Rückschlag</b> wird nie geteilt – nur der Vorschlag.</li>
+      <li>Jeder erhält die Hälfte des Vorschlags des <b>anderen</b> – nicht des eigenen.</li>
+      <li>Bewertung zum <b>Verkehrswert</b>, nicht zum Kaufpreis (Art. 211 ZGB).</li>
+      <li>Artikel vollständig zitieren: Absatz <b>und</b> Ziffer (z. B. Art. 197 Abs. 2 Ziff. 4 ZGB).</li>
+    </ul>
+  </div></dialog>`;
+}
+function wireSpick() {
+  const d = $('#spick-dialog');
+  if ($('#spick-close')) $('#spick-close').addEventListener('click', () => d.close());
+  d.addEventListener('click', e => { if (e.target === d) d.close(); });
+}
+
+/* ---------- Lösungsblatt (füllt sich von Phase zu Phase) ---------- */
+let abOffen = true;
+
+function masseChip(p) {
+  if (p.keineHinzurechnung) return { txt: 'nicht zu berücksichtigen', title: 'Übliche Gelegenheitsgeschenke werden nicht hinzugerechnet (Art. 208 Abs. 1 Ziff. 1 ZGB)' };
+  if (p.hinzurechnung) return { txt: `weg – Hinzurechnung zur ${MASSE_KURZ[p.hinzurechnung.ziel]}`, title: 'Art. 208 ZGB: rechnerische Hinzurechnung (siehe Phase 4)' };
+  if (p.masse === 'NONE') return { txt: 'nicht zu berücksichtigen', title: p.phase2Label || '' };
+  if (p.masse === 'MIT_ER') return { txt: 'je ½ ER F + ER M', title: 'Miteigentum – je hälftig in beiden Errungenschaften' };
+  if (p.mehrwert) {
+    const fremde = p.mehrwert.beitraege.filter(b => b.masse !== p.mehrwert.hauptmasse).map(b => MASSE_KURZ[b.masse]).join(', ');
+    return { txt: `${MASSE_KURZ[p.mehrwert.hauptmasse]} – Beteiligung: ${fremde}`, title: p.phase2Label || '' };
+  }
+  if (p.nurForderung) return { txt: `${MASSE_KURZ[p.masse]} – Forderung ⚑ Phase 6`, title: (p.phase6 && p.phase6.grund) || 'Wird in Phase 6 verrechnet' };
+  const flag = p.phase6 ? ' ⚑ Phase 6' : '';
+  return { txt: MASSE_KURZ[p.masse] + flag, title: p.phase2Label || (p.phase6 ? p.phase6.grund : '') };
+}
+
+function wertZelle(p) {
+  if (p.bewertbar === false) return '<span class="ab-leer">—</span>';
+  const v = 'CHF ' + chf(p.wert);
+  if (p.schuld) return `<span class="ab-schuld">− ${v}</span>`;
+  return v;
+}
+
+function endErgebnisText() {
+  const { c, s } = cur;
+  if (s.endAnF === 0) return 'Niemand schuldet dem anderen etwas.';
+  if (s.endAnF > 0) return `${gatteName(c, 'M')} ${c.erbenM ? 'bzw. der Nachlass schuldet' : 'schuldet'} der Ehefrau <b>CHF ${chf(s.endAnF)}</b>.`;
+  return `Die Ehefrau schuldet ${c.erbenM ? 'den Erben des Ehemannes' : 'dem Ehemann'} <b>CHF ${chf(-s.endAnF)}</b>.`;
+}
+
+function massentabelleHtml() {
+  const { c, s } = cur;
+  const spalten = ['EG_M', 'ER_M', 'ER_F', 'EG_F'];
+  const maxRows = Math.max(...spalten.map(m => s.pos[m].length));
+  let mt = `<div class="mt-scroll"><table class="loesung-tabelle massen-tabelle"><thead><tr>${spalten.map(m => `<th>${MASSE_LABEL[m]}</th>`).join('')}</tr></thead><tbody>`;
+  for (let i = 0; i < maxRows; i++) {
+    mt += '<tr>' + spalten.map(m => {
+      const e = s.pos[m][i];
+      return `<td>${e ? `${esc(e.label)}: <span class="nowrap">${e.betrag < 0 ? '−' : ''}${chf(Math.abs(e.betrag))}</span>` : ''}</td>`;
+    }).join('') + '</tr>';
+  }
+  mt += `<tr class="zeile-total">${spalten.map(m => {
+    const er = m.startsWith('ER');
+    return `<td>${er ? `<b>Saldo: ${chf(s.saldo[m])}</b>` : `<span class="eg-saldo">Bestand: ${chf(s.saldo[m])}</span>`}</td>`;
+  }).join('')}</tr>`;
+  mt += `</tbody></table></div>`;
+  if (s.memo.length) {
+    mt += `<p class="memo-erkl"><b>Merkposten (nicht in den Salden):</b> ${s.memo.map(m => `${esc(m.label)} – CHF ${chf(m.betrag)} zugunsten ${gatteName(c, m.glaeubiger)}`).join('; ')}. Diese Forderungen zwischen den Ehegatten werden erst in Phase 6 verrechnet.</p>`;
+  }
+  return mt;
+}
+
+function vorschlagKompaktHtml() {
+  const { c, s } = cur;
+  const em = gatteName(c, 'M');
+  const ausgleich = s.nettoAnF === 0 ? 'Die Ansprüche decken sich – keine Zahlung.'
+    : (s.nettoAnF > 0 ? `${em} zahlt der Ehefrau CHF ${chf(s.nettoAnF)}.`
+      : `Die Ehefrau zahlt ${c.erbenM ? 'den Erben' : 'dem Ehemann'} CHF ${chf(-s.nettoAnF)}.`);
+  return `<table class="loesung-tabelle"><tbody>
+    <tr><td>Vorschlag ${em}</td><td class="nowrap"><b>CHF ${chf(s.vorschlagM)}</b>${s.rueckschlagM ? ` <span class="hint">(Rückschlag ${chf(s.saldo.ER_M)} → 0)</span>` : ''}</td>
+        <td>Vorschlag Ehefrau</td><td class="nowrap"><b>CHF ${chf(s.vorschlagF)}</b>${s.rueckschlagF ? ` <span class="hint">(Rückschlag ${chf(s.saldo.ER_F)} → 0)</span>` : ''}</td></tr>
+    <tr><td>Anspruch Ehefrau (½ × ${chf(s.vorschlagM)})</td><td class="nowrap"><b>CHF ${chf(s.anspruchF)}</b></td>
+        <td>Anspruch ${em} (½ × ${chf(s.vorschlagF)})</td><td class="nowrap"><b>CHF ${chf(s.anspruchM)}</b></td></tr>
+    <tr class="zeile-total"><td colspan="4"><b>Ausgleich der Vorschlagsbeteiligung: ${ausgleich}</b></td></tr>
+  </tbody></table>`;
+}
+
+function verrechnungTabelleHtml() {
+  const { c, s } = cur;
+  let rows = '';
+  if (s.memo.length) {
+    rows += s.memo.map(m => `<tr><td>${esc(m.label)} ${m.art ? artBadges([m.art]) : ''}</td>
+      <td class="nowrap">${m.glaeubiger === 'F' ? '+' : '−'} CHF ${chf(m.betrag)}</td></tr>`).join('');
+    rows += `<tr class="zeile-zwischen"><td><i>Zwischentotal gegenseitige Forderungen</i></td><td class="nowrap"><i>${s.forderungenAnF >= 0 ? '+' : '−'} CHF ${chf(Math.abs(s.forderungenAnF))}</i></td></tr>`;
+  }
+  rows += `<tr><td>Vorschlagsbeteiligung (Phase 5)</td><td class="nowrap">${s.nettoAnF >= 0 ? '+' : '−'} CHF ${chf(Math.abs(s.nettoAnF))}</td></tr>`;
+  rows += `<tr class="zeile-total"><td><b>Forderung aus güterrechtlicher Auseinandersetzung</b></td><td class="nowrap"><b>${s.endAnF >= 0 ? '' : '−'} CHF ${chf(Math.abs(s.endAnF))}</b></td></tr>`;
+  return `<p class="sektion-info">Vorzeichen aus Sicht der Ehefrau: + = zu ihren Gunsten, − = zu ihren Lasten.</p>
+    <table class="loesung-tabelle"><tbody>${rows}</tbody></table>`;
+}
+
+function arbeitsblattHtml() {
+  const { c } = cur;
+  const d = n => phaseDone(c.id, n);
+  let stand = 0;
+  for (let n = 1; n <= 6; n++) { if (d(n)) stand = n; else break; }
+  let inner;
+  if (stand === 0) {
+    inner = '<p class="ab-platzhalter">Hier füllt sich Ihr Lösungsblatt automatisch, sobald Sie eine Phase geprüft haben – beim Weiterrechnen haben Sie so alle bisherigen Ergebnisse stets vor Augen.</p>';
+  } else {
+    inner = `<table class="loesung-tabelle ab-tabelle"><thead><tr><th>Vermögenswert</th><th>1 · Wem?</th><th>2 · Gütermasse</th><th>3 · Wert</th></tr></thead><tbody>` +
+      c.posten.map(p => {
+        const o = OWNER_OPTS.find(x => x.key === p.owner).label;
+        const chip = masseChip(p);
+        return `<tr><td>${esc(p.name)}</td>
+          <td>${d(1) ? o : '<span class="ab-leer">·</span>'}</td>
+          <td>${d(2) ? `<span title="${esc(chip.title)}">${esc(chip.txt)}</span>` : '<span class="ab-leer">·</span>'}</td>
+          <td class="nowrap">${d(3) ? wertZelle(p) : '<span class="ab-leer">·</span>'}</td></tr>`;
+      }).join('') + `</tbody></table>`;
+    if (d(4)) inner += `<h4>Massentabelle (Phase 4)</h4>` + massentabelleHtml();
+    if (d(5)) inner += `<h4>Vorschlagsbeteiligung (Phase 5)</h4>` + vorschlagKompaktHtml();
+    if (d(6)) inner += `<h4>Erfüllung (Phase 6)</h4>` + verrechnungTabelleHtml() +
+      `<div class="endbox">🏁 <b>Endergebnis:</b> ${endErgebnisText()}</div>`;
+  }
+  return `<details class="arbeitsblatt" id="arbeitsblatt" ${abOffen ? 'open' : ''}>
+    <summary>📋 Lösungsblatt – bisherige Ergebnisse${stand ? ` <span class="ab-stand">(Stand: Phase ${stand} von 6)</span>` : ''}</summary>
+    <div class="ab-inhalt">${inner}</div></details>`;
+}
+
+function wireArbeitsblatt() {
+  const ab = $('#arbeitsblatt');
+  if (ab) ab.addEventListener('toggle', () => { abOffen = ab.open; });
+}
+function updateArbeitsblatt() {
+  const cont = $('#ab-container');
+  if (cont) { cont.innerHTML = arbeitsblattHtml(); wireArbeitsblatt(); }
+}
+
+/* ---------- Fallansicht ---------- */
+let cur = null; // {c, s, phase}
+
+function openCase(id) {
+  const c = CASES.find(x => x.id === id);
+  cur = { c, s: solveCase(c), phase: 1 };
+  for (let n = 1; n <= 6; n++) if (!phaseDone(id, n)) { cur.phase = n; break; }
+  if (caseDone(id)) cur.phase = 7;
+  store.last = id; save();
+  renderCase();
+}
+
+function renderCase() {
+  const { c, s } = cur;
+  const postenListe = c.posten.map((p, i) =>
+    `<li><b>${esc(p.name)}</b>${p.hint ? ` – <span class="hint">${esc(p.hint)}</span>` : ''}</li>`).join('');
+  const steps = PHASEN.map(ph => {
+    const done = phaseDone(c.id, ph.n);
+    const active = cur.phase === ph.n;
+    const reachable = done || ph.n <= maxReachable(c.id);
+    return `<button class="step ${done ? 'step-done' : ''} ${active ? 'step-active' : ''}" data-step="${ph.n}" ${reachable ? '' : 'disabled'} title="${esc(ph.titel)}">
+      <span class="step-nr">${done ? '✓' : ph.n}</span><span class="step-label">${esc(ph.titel)}</span></button>`;
+  }).join('<span class="step-line"></span>');
+  app().innerHTML = `
+    <div class="case-top">
+      <button class="btn btn-ghost" id="btn-home">← Übersicht</button>
+      <button class="btn btn-ghost" id="btn-spick2">📖 Spickzettel</button>
+    </div>
+    <header class="case-header">
+      <div class="case-kopf">
+        <h1>Fall ${c.id}: ${esc(c.titel)}</h1>
+        <div class="case-meta"><span class="case-sterne">${sterne(c.stufe)}</span> <span class="badge badge-aufloesung">Auflösungsgrund: ${esc(c.aufloesung)}</span></div>
+      </div>
+      <p class="lernziel"><b>Lernziel:</b> ${c.lernziel}</p>
+    </header>
+    <section class="sachverhalt">
+      <h2>Sachverhalt</h2>
+      <p>${c.intro}</p>
+      <ol class="posten-liste">${postenListe}</ol>
+    </section>
+    <section id="ab-container">${arbeitsblattHtml()}</section>
+    <nav class="stepper">${steps}</nav>
+    <section id="phase-panel"></section>
+    ${spickzettelHtml()}`;
+  $('#btn-home').addEventListener('click', () => { cur = null; renderHome(); });
+  $('#btn-spick2').addEventListener('click', () => $('#spick-dialog').showModal());
+  wireSpick();
+  wireArbeitsblatt();
+  app().querySelectorAll('.step:not([disabled])').forEach(el =>
+    el.addEventListener('click', () => { cur.phase = +el.dataset.step; renderCase(); }));
+  if (cur.phase === 7) renderAbschluss();
+  else renderPhase(cur.phase);
+  window.scrollTo(0, 0);
+}
+
+function maxReachable(id) {
+  for (let n = 1; n <= 6; n++) if (!phaseDone(id, n)) return n;
+  return 7;
+}
+
+/* ---------- Phasen-Rendering ---------- */
+function renderPhase(n) {
+  const { c } = cur;
+  const ph = PHASEN[n - 1];
+  const done = phaseDone(c.id, n);
+  const panel = $('#phase-panel');
+  panel.innerHTML = `
+    <div class="phase-card">
+      <div class="phase-head">
+        <h2><span class="phase-nr">Phase ${n}</span> ${esc(ph.titel)}</h2>
+        <span class="art" title="${esc(gesetzText(ph.art))}">${esc(ph.art)}</span>
+      </div>
+      <p class="phase-frage">${esc(ph.frage)}</p>
+      ${done ? '<div class="phase-done-banner">✓ Diese Phase haben Sie bereits gelöst – unten sehen Sie die Musterlösung mit Erklärungen.</div>' : ''}
+      <form id="phase-form">${renderInputs(n, done)}</form>
+      <div class="phase-actions" id="phase-actions"></div>
+      <div id="feedback"></div>
+      <div id="solution">${done ? solutionHtml(n) : ''}</div>
+      <div class="phase-nav" id="phase-nav">${done ? navButtons(n) : ''}</div>
+    </div>`;
+  const form = $('#phase-form');
+  form.addEventListener('submit', e => { e.preventDefault(); checkPhase(n); });
+  if (!done) {
+    $('#phase-actions').innerHTML = `<button class="btn btn-primary" id="btn-check">Phase prüfen</button>`;
+    $('#btn-check').addEventListener('click', () => checkPhase(n));
+  } else {
+    form.querySelectorAll('input, select').forEach(el => el.disabled = true);
+    wireNav();
+  }
+}
+
+function navButtons(n) {
+  return n < 6
+    ? `<button class="btn btn-primary" id="btn-next">Weiter zu Phase ${n + 1} →</button>`
+    : `<button class="btn btn-primary" id="btn-next">Fall abschliessen →</button>`;
+}
+function wireNav() {
+  const b = $('#btn-next');
+  if (b) b.addEventListener('click', () => { cur.phase++; renderCase(); });
+}
+
+/* ---------- Eingabe-Renderer pro Phase ---------- */
+function renderInputs(n, done) {
+  const { c, s } = cur;
+  if (n === 1) {
+    return `<table class="aufgabe-tabelle"><thead><tr><th>Vermögenswert</th><th>Zuordnung</th></tr></thead><tbody>` +
+      c.posten.map(p => `<tr data-item="${p.id}"><td>${esc(p.name)}</td><td><div class="seg" role="radiogroup">` +
+        OWNER_OPTS.map(o => `<label class="seg-opt"><input type="radio" name="p1_${p.id}" value="${o.key}" ${done && p.owner === o.key ? 'checked' : ''}><span>${o.label}</span></label>`).join('') +
+        `</div></td></tr>`).join('') + `</tbody></table>`;
+  }
+  if (n === 2) {
+    return `<table class="aufgabe-tabelle"><thead><tr><th>Vermögenswert</th><th>Gütermasse</th></tr></thead><tbody>` +
+      c.posten.map(p => {
+        const opts = p.p2opts ? shuffled(p.p2opts, p.id) : P2_STD_OPTS;
+        const korrekt = p.p2key || p.masse;
+        return `<tr data-item="${p.id}"><td>${esc(p.name)}</td><td><select name="p2_${p.id}">` +
+          `<option value="">– bitte wählen –</option>` +
+          opts.map(o => `<option value="${o.key}" ${done && o.key === korrekt ? 'selected' : ''}>${esc(o.label)}</option>`).join('') +
+          `</select></td></tr>`;
+      }).join('') + `</tbody></table>`;
+  }
+  if (n === 3) {
+    return `<table class="aufgabe-tabelle"><thead><tr><th>Position</th><th>Massgeblicher Betrag (CHF)</th></tr></thead><tbody>` +
+      c.posten.map(p => {
+        if (p.bewertbar === false) {
+          return `<tr class="zeile-inaktiv"><td>${esc(p.name)}</td><td class="inaktiv-info">keine Bewertung nötig</td></tr>`;
+        }
+        const badge = p.schuld ? '<span class="badge badge-schuld">Schuld</span> ' : (p.nurForderung ? '<span class="badge badge-forderung">Forderung</span> ' : '');
+        return `<tr data-item="${p.id}"><td>${badge}${esc(p.name)}<div class="hint">${esc(p.hint || '')}</div></td>
+          <td><input type="text" inputmode="decimal" name="p3_${p.id}" placeholder="CHF" value="${done ? chf(p.wert) : ''}" autocomplete="off"></td></tr>`;
+      }).join('') + `</tbody></table>`;
+  }
+  if (n === 4) {
+    let html = '';
+    for (const mw of s.mehrwerte) {
+      const p = c.posten.find(x => x.id === mw.postenId);
+      html += `<div class="sektion"><h3>${mw.faktor === 1 ? 'Ersatzforderung' : (mw.faktor > 1 ? 'Mehrwertanteile' : 'Minderwertanteile')}: ${esc(mw.name)}</h3>
+        <p class="sektion-info">Beiträge: ${mw.rows.map(r => `${MASSE_LABEL[r.masse]} CHF ${chf(r.beitrag)}`).join(' · ')} · aktueller Wert: CHF ${chf(mw.endwert)}.<br>
+        Berechnen Sie den heutigen Anteil jeder beteiligten Masse (Kontrolle: Alle Anteile ergeben zusammen den aktuellen Wert).</p>
+        <table class="aufgabe-tabelle"><thead><tr><th>Beteiligte Masse</th><th>Beitrag</th><th>Anteil heute (CHF)</th></tr></thead><tbody>` +
+        mw.rows.map(r => `<tr data-item="mw_${mw.postenId}_${r.masse}"><td>${MASSE_LABEL[r.masse]}</td><td>CHF ${chf(r.beitrag)}</td>
+          <td><input type="text" inputmode="decimal" name="p4mw_${mw.postenId}_${r.masse}" placeholder="CHF" value="${done ? chf(r.anteil) : ''}" autocomplete="off"></td></tr>`).join('') +
+        `</tbody></table></div>`;
+    }
+    if (s.hinzurechnungen.length) {
+      html += `<div class="sektion"><h3>Hinzurechnung (Art. 208 ZGB)</h3>
+        <p class="sektion-info">Welcher Betrag wird der Errungenschaft rechnerisch hinzugerechnet? (0 eingeben, falls keine Hinzurechnung erfolgt.)</p>
+        <table class="aufgabe-tabelle"><thead><tr><th>Vorgang</th><th>Hinzurechnung zur ER ${''}</th></tr></thead><tbody>` +
+        s.hinzurechnungen.map(hz => `<tr data-item="hz_${hz.postenId}"><td>${esc(hz.name)}<div class="hint">Ziel: ${MASSE_LABEL[hz.ziel]}</div></td>
+          <td><input type="text" inputmode="decimal" name="p4hz_${hz.postenId}" placeholder="CHF" value="${done ? chf(hz.betrag) : ''}" autocomplete="off"></td></tr>`).join('') +
+        `</tbody></table></div>`;
+    }
+    if (s.memo.length) {
+      html += `<div class="sektion sektion-memo"><h3>Merkposten für Phase 6</h3>
+        <p class="sektion-info">Diese Forderungen zwischen den Ehegatten fliessen <b>nicht</b> in die Errungenschafts-Salden ein – sie werden erst in Phase 6 verrechnet:</p>
+        <ul>${s.memo.map(m => `<li>${esc(m.label)}: CHF ${chf(m.betrag)} zugunsten ${gatteName(c, m.glaeubiger)} ${m.art ? artBadges([m.art]) : ''}</li>`).join('')}</ul></div>`;
+    }
+    html += `<div class="sektion"><h3>Salden der Errungenschaften</h3>
+      <p class="sektion-info">Stellen Sie die Massentabelle auf und ermitteln Sie den Saldo jeder Errungenschaft (inkl. Anteile, Hinzurechnungen und abzüglich Schulden; negative Salden mit Minuszeichen).</p>
+      <table class="aufgabe-tabelle"><tbody>
+        <tr data-item="saldo_ER_M"><td>Saldo Errungenschaft ${gatteName(c, 'M')}</td>
+          <td><input type="text" inputmode="decimal" name="p4s_ER_M" placeholder="CHF" value="${done ? chf(s.saldo.ER_M) : ''}" autocomplete="off"></td></tr>
+        <tr data-item="saldo_ER_F"><td>Saldo Errungenschaft Ehefrau</td>
+          <td><input type="text" inputmode="decimal" name="p4s_ER_F" placeholder="CHF" value="${done ? chf(s.saldo.ER_F) : ''}" autocomplete="off"></td></tr>
+      </tbody></table></div>`;
+    return html;
+  }
+  if (n === 5) {
+    const rows = [
+      ['p5_vm', `Vorschlag ${gatteName(c, 'M')}`, s.vorschlagM, 'Aktivsaldo seiner Errungenschaft (Rückschlag → 0)'],
+      ['p5_vf', 'Vorschlag Ehefrau', s.vorschlagF, 'Aktivsaldo ihrer Errungenschaft (Rückschlag → 0)'],
+      ['p5_af', `Anspruch Ehefrau (½ des Vorschlags ${c.erbenM ? 'des Ehemannes' : 'des Ehemannes'})`, s.anspruchF, ''],
+      ['p5_am', `Anspruch ${gatteName(c, 'M')} (½ des Vorschlags der Ehefrau)`, s.anspruchM, ''],
+    ];
+    return `<table class="aufgabe-tabelle"><tbody>` +
+      rows.map(([nm, label, val, sub]) => `<tr data-item="${nm}"><td>${label}${sub ? `<div class="hint">${sub}</div>` : ''}</td>
+        <td><input type="text" inputmode="decimal" name="${nm}" placeholder="CHF" value="${cur && phaseDone(c.id, 5) ? chf(val) : ''}" autocomplete="off"></td></tr>`).join('') +
+      `<tr data-item="p5_richtung"><td>Ausgleich der Vorschlagsbeteiligung</td><td>
+        ${richtungSelect('p5_r', s.nettoAnF, phaseDone(c.id, 5))}
+        <input type="text" inputmode="decimal" name="p5_betrag" placeholder="Betrag CHF" value="${phaseDone(c.id, 5) ? chf(Math.abs(s.nettoAnF)) : ''}" autocomplete="off" class="input-betrag"></td></tr>
+      </tbody></table>`;
+  }
+  if (n === 6) {
+    let html = '';
+    if (s.memo.length) {
+      html += `<div class="sektion"><h3>1. Gegenseitige Forderungen (aus den Phasen 2–4)</h3>
+        <ul class="memo-liste">${s.memo.map(m => `<li>${esc(m.label)}: CHF ${chf(m.betrag)} zugunsten ${gatteName(c, m.glaeubiger)}</li>`).join('')}</ul>
+        <table class="aufgabe-tabelle"><tbody><tr data-item="p6_ford"><td>Saldo dieser Forderungen (ohne Vorschlagsbeteiligung)</td><td>
+          ${richtungSelect('p6_fr', s.forderungenAnF, phaseDone(c.id, 6))}
+          <input type="text" inputmode="decimal" name="p6_fbetrag" placeholder="Betrag CHF" value="${phaseDone(c.id, 6) ? chf(Math.abs(s.forderungenAnF)) : ''}" autocomplete="off" class="input-betrag"></td></tr></tbody></table></div>`;
+    } else {
+      html += `<p class="sektion-info">Es bestehen keine weiteren Forderungen zwischen den Ehegatten – massgebend ist allein die Vorschlagsbeteiligung aus Phase 5.</p>`;
+    }
+    html += `<div class="sektion"><h3>${s.memo.length ? '2. ' : ''}Endergebnis der güterrechtlichen Auseinandersetzung</h3>
+      <table class="aufgabe-tabelle"><tbody><tr data-item="p6_ende"><td>Wer bezahlt wem wie viel? (alles verrechnet)</td><td>
+        ${richtungSelect('p6_er', s.endAnF, phaseDone(c.id, 6))}
+        <input type="text" inputmode="decimal" name="p6_ebetrag" placeholder="Betrag CHF" value="${phaseDone(c.id, 6) ? chf(Math.abs(s.endAnF)) : ''}" autocomplete="off" class="input-betrag"></td></tr></tbody></table></div>`;
+    return html;
+  }
+  return '';
+}
+
+function richtungSelect(name, anF, done) {
+  const { c } = cur;
+  const korrekt = anF > 0 ? 'MF' : (anF < 0 ? 'FM' : 'NONE');
+  const opts = [
+    ['MF', `${gatteName(c, 'M')} zahlt der Ehefrau`],
+    ['FM', `Ehefrau zahlt ${c.erbenM ? 'den Erben des Ehemannes' : 'dem Ehemann'}`],
+    ['NONE', 'Niemand schuldet etwas (0)'],
+  ];
+  return `<select name="${name}" class="select-richtung"><option value="">– Richtung wählen –</option>` +
+    opts.map(([k, l]) => `<option value="${k}" ${done && k === korrekt ? 'selected' : ''}>${l}</option>`).join('') + `</select>`;
+}
+
+let shuffleCache = {};
+function shuffled(arr, key) {
+  const k = cur.c.id + '_' + key;
+  if (!shuffleCache[k]) {
+    const a = arr.slice();
+    let seed = 0; for (const ch of k) seed = (seed * 31 + ch.charCodeAt(0)) % 997;
+    for (let i = a.length - 1; i > 0; i--) { seed = (seed * 73 + 41) % 1009; const j = seed % (i + 1); [a[i], a[j]] = [a[j], a[i]]; }
+    shuffleCache[k] = a;
+  }
+  return shuffleCache[k];
+}
+
+/* ---------- Prüfung ---------- */
+function checkPhase(n) {
+  const { c, s } = cur;
+  const form = $('#phase-form');
+  const results = [];
+  const mark = (sel, ok) => {
+    const row = form.querySelector(`[data-item="${sel}"]`);
+    if (row) { row.classList.remove('row-ok', 'row-bad'); row.classList.add(ok ? 'row-ok' : 'row-bad'); }
+    results.push(ok);
+  };
+  const numOk = (name, expected) => {
+    const el = form.querySelector(`[name="${name}"]`);
+    const v = parseNum(el ? el.value : '');
+    return Number.isFinite(v) && Math.abs(v - expected) < 0.5;
+  };
+
+  if (n === 1) c.posten.forEach(p => {
+    const v = (form.querySelector(`[name="p1_${p.id}"]:checked`) || {}).value;
+    mark(p.id, v === p.owner);
+  });
+  if (n === 2) c.posten.forEach(p => {
+    const v = form.querySelector(`[name="p2_${p.id}"]`).value;
+    mark(p.id, v === (p.p2key || p.masse));
+  });
+  if (n === 3) c.posten.forEach(p => {
+    if (p.bewertbar === false) return;
+    mark(p.id, numOk(`p3_${p.id}`, p.wert));
+  });
+  if (n === 4) {
+    for (const mw of s.mehrwerte) for (const r of mw.rows)
+      mark(`mw_${mw.postenId}_${r.masse}`, numOk(`p4mw_${mw.postenId}_${r.masse}`, r.anteil));
+    for (const hz of s.hinzurechnungen)
+      mark(`hz_${hz.postenId}`, numOk(`p4hz_${hz.postenId}`, hz.betrag));
+    mark('saldo_ER_M', numOk('p4s_ER_M', s.saldo.ER_M));
+    mark('saldo_ER_F', numOk('p4s_ER_F', s.saldo.ER_F));
+  }
+  if (n === 5) {
+    mark('p5_vm', numOk('p5_vm', s.vorschlagM));
+    mark('p5_vf', numOk('p5_vf', s.vorschlagF));
+    mark('p5_af', numOk('p5_af', s.anspruchF));
+    mark('p5_am', numOk('p5_am', s.anspruchM));
+    const r = form.querySelector('[name="p5_r"]').value;
+    const korrekt = s.nettoAnF > 0 ? 'MF' : (s.nettoAnF < 0 ? 'FM' : 'NONE');
+    mark('p5_richtung', r === korrekt && numOk('p5_betrag', Math.abs(s.nettoAnF)));
+  }
+  if (n === 6) {
+    if (s.memo.length) {
+      const r = form.querySelector('[name="p6_fr"]').value;
+      const korrekt = s.forderungenAnF > 0 ? 'MF' : (s.forderungenAnF < 0 ? 'FM' : 'NONE');
+      mark('p6_ford', r === korrekt && numOk('p6_fbetrag', Math.abs(s.forderungenAnF)));
+    }
+    const r2 = form.querySelector('[name="p6_er"]').value;
+    const korrekt2 = s.endAnF > 0 ? 'MF' : (s.endAnF < 0 ? 'FM' : 'NONE');
+    mark('p6_ende', r2 === korrekt2 && numOk('p6_ebetrag', Math.abs(s.endAnF)));
+  }
+
+  const correct = results.filter(Boolean).length, total = results.length;
+  const cp = caseProg(c.id);
+  if (!cp.phases[n] || !cp.phases[n].tried) {
+    cp.phases[n] = { tried: true, correct, total, done: false };
+  }
+  const allOk = correct === total;
+  if (allOk) { cp.phases[n].done = true; }
+  save();
+
+  const fb = $('#feedback');
+  if (allOk) {
+    fb.innerHTML = `<div class="fb fb-ok">✓ Alles richtig! ${correct} von ${total} Antworten korrekt.</div>`;
+    $('#phase-actions').innerHTML = '';
+    $('#solution').innerHTML = solutionHtml(n);
+    $('#phase-nav').innerHTML = navButtons(n);
+    form.querySelectorAll('input, select').forEach(el => el.disabled = true);
+    wireNav();
+    updateArbeitsblatt();
+  } else {
+    fb.innerHTML = `<div class="fb fb-bad">${correct} von ${total} richtig. Die rot markierten Zeilen stimmen noch nicht.</div>`;
+    $('#phase-actions').innerHTML = `<button class="btn btn-primary" id="btn-check">Nochmals prüfen</button>
+      <button class="btn" id="btn-reveal">Lösung anzeigen</button>`;
+    $('#btn-check').addEventListener('click', () => checkPhase(n));
+    $('#btn-reveal').addEventListener('click', () => revealPhase(n));
+  }
+  const target = allOk ? $('#solution') : fb;
+  if (target && target.scrollIntoView) target.scrollIntoView({ behavior: 'smooth', block: allOk ? 'start' : 'center' });
+}
+
+function revealPhase(n) {
+  const { c } = cur;
+  const cp = caseProg(c.id);
+  if (!cp.phases[n]) cp.phases[n] = { tried: true, correct: 0, total: 1, done: false };
+  cp.phases[n].done = true;
+  cp.phases[n].revealed = true;
+  save();
+  renderPhase(n); // rendert im "done"-Modus mit ausgefüllter Musterlösung
+  updateArbeitsblatt();
+  $('#feedback').innerHTML = `<div class="fb fb-info">Die Musterlösung ist nun eingesetzt – unten finden Sie die Erklärungen.</div>`;
+}
+
+/* ---------- Lösungs-/Erklärungsboxen ---------- */
+function solutionHtml(n) {
+  const { c, s } = cur;
+  let inner = '';
+  if (n === 1) {
+    inner = `<table class="loesung-tabelle"><thead><tr><th>Vermögenswert</th><th>Lösung</th><th>Begründung</th></tr></thead><tbody>` +
+      c.posten.map(p => `<tr><td>${esc(p.name)}</td><td class="nowrap"><b>${OWNER_OPTS.find(o => o.key === p.owner).label}</b></td><td>${p.why1}</td></tr>`).join('') +
+      `</tbody></table>`;
+  }
+  if (n === 2) {
+    inner = `<table class="loesung-tabelle"><thead><tr><th>Vermögenswert</th><th>Lösung</th><th>Begründung &amp; Gesetzesartikel</th></tr></thead><tbody>` +
+      c.posten.map(p => {
+        const opts = p.p2opts || P2_STD_OPTS;
+        const korrekt = p.p2key || p.masse;
+        const lbl = p.phase2Label || (opts.find(o => o.key === korrekt) || {}).label || korrekt;
+        return `<tr><td>${esc(p.name)}</td><td><b>${esc(lbl)}</b></td><td>${p.why2}<div class="art-zeile">${artBadges(p.art2)}</div></td></tr>`;
+      }).join('') + `</tbody></table>`;
+  }
+  if (n === 3) {
+    inner = `<table class="loesung-tabelle"><thead><tr><th>Position</th><th>Betrag</th><th>Begründung</th></tr></thead><tbody>` +
+      c.posten.map(p => {
+        if (p.bewertbar === false) return `<tr><td>${esc(p.name)}</td><td class="nowrap">–</td><td>${p.why3 || 'Keine Bewertung nötig.'}</td></tr>`;
+        return `<tr><td>${esc(p.name)}</td><td class="nowrap"><b>CHF ${chf(p.wert)}</b>${p.schuld ? ' (Schuld)' : ''}</td><td>${p.why3}<div class="art-zeile">${artBadges(p.art3)}</div></td></tr>`;
+      }).join('') + `</tbody></table>
+      <div class="merkbox">Grundsatz: Massgebend ist der <b>Verkehrswert</b> im Zeitpunkt der Auseinandersetzung (Art. 211 ZGB) – nicht der frühere Kaufpreis. Konten und Forderungen zum Nennwert.</div>`;
+  }
+  if (n === 4) {
+    for (const mw of s.mehrwerte) {
+      const p = c.posten.find(x => x.id === mw.postenId);
+      const deltaLabel = mw.faktor > 1 ? 'Mehrwert' : (mw.faktor < 1 ? 'Minderwert' : 'Wertveränderung');
+      const delta = mw.endwert - mw.basis;
+      inner += `<h4>${esc(mw.name)}: Beiträge ${mw.rows.map(r => chf(r.beitrag)).join(' : ')} · ${deltaLabel} ${delta >= 0 ? '+' : ''}${chf(delta)}</h4>
+        <table class="loesung-tabelle mw-tabelle"><thead><tr><th></th>${mw.rows.map(r => `<th>${MASSE_KURZ[r.masse]}</th>`).join('')}<th>Total</th></tr></thead><tbody>
+        <tr><td>Beitrag</td>${mw.rows.map(r => `<td>${chf(r.beitrag)}</td>`).join('')}<td>${chf(mw.basis)}</td></tr>
+        <tr><td>${deltaLabel} (${delta >= 0 ? '+' : ''}${chf(delta)})</td>${mw.rows.map(r => `<td>${r.anteil - r.beitrag >= 0 ? '+' : ''}${chf(r.anteil - r.beitrag)}${r.geschuetzt ? ' <span class="schutz" title="Art. 206 Abs. 1 ZGB: geschützt – mindestens Nennwert">🛡</span>' : ''}</td>`).join('')}<td>${delta >= 0 ? '+' : ''}${chf(delta)}</td></tr>
+        <tr class="zeile-total"><td>Anteil total</td>${mw.rows.map(r => `<td><b>${chf(r.anteil)}</b></td>`).join('')}<td><b>${chf(mw.endwert)}</b></td></tr>
+        </tbody></table>`;
+      if (mw.faktor < 1 && mw.rows.some(r => r.geschuetzt)) {
+        inner += `<p class="mw-erkl">🛡 Der beitragende Ehegatte ist nach Art. 206 Abs. 1 ZGB geschützt: Er erhält mindestens den Nennwert zurück. Den Verlust tragen die Massen des Eigentümer-Ehegatten anteilig (Art. 209 Abs. 3 ZGB).</p>`;
+      }
+    }
+    inner += `<h4>Massentabelle</h4>` + massentabelleHtml();
+    if (s.hinzurechnungen.length) {
+      inner += `<h4>Hinzurechnung (Art. 208 ZGB)</h4><ul>` + s.hinzurechnungen.map(hz =>
+        hz.betrag > 0
+          ? `<li>${esc(hz.name)}: <b>CHF ${chf(hz.betrag)}</b> werden der ${MASSE_LABEL[hz.ziel]} rechnerisch hinzugerechnet.</li>`
+          : `<li>${esc(hz.name)}: <b>keine Hinzurechnung (CHF 0)</b> – übliche Gelegenheitsgeschenke sind ausgenommen (Art. 208 Abs. 1 Ziff. 1 ZGB).</li>`).join('') + `</ul>`;
+    }
+    if (c.note4) inner += `<div class="merkbox">${c.note4}</div>`;
+  }
+  if (n === 5) {
+    const em = gatteName(c, 'M');
+    inner = `<table class="loesung-tabelle"><tbody>
+      <tr><td>Vorschlag ${em}</td><td class="nowrap"><b>CHF ${chf(s.vorschlagM)}</b></td>
+        <td>${s.rueckschlagM ? `Saldo der Errungenschaft: CHF ${chf(s.saldo.ER_M)} → <b>Rückschlag</b>, wird nicht berücksichtigt → Vorschlag 0 (Art. 210 Abs. 2 ZGB).` : 'Aktivsaldo seiner Errungenschaft (Art. 210 Abs. 1 ZGB).'}</td></tr>
+      <tr><td>Vorschlag Ehefrau</td><td class="nowrap"><b>CHF ${chf(s.vorschlagF)}</b></td>
+        <td>${s.rueckschlagF ? `Saldo der Errungenschaft: CHF ${chf(s.saldo.ER_F)} → <b>Rückschlag</b>, wird nicht berücksichtigt → Vorschlag 0 (Art. 210 Abs. 2 ZGB).` : 'Aktivsaldo ihrer Errungenschaft (Art. 210 Abs. 1 ZGB).'}</td></tr>
+      <tr><td>Anspruch Ehefrau</td><td class="nowrap"><b>CHF ${chf(s.anspruchF)}</b></td><td>½ des Vorschlags des Ehemannes: ${chf(s.vorschlagM)} : 2 (Art. 215 Abs. 1 ZGB).</td></tr>
+      <tr><td>Anspruch ${em}</td><td class="nowrap"><b>CHF ${chf(s.anspruchM)}</b></td><td>½ des Vorschlags der Ehefrau: ${chf(s.vorschlagF)} : 2 (Art. 215 Abs. 1 ZGB).</td></tr>
+      <tr class="zeile-total"><td>Ausgleich</td><td class="nowrap"><b>${s.nettoAnF === 0 ? 'CHF 0' : 'CHF ' + chf(Math.abs(s.nettoAnF))}</b></td>
+        <td>${s.nettoAnF === 0 ? 'Die Ansprüche decken sich – niemand schuldet etwas.' : `${chf(Math.max(s.anspruchF, s.anspruchM))} − ${chf(Math.min(s.anspruchF, s.anspruchM))} = ${chf(Math.abs(s.nettoAnF))} – ${s.nettoAnF > 0 ? `${em} zahlt der Ehefrau` : `die Ehefrau zahlt ${c.erbenM ? 'den Erben' : 'dem Ehemann'}`} (Verrechnung der gegenseitigen Beteiligungsforderungen).`}</td></tr>
+    </tbody></table>
+    <div class="merkbox">Schneller Weg: (Vorschlag ${em} − Vorschlag Ehefrau) : 2 = (${chf(s.vorschlagM)} − ${chf(s.vorschlagF)}) : 2 = ${chf((s.vorschlagM - s.vorschlagF) / 2)} ${s.nettoAnF > 0 ? 'zugunsten der Ehefrau' : (s.nettoAnF < 0 ? 'zugunsten des Ehemannes' : '– keine Zahlung')}.</div>`;
+    if (c.note5) inner += `<div class="merkbox">${c.note5}</div>`;
+  }
+  if (n === 6) {
+    inner = verrechnungTabelleHtml() + `<div class="endbox">🏁 <b>Endergebnis:</b> ${endErgebnisText()}</div>`;
+    if (c.note6) inner += `<div class="merkbox">${c.note6}</div>`;
+    inner += `<div class="merkbox">Zur Erfüllung: Jeder behält seine Gegenstände; der Ausgleich erfolgt in Geld. Würde die sofortige Zahlung den verpflichteten Ehegatten in ernstliche Schwierigkeiten bringen, kann er Zahlungsfristen verlangen (Art. 218 ZGB).</div>`;
+  }
+  return `<div class="solution-box"><h3>Lösung &amp; Erklärung</h3>${inner}</div>`;
+}
+
+/* ---------- Abschluss ---------- */
+function renderAbschluss() {
+  const { c, s } = cur;
+  const sc = caseScore(c.id);
+  const endTxt = endErgebnisText();
+  const next = CASES.find(x => x.id > c.id);
+  $('#phase-panel').innerHTML = `
+    <div class="phase-card abschluss">
+      <h2>🎉 Fall ${c.id} abgeschlossen!</h2>
+      <p class="abschluss-ende"><b>Endergebnis:</b> ${endTxt}</p>
+      ${sc ? `<p class="abschluss-score">Ihre Trefferquote (jeweils 1. Prüfversuch): <b>${sc.c} von ${sc.t}</b> Antworten (${sc.pct}%).</p>` : ''}
+      <div class="phase-nav">
+        <button class="btn" id="btn-repeat">Fall nochmals üben</button>
+        ${next ? `<button class="btn btn-primary" id="btn-nextcase">Nächster Fall: ${next.id} – ${esc(next.titel)} →</button>` : ''}
+        <button class="btn" id="btn-home2">Zur Übersicht</button>
+      </div>
+    </div>`;
+  $('#btn-home2').addEventListener('click', () => { cur = null; renderHome(); });
+  $('#btn-repeat').addEventListener('click', () => {
+    delete store.cases[c.id]; save(); openCase(c.id);
+  });
+  if (next) $('#btn-nextcase').addEventListener('click', () => openCase(next.id));
+}
+
+/* ---------- Start ---------- */
+renderHome();
+
+</script>
+</body>
+</html>

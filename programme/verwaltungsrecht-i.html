@@ -1,0 +1,2242 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verwaltungsrecht I – Lernprogramm (100 Aufgaben)</title>
+<style>
+:root {
+  --navy: #1b3a5c;
+  --navy-dunkel: #12283f;
+  --blau: #2563a8;
+  --blau-hell: #e8f0f9;
+  --gold: #b8860b;
+  --gruen: #15803d;
+  --gruen-hell: #ecfdf3;
+  --rot: #b91c1c;
+  --rot-hell: #fef2f2;
+  --grau: #5b6b7b;
+  --grau-hell: #f4f6f8;
+  --rand: #d7dfe8;
+  --schatten: 0 1px 3px rgba(18, 40, 63, .10), 0 4px 14px rgba(18, 40, 63, .06);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; padding: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", sans-serif;
+  color: #1d2b3a; background: #eef2f6;
+  font-size: 16px; line-height: 1.55;
+}
+#app { max-width: 1080px; margin: 0 auto; padding: 24px 20px 80px; }
+h1 { font-size: 1.7rem; color: var(--navy); margin: 0 0 4px; line-height: 1.25; }
+h2 { font-size: 1.2rem; color: var(--navy); margin: 0 0 10px; }
+h3 { font-size: 1.05rem; color: var(--navy); margin: 18px 0 8px; }
+h4 { font-size: 1rem; color: var(--navy); margin: 16px 0 6px; }
+
+.btn {
+  font: inherit; font-size: .95rem; font-weight: 600;
+  padding: 10px 18px; border-radius: 10px; cursor: pointer;
+  border: 1.5px solid var(--rand); background: #fff; color: var(--navy);
+  transition: all .15s;
+}
+.btn:hover { border-color: var(--blau); box-shadow: var(--schatten); }
+.btn-primary { background: var(--navy); border-color: var(--navy); color: #fff; }
+.btn-primary:hover { background: var(--blau); border-color: var(--blau); }
+.btn-ghost { border-color: transparent; background: transparent; color: var(--grau); }
+.btn-ghost:hover { color: var(--navy); border-color: var(--rand); box-shadow: none; }
+.btn:disabled { opacity: .45; cursor: default; pointer-events: none; }
+
+/* ---------- Startseite ---------- */
+.home-header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--blau) 100%);
+  color: #fff; border-radius: 16px; padding: 32px 32px 26px; box-shadow: var(--schatten);
+}
+.home-header h1 { color: #fff; font-size: 1.9rem; }
+.untertitel { margin: 4px 0 20px; opacity: .85; }
+.home-stats { display: flex; gap: 28px; margin-bottom: 20px; flex-wrap: wrap; }
+.stat { background: rgba(255,255,255,.12); border-radius: 12px; padding: 12px 22px; }
+.stat-zahl { font-size: 1.5rem; font-weight: 700; }
+.stat-label { font-size: .82rem; opacity: .85; }
+.balken { background: rgba(255,255,255,.25); border-radius: 999px; height: 10px; overflow: hidden; margin: 4px 0 18px; }
+.balken > div { background: var(--gold); height: 100%; border-radius: 999px; transition: width .3s; }
+.home-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.home-actions .btn { border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.95); }
+.home-actions .btn-ghost { background: transparent; color: rgba(255,255,255,.8); }
+.home-actions .btn-ghost:hover { color: #fff; border-color: rgba(255,255,255,.5); }
+.hinweis-methodik { color: var(--grau); font-size: .88rem; margin: 16px 4px 20px; }
+.teil-titel { font-size: .8rem; font-weight: 700; color: var(--grau); text-transform: uppercase; letter-spacing: .06em; margin: 22px 4px 8px; }
+
+/* ---------- Themen-Grid ---------- */
+.themen-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.thema-card {
+  font: inherit; text-align: left; cursor: pointer;
+  background: #fff; border: 1.5px solid var(--rand); border-radius: 14px;
+  padding: 16px 18px 14px; transition: all .15s; display: flex; flex-direction: column; gap: 5px;
+}
+.thema-card:hover { border-color: var(--blau); box-shadow: var(--schatten); transform: translateY(-2px); }
+.thema-nr { font-size: .78rem; font-weight: 700; color: var(--grau); text-transform: uppercase; letter-spacing: .05em; }
+.thema-titel { font-weight: 700; color: var(--navy); font-size: 1.04rem; line-height: 1.3; }
+.thema-kurz { color: var(--grau); font-size: .86rem; }
+.thema-fuss { margin-top: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.qdots { display: flex; gap: 5px; flex-wrap: wrap; }
+.qdot { width: 13px; height: 13px; border-radius: 999px; background: var(--grau-hell); border: 1.5px solid var(--rand); }
+.qdot.d-geloest { background: var(--gruen); border-color: var(--gruen); }
+.qdot.d-hilfe { background: #eab308; border-color: #ca9a04; }
+
+.badge { display: inline-block; font-size: .76rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+.badge-done { background: var(--gruen-hell); color: var(--gruen); border: 1px solid #bbe7cb; }
+.badge-hilfe { background: #fff8e6; color: #92640a; border: 1px solid #f0dca4; }
+.badge-open { background: var(--grau-hell); color: var(--grau); border: 1px solid var(--rand); }
+.badge-thema { background: var(--blau-hell); color: var(--blau); border: 1px solid #c4d8ee; }
+
+/* ---------- Themen-/Fragenansicht ---------- */
+.top-bar { display: flex; justify-content: space-between; margin-bottom: 10px; gap: 10px; flex-wrap: wrap; }
+.thema-header { background: #fff; border-radius: 14px; padding: 18px 24px; box-shadow: var(--schatten); border-left: 6px solid var(--navy); }
+.thema-kopf { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: baseline; }
+.frage-nav { display: flex; gap: 7px; margin-top: 12px; flex-wrap: wrap; }
+.fnav {
+  font: inherit; font-weight: 700; font-size: .88rem; cursor: pointer;
+  width: 38px; height: 38px; border-radius: 999px; border: 1.5px solid var(--rand);
+  background: #fff; color: var(--grau); transition: all .12s;
+}
+.fnav:hover { border-color: var(--blau); color: var(--blau); }
+.fnav.f-aktiv { border-color: var(--navy); background: var(--navy); color: #fff; }
+.fnav.f-geloest { border-color: var(--gruen); background: var(--gruen-hell); color: var(--gruen); }
+.fnav.f-hilfe { border-color: #ca9a04; background: #fff8e6; color: #92640a; }
+.fnav.f-geloest.f-aktiv { background: var(--gruen); color: #fff; }
+.fnav.f-hilfe.f-aktiv { background: #ca9a04; color: #fff; }
+
+.frage-card { background: #fff; border-radius: 14px; padding: 22px 26px; box-shadow: var(--schatten); margin-top: 16px; }
+.frage-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.frage-nrchip { background: var(--navy); color: #fff; border-radius: 8px; padding: 2px 10px; font-size: .85rem; white-space: nowrap; }
+.stufe-sterne { color: var(--gold); font-size: .95rem; letter-spacing: .12em; white-space: nowrap; }
+.stern-leer { color: #d5dbe2; }
+.stufe-text { color: var(--grau); font-size: .8rem; margin-left: 4px; }
+.typ-label { font-size: .78rem; font-weight: 700; color: var(--grau); text-transform: uppercase; letter-spacing: .05em; }
+.frage-text { font-weight: 600; color: var(--navy); margin: 12px 0 14px; font-size: 1.05rem; }
+
+.sachverhalt { background: #fffdf5; border: 1.5px solid #ead9a8; border-radius: 12px; padding: 14px 18px; margin: 12px 0 14px; }
+.sachverhalt-titel { color: #7c5e10; font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+.norm { background: #f4f6f8; border-left: 4px solid var(--blau); border-radius: 8px; padding: 10px 14px; margin: 10px 0; font-style: italic; }
+.hint { color: var(--grau); font-size: .9em; }
+
+.art {
+  display: inline-block; font-family: inherit; background: var(--blau-hell); color: var(--blau);
+  border: 1px solid #c4d8ee; border-radius: 6px; padding: 2px 8px;
+  font-size: .8rem; font-weight: 600; cursor: pointer; white-space: nowrap; margin: 1px 0;
+}
+.art:hover { background: #d8e6f5; }
+.art:focus-visible { outline: 2px solid var(--blau); outline-offset: 2px; }
+.art.art-offen { background: var(--navy); border-color: var(--navy); color: #fff; }
+.art-zeile { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 4px; align-items: baseline; }
+.gesetzbox {
+  background: #f4f6f8; border: 1.5px solid var(--rand); border-left: 4px solid var(--blau);
+  border-radius: 8px; padding: 10px 14px; margin-top: 10px; font-size: .9rem;
+}
+.gesetzbox b { color: var(--navy); }
+
+/* Multiple Choice */
+.mc-liste { display: flex; flex-direction: column; gap: 8px; }
+.mc-opt { display: flex; gap: 10px; align-items: flex-start; border: 1.5px solid var(--rand); border-radius: 10px; padding: 11px 14px; cursor: pointer; background: #fff; transition: all .12s; }
+.mc-opt:hover { border-color: var(--blau); }
+.mc-opt input { margin-top: 4px; accent-color: var(--navy); flex-shrink: 0; }
+.mc-opt.mc-ok { border-color: var(--gruen); background: var(--gruen-hell); }
+.mc-opt.mc-bad { border-color: var(--rot); background: var(--rot-hell); }
+.mc-opt.mc-dim { opacity: .6; }
+
+/* Mehrfachauswahl-Chips */
+.check-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.check-chip input { position: absolute; opacity: 0; pointer-events: none; }
+.check-chip span {
+  display: inline-block; padding: 9px 16px; border: 1.5px solid var(--rand); border-radius: 999px;
+  font-size: .93rem; font-weight: 600; color: var(--grau); cursor: pointer; transition: all .12s; background: #fff;
+}
+.check-chip input:checked + span { background: var(--navy); border-color: var(--navy); color: #fff; }
+.check-chip input:focus-visible + span { box-shadow: 0 0 0 3px rgba(37, 99, 168, .3); }
+.check-chip input:disabled + span { cursor: default; }
+.check-chip span:hover { border-color: var(--blau); }
+.check-chip.chip-ok span { background: var(--gruen); border-color: var(--gruen); color: #fff; }
+.check-chip.chip-bad span { background: var(--rot-hell); border-color: var(--rot); color: var(--rot); }
+.check-chip.chip-fehlt span { border-color: var(--rot); border-style: dashed; color: var(--rot); background: #fff; }
+
+/* Zuordnen */
+.aufgabe-tabelle { width: 100%; border-collapse: collapse; margin: 6px 0 10px; }
+.aufgabe-tabelle th {
+  text-align: left; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em;
+  color: var(--grau); padding: 8px 10px; border-bottom: 2px solid var(--rand);
+}
+.aufgabe-tabelle td { padding: 10px; border-bottom: 1px solid var(--grau-hell); vertical-align: middle; }
+.aufgabe-tabelle tr:last-child td { border-bottom: none; }
+.aufgabe-tabelle select {
+  font: inherit; font-size: .92rem; padding: 9px 10px; border: 1.5px solid var(--rand); border-radius: 8px;
+  max-width: 100%; background: #fff;
+}
+.aufgabe-tabelle select:focus { outline: none; border-color: var(--blau); box-shadow: 0 0 0 3px rgba(37, 99, 168, .15); }
+.row-ok td { background: var(--gruen-hell); }
+.row-ok td:first-child { box-shadow: inset 4px 0 0 var(--gruen); }
+.row-bad td { background: var(--rot-hell); }
+.row-bad td:first-child { box-shadow: inset 4px 0 0 var(--rot); }
+.zeile-links { font-weight: 600; color: var(--navy); }
+
+/* Reihenfolge */
+.reihe-liste { display: flex; flex-direction: column; gap: 8px; }
+.reihe-item {
+  font: inherit; text-align: left; display: flex; gap: 12px; align-items: center;
+  border: 1.5px solid var(--rand); border-radius: 10px; padding: 10px 14px;
+  cursor: pointer; background: #fff; transition: all .12s;
+}
+.reihe-item:hover { border-color: var(--blau); }
+.reihe-num {
+  flex-shrink: 0; width: 30px; height: 30px; border-radius: 999px;
+  border: 1.5px dashed var(--rand); color: var(--grau);
+  display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .9rem;
+}
+.reihe-item.gewaehlt .reihe-num { background: var(--navy); border: 1.5px solid var(--navy); color: #fff; }
+.reihe-item.reihe-ok { border-color: var(--gruen); background: var(--gruen-hell); }
+.reihe-item.reihe-ok .reihe-num { background: var(--gruen); border-color: var(--gruen); color: #fff; }
+.reihe-item.reihe-bad { border-color: var(--rot); background: var(--rot-hell); }
+.reihe-item.reihe-bad .reihe-num { background: var(--rot); border-color: var(--rot); color: #fff; }
+
+/* Feedback & Lösung */
+.frage-actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.fb { border-radius: 10px; padding: 12px 16px; font-weight: 600; margin-top: 14px; }
+.fb-ok { background: var(--gruen-hell); color: var(--gruen); border: 1px solid #bbe7cb; }
+.fb-bad { background: var(--rot-hell); color: var(--rot); border: 1px solid #f3c6c6; }
+.fb-info { background: var(--blau-hell); color: var(--blau); border: 1px solid #c4d8ee; }
+
+.solution-box { background: var(--grau-hell); border: 1.5px solid var(--rand); border-radius: 12px; padding: 16px 20px; margin-top: 16px; font-size: .96rem; overflow-x: auto; }
+.solution-box > h4 { margin-top: 0; }
+.solution-box p { margin: 8px 0; }
+.solution-box ul, .solution-box ol { margin: 6px 0; padding-left: 22px; }
+.solution-box li { margin-bottom: 4px; }
+
+.merkbox {
+  background: #fffdf5; border: 1.5px solid #ead9a8; border-left: 5px solid var(--gold);
+  border-radius: 10px; padding: 10px 14px; margin-top: 12px; font-size: .93rem;
+}
+.merkbox b:first-child { color: #7c5e10; }
+
+/* Spickzettel-Modal */
+.modal-hg {
+  position: fixed; inset: 0; background: rgba(18, 40, 63, .55); z-index: 50;
+  display: flex; align-items: flex-start; justify-content: center; padding: 30px 16px; overflow-y: auto;
+}
+.modal-box {
+  background: #fff; border-radius: 16px; max-width: 880px; width: 100%;
+  padding: 26px 30px 30px; box-shadow: 0 10px 40px rgba(0,0,0,.25); position: relative;
+  overflow-x: auto;
+}
+.modal-schliessen { position: sticky; float: right; top: 0; }
+.spick-tabelle { width: 100%; border-collapse: collapse; margin: 8px 0 18px; font-size: .9rem; }
+.spick-tabelle th { text-align: left; background: var(--navy); color: #fff; padding: 7px 10px; font-size: .8rem; }
+.spick-tabelle td { padding: 7px 10px; border-bottom: 1px solid var(--grau-hell); vertical-align: top; }
+.spick-tabelle tr:nth-child(even) td { background: #f8fafc; }
+
+@media (max-width: 640px) {
+  #app { padding: 14px 10px 60px; }
+  .home-header { padding: 22px 20px 20px; }
+  .frage-card { padding: 16px 16px; }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal"></div>
+<script>
+'use strict';
+
+/* =====================  GESETZESTEXTE (Tooltip)  ===================== */
+const GESETZ = {
+  'Art. 5 BV': 'Grundsätze rechtsstaatlichen Handelns: Grundlage und Schranke staatlichen Handelns ist das Recht (Abs. 1). Staatliches Handeln muss im öffentlichen Interesse liegen und verhältnismässig sein (Abs. 2). Staatliche Organe und Private handeln nach Treu und Glauben (Abs. 3). Bund und Kantone beachten das Völkerrecht (Abs. 4).',
+  'Art. 5 Abs. 1 BV': 'Grundlage und Schranke staatlichen Handelns ist das Recht (Legalitätsprinzip).',
+  'Art. 5 Abs. 2 BV': 'Staatliches Handeln muss im öffentlichen Interesse liegen und verhältnismässig sein.',
+  'Art. 5 Abs. 3 BV': 'Staatliche Organe und Private handeln nach Treu und Glauben.',
+  'Art. 8 BV': 'Alle Menschen sind vor dem Gesetz gleich (Abs. 1). Niemand darf diskriminiert werden, namentlich nicht wegen der Herkunft, der Rasse, des Geschlechts, des Alters, der Sprache, der sozialen Stellung, der Lebensform, der religiösen, weltanschaulichen oder politischen Überzeugung oder wegen einer körperlichen, geistigen oder psychischen Behinderung (Abs. 2).',
+  'Art. 9 BV': 'Jede Person hat Anspruch darauf, von den staatlichen Organen ohne Willkür und nach Treu und Glauben behandelt zu werden.',
+  'Art. 10 BV': 'Jeder Mensch hat das Recht auf Leben (Abs. 1) und auf persönliche Freiheit, insbesondere auf körperliche und geistige Unversehrtheit und auf Bewegungsfreiheit (Abs. 2).',
+  'Art. 15 BV': 'Die Glaubens- und Gewissensfreiheit ist gewährleistet. Jede Person hat das Recht, ihre Religion und ihre weltanschauliche Überzeugung frei zu wählen und allein oder in Gemeinschaft mit anderen zu bekennen (Abs. 1 und 2).',
+  'Art. 22 BV': 'Die Versammlungsfreiheit ist gewährleistet. Jede Person hat das Recht, Versammlungen zu organisieren, an Versammlungen teilzunehmen oder Versammlungen fernzubleiben.',
+  'Art. 26 BV': 'Das Eigentum ist gewährleistet (Abs. 1). Enteignungen und Eigentumsbeschränkungen, die einer Enteignung gleichkommen, werden voll entschädigt (Abs. 2).',
+  'Art. 27 BV': 'Die Wirtschaftsfreiheit ist gewährleistet (Abs. 1). Sie umfasst insbesondere die freie Wahl des Berufes sowie den freien Zugang zu einer privatwirtschaftlichen Erwerbstätigkeit und deren freie Ausübung (Abs. 2).',
+  'Art. 29 BV': 'Jede Person hat in Verfahren vor Gerichts- und Verwaltungsinstanzen Anspruch auf gleiche und gerechte Behandlung sowie auf Beurteilung innert angemessener Frist (Abs. 1). Die Parteien haben Anspruch auf rechtliches Gehör (Abs. 2). Jede Person, die nicht über die erforderlichen Mittel verfügt, hat Anspruch auf unentgeltliche Rechtspflege (Abs. 3).',
+  'Art. 29 Abs. 2 BV': 'Die Parteien haben Anspruch auf rechtliches Gehör.',
+  'Art. 30 BV': 'Jede Person, deren Sache in einem gerichtlichen Verfahren beurteilt werden muss, hat Anspruch auf ein durch Gesetz geschaffenes, zuständiges, unabhängiges und unparteiisches Gericht (Abs. 1).',
+  'Art. 36 BV': 'Einschränkungen von Grundrechten bedürfen einer gesetzlichen Grundlage. Schwerwiegende Einschränkungen müssen im Gesetz selbst vorgesehen sein; ausgenommen sind Fälle ernster, unmittelbarer und nicht anders abwendbarer Gefahr (Abs. 1). Einschränkungen müssen durch ein öffentliches Interesse oder durch den Schutz von Grundrechten Dritter gerechtfertigt (Abs. 2) und verhältnismässig sein (Abs. 3). Der Kerngehalt der Grundrechte ist unantastbar (Abs. 4).',
+  'Art. 48 BV': 'Die Kantone können miteinander Verträge schliessen sowie gemeinsame Organisationen und Einrichtungen schaffen (Konkordate, Abs. 1).',
+  'Art. 73 BV': 'Bund und Kantone streben ein auf Dauer ausgewogenes Verhältnis zwischen der Natur und ihrer Erneuerungsfähigkeit einerseits und ihrer Beanspruchung durch den Menschen anderseits an (Nachhaltigkeit).',
+  'Art. 74 BV': 'Der Bund erlässt Vorschriften über den Schutz des Menschen und seiner natürlichen Umwelt vor schädlichen oder lästigen Einwirkungen (Abs. 1). Er sorgt dafür, dass solche Einwirkungen vermieden werden; die Kosten der Vermeidung und Beseitigung tragen die Verursacher (Abs. 2, Verursacherprinzip).',
+  'Art. 78 BV': 'Für den Natur- und Heimatschutz sind die Kantone zuständig (Abs. 1). Moore und Moorlandschaften von besonderer Schönheit und gesamtschweizerischer Bedeutung sind geschützt; es dürfen darin weder Anlagen gebaut noch Bodenveränderungen vorgenommen werden (Abs. 5) — direkt anwendbares materielles Verwaltungsrecht in der Verfassung.',
+  'Art. 86 BV': 'Der Bund verwendet die Erträge aus den Abgaben auf Treibstoffen sowie die Nationalstrassenabgabe für Aufgaben und Aufwendungen im Zusammenhang mit dem Strassenverkehr — direkt anwendbares materielles Verwaltungsrecht in der Verfassung.',
+  'Art. 127 BV': 'Die Ausgestaltung der Steuern, namentlich der Kreis der Steuerpflichtigen, der Gegenstand der Steuer und deren Bemessung, ist in den Grundzügen im Gesetz selbst zu regeln (Abs. 1 — strenges Legalitätsprinzip im Abgaberecht).',
+  'Art. 164 BV': 'Alle wichtigen rechtsetzenden Bestimmungen sind in der Form des Bundesgesetzes zu erlassen (Abs. 1). Rechtsetzungsbefugnisse können durch Bundesgesetz übertragen werden, soweit dies nicht durch die Bundesverfassung ausgeschlossen wird (Abs. 2 — Gesetzesdelegation).',
+  'Art. 185 BV': 'Der Bundesrat kann, unmittelbar gestützt auf diesen Artikel, Verordnungen und Verfügungen erlassen, um eingetretenen oder unmittelbar drohenden schweren Störungen der öffentlichen Ordnung oder der inneren oder äusseren Sicherheit zu begegnen (Abs. 3, Notrecht).',
+  'Art. 5 VwVG': 'Als Verfügungen gelten Anordnungen der Behörden im Einzelfall, die sich auf öffentliches Recht des Bundes stützen und zum Gegenstand haben: Begründung, Änderung oder Aufhebung von Rechten oder Pflichten; Feststellung des Bestehens, Nichtbestehens oder Umfanges von Rechten oder Pflichten; Abweisung von Begehren auf Begründung, Änderung, Aufhebung oder Feststellung von Rechten oder Pflichten oder Nichteintreten auf solche Begehren (Abs. 1).',
+  'Art. 25 VwVG': 'Die für die Beurteilung zuständige Behörde kann über den Bestand, den Nichtbestand oder den Umfang öffentlichrechtlicher Rechte oder Pflichten von Amtes wegen oder auf Begehren eine Feststellungsverfügung treffen (Abs. 1). Dem Begehren ist zu entsprechen, wenn der Gesuchsteller ein schutzwürdiges Interesse nachweist (Abs. 2).',
+  'Art. 26 VwVG': 'Die Partei oder ihr Vertreter hat Anspruch darauf, in ihrer Sache Eingaben von Parteien und Vernehmlassungen von Behörden, alle als Beweismittel dienenden Aktenstücke sowie Niederschriften eröffneter Verfügungen am Sitze der verfügenden Behörde einzusehen (Abs. 1, Akteneinsicht).',
+  'Art. 30 VwVG': 'Die Behörde hört die Parteien an, bevor sie verfügt (Abs. 1).',
+  'Art. 34 VwVG': 'Die Behörde eröffnet Verfügungen den Parteien schriftlich (Abs. 1).',
+  'Art. 35 VwVG': 'Schriftliche Verfügungen sind, auch wenn die Behörde sie in Briefform eröffnet, als solche zu bezeichnen, zu begründen und mit einer Rechtsmittelbelehrung zu versehen (Abs. 1).',
+  'Art. 38 VwVG': 'Aus mangelhafter Eröffnung darf den Parteien kein Nachteil erwachsen.',
+  'Art. 41 VwVG': 'Vollstreckungsmittel: Ersatzvornahme durch die verfügende Behörde selbst oder durch einen beauftragten Dritten auf Kosten des Verpflichteten, unmittelbarer Zwang gegen die Person oder ihre Sachen, Strafverfolgung sowie Schuldbetreibung (Abs. 1).',
+  'Art. 292 StGB': 'Ungehorsam gegen amtliche Verfügungen: Wer der von einer zuständigen Behörde oder einem zuständigen Beamten unter Hinweis auf die Strafdrohung dieses Artikels an ihn erlassenen Verfügung nicht Folge leistet, wird mit Busse bestraft.',
+  'Art. 38 SchKG': 'Die Zwangsvollstreckung für Geldforderungen wird auf dem Weg der Schuldbetreibung durchgeführt.',
+  'Art. 3 VG': 'Der Bund haftet für den Schaden, den ein Beamter in Ausübung seiner amtlichen Tätigkeit Dritten widerrechtlich zufügt, ohne Rücksicht auf das Verschulden des Beamten (Abs. 1, Verantwortlichkeitsgesetz).',
+  'Art. 15d SVG': 'Fahrzeugführerinnen und Fahrzeugführer ab dem vollendeten 75. Altersjahr müssen sich alle zwei Jahre einer vertrauensärztlichen Untersuchung der Fahreignung unterziehen (Abs. 2, seit 1.1.2019).',
+  'Art. 1 USG': 'Dieses Gesetz soll Menschen, Tiere und Pflanzen, ihre Lebensgemeinschaften und Lebensräume gegen schädliche oder lästige Einwirkungen schützen (Abs. 1). Im Sinne der Vorsorge sind Einwirkungen, die schädlich oder lästig werden könnten, frühzeitig zu begrenzen (Abs. 2, Vorsorgeprinzip).',
+  'Art. 11 USG': 'Luftverunreinigungen, Lärm, Erschütterungen und Strahlen werden durch Massnahmen bei der Quelle begrenzt (Abs. 1). Unabhängig von der bestehenden Umweltbelastung sind Emissionen im Rahmen der Vorsorge so weit zu begrenzen, als dies technisch und betrieblich möglich und wirtschaftlich tragbar ist (Abs. 2).',
+  'Art. 30e USG': 'Abfälle dürfen nur auf einer bewilligten Deponie abgelagert werden (Abs. 1).',
+  'Art. 24 RPG': 'Abweichend von Artikel 22 Absatz 2 Buchstabe a können Bewilligungen erteilt werden, Bauten und Anlagen ausserhalb der Bauzonen zu errichten, wenn der Zweck der Bauten einen Standort ausserhalb der Bauzonen erfordert und keine überwiegenden Interessen entgegenstehen (Ausnahmebewilligung).',
+  'Art. 22 RPG': 'Bauten und Anlagen dürfen nur mit behördlicher Bewilligung errichtet oder geändert werden (Abs. 1). Voraussetzung ist, dass die Bauten dem Zweck der Nutzungszone entsprechen und das Land erschlossen ist (Abs. 2).',
+  '§ 10 VRG ZH': 'Anordnungen sind als Verfügung zu bezeichnen und mit Begründung, Entscheidformel (Dispositiv) und Rechtsmittelbelehrung zu versehen (Abs. 1).',
+  '§ 10a VRG ZH': 'Auf die Begründung kann verzichtet werden, wenn dem Begehren der betroffenen Person vollumfänglich entsprochen wird.',
+  'BGE 125 I 173': 'Basler Numerus clausus: Die Wirtschaftsfreiheit verleiht keinen Anspruch auf freien Zugang zum Universitätsstudium. Die Beschränkung der Zulassung zum Medizinstudium mittels Eignungstest stützte sich auf eine genügende formell-gesetzliche Grundlage; dass der Numerus clausus nur für Medizin und nur in der Deutschschweiz galt, verletzt die Rechtsgleichheit nicht (sachlicher Grund: beschränkte, teure Ausbildungskapazitäten). Aufgehoben wurde einzig die Gebühr für den Eignungstest — ihr fehlte die gesetzliche Grundlage.',
+  'BGE 137 I 69': 'Widerruf einer ursprünglich fehlerhaften Verfügung: Eine materiell unrichtige Verfügung kann auch nach Ablauf der Rechtsmittelfrist zurückgenommen werden. Abzuwägen sind das Interesse an der richtigen Durchführung des objektiven Rechts und das Interesse am Vertrauensschutz. Der Widerruf ist in der Regel ausgeschlossen, wenn die Verfügung ein subjektives Recht begründet hat, in einem Verfahren mit allseitiger Interessenprüfung erging oder der Private von der Befugnis bereits Gebrauch gemacht hat.',
+  'BGE 142 I 49': 'Kopftuchverbot St. Margrethen (BGer 2C_121/2015): Das Verbot jeglicher Kopfbedeckung im Unterricht greift in die Glaubens- und Gewissensfreiheit (Art. 15 BV) ein. Der Eingriff erwies sich als unverhältnismässig — für einen geordneten Schulbetrieb war er nicht erforderlich; die Schülerin wurde faktisch vor die Wahl zwischen religiösem Gebot und öffentlichem Schulunterricht gestellt.',
+  'BGE 140 II 33': 'Weihnachts- und Zierbeleuchtung Möhlin: Künstliches Licht ist eine Einwirkung im Sinne des USG und untersteht dem Vorsorgeprinzip. Die zeitliche Beschränkung der Beleuchtungsdauer (unter dem Jahr bis 22.00 Uhr, in der Weihnachtszeit bis 01.00 Uhr) ist eine verhältnismässige Emissionsbegrenzung und verletzt die Grundrechte nicht.',
+  'BGE 115 Ia 8': 'Fristwahrung: Lässt sich durch Zeugen beweisen, dass die Eingabe rechtzeitig der Schweizerischen Post übergeben wurde, ist die Beschwerde rechtzeitig erfolgt. Die Instanz muss dem Beschwerdeführer Gelegenheit geben, bei der Beweiserhebung mitzuwirken oder zum Ergebnis Stellung zu nehmen (Art. 29 Abs. 2 BV).',
+  'BGE 104 Ia 69': 'Unangemeldete Beweiserhebungen: Der Private hat grundsätzlich Anspruch, an Beweiserhebungen teilzunehmen. Eine Ausnahme gilt für Beweiserhebungen, die ihren Zweck nur unangemeldet erfüllen (namentlich Augenscheine und Messungen im Immissionsschutz). Das rechtliche Gehör ist gewahrt, wenn das Beweisergebnis nachträglich zur Stellungnahme unterbreitet wird.',
+  'BGE 121 I 225': 'Akteneinsicht in Prüfungsakten: Die Akteneinsicht erstreckt sich auf die entscheidwesentlichen Akten. Bei einer Eignungsprüfung ist massgebend, ob der einzelne Kandidat die Eignung besitzt; anders als bei Wettbewerben bildet der Quervergleich mit anderen Kandidaten nicht die Entscheidgrundlage. Arbeiten anderer Kandidaten gehören deshalb im Allgemeinen nicht zu den einsehbaren Akten.'
+};
+
+/* =====================  THEMEN  ===================== */
+const THEMEN = [
+  { nr: 1,  teil: 'Teil I — Grundlagen', icon: '🏛️', titel: 'Verwaltungsbegriff & Verwaltungsaufgaben', kurz: 'Funktioneller Begriff, Ordnungs-, sozialpolitische, Lenkungs- und Infrastrukturaufgaben' },
+  { nr: 2,  teil: 'Teil I — Grundlagen', icon: '⚙️', titel: 'Formen der Verwaltungstätigkeit', kurz: 'Hoheitlich/nicht hoheitlich; Eingriffs-, Leistungs-, Bedarfs-, Gewährleistungs-, wirtschaftende Verwaltung' },
+  { nr: 3,  teil: 'Teil I — Grundlagen', icon: '📚', titel: 'Rechtsquellen des Verwaltungsrechts', kurz: 'Verfassung, Gesetz, Verordnung, Satzung, Konkordate, Gewohnheits- und Richterrecht, Notrecht' },
+  { nr: 4,  teil: 'Teil I — Grundlagen', icon: '⚖️', titel: 'Legalitätsprinzip & Gesetzesdelegation', kurz: 'Art. 5 Abs. 1 BV, Rechtssatz, Normstufe, Delegation (Art. 164 BV), Bestimmtheit, Abgaberecht' },
+  { nr: 5,  teil: 'Teil I — Grundlagen', icon: '🎚️', titel: 'Ermessen & unbestimmte Rechtsbegriffe', kurz: 'Entschliessungs-, Auswahl-, Tatbestandsermessen; Ermessensfehler; Auslegung offener Begriffe' },
+  { nr: 6,  teil: 'Teil I — Grundlagen', icon: '🎯', titel: 'Öffentliches Interesse & Verhältnismässigkeit', kurz: 'Art. 5 Abs. 2 BV, Interessenkategorien, Geeignetheit – Erforderlichkeit – Zumutbarkeit' },
+  { nr: 7,  teil: 'Teil I — Grundlagen', icon: '🛡️', titel: 'Grundrechtsbeschränkung (Art. 36 BV)', kurz: 'Vier Voraussetzungen, Polizeigeneralklausel, Kerngehalt, Leitentscheide Kopftuch & Beleuchtung' },
+  { nr: 8,  teil: 'Teil II — Grundprinzipien', icon: '🤝', titel: 'Treu und Glauben & Vertrauensschutz', kurz: 'Art. 5 Abs. 3 / Art. 9 BV, vier Voraussetzungen, unrichtige Auskunft, Folgen, BGE 137 I 69' },
+  { nr: 9,  teil: 'Teil II — Grundprinzipien', icon: '⚖️', titel: 'Rechtsgleichheit & Willkürverbot', kurz: 'Art. 8/9 BV, Praxisänderung, «Legalität vor Egalität», Auffanggrundrecht, BGE 125 I 173' },
+  { nr: 10, teil: 'Teil II — Grundprinzipien', icon: '👂', titel: 'Anspruch auf rechtliches Gehör', kurz: 'Art. 29 Abs. 2 BV, Teilgehalte, formelle Natur, Heilung, drei Leitentscheide' },
+  { nr: 11, teil: 'Teil III — Verfügung', icon: '🧩', titel: 'Handlungsformen der Verwaltung', kurz: 'Raster generell/individuell × abstrakt/konkret, Realakt, Verwaltungsverordnung, Plan, Verträge' },
+  { nr: 12, teil: 'Teil III — Verfügung', icon: '📄', titel: 'Die Verfügung: Begriff, Elemente & Aufbau', kurz: 'Art. 5 VwVG, materielle Elemente, Funktionen, formeller Aufbau, Rechtsmittelbelehrung' },
+  { nr: 13, teil: 'Teil III — Verfügung', icon: '🔧', titel: 'Nebenbestimmungen, Fehler & Vollstreckung', kurz: 'Auflage/Bedingung/Befristung, Nichtigkeit, Widerruf, Sanktionen, Allgemeinverfügung' },
+  { nr: 14, teil: 'Teil IV — Bewilligungen', icon: '🎫', titel: 'Bewilligungen, Konzessionen & Subventionen', kurz: 'Bewilligungspflicht und -arten, Monopole, Konzession, Pflichten des Konzessionärs, Subvention' }
+];
+
+/* =====================  AUFGABEN  ===================== */
+/* 100 Aufgaben in 14 Themen, pro Thema mit aufsteigendem Schwierigkeitsgrad (stufe = 1 … n). */
+const FRAGEN = [
+
+/* ==========  THEMA 1: Verwaltungsbegriff & Verwaltungsaufgaben (7)  ========== */
+{ id: 'T1F1', thema: 1, stufe: 1, typ: 'mc',
+  frage: 'Wie lautet die <b>negative</b> Umschreibung des Verwaltungsbegriffs?',
+  optionen: [
+    '«Verwaltung ist diejenige Staatstätigkeit, die nicht in Rechtsetzung und nicht im Entscheid über Rechtsstreitigkeiten oder Strafen besteht.»',
+    '«Verwaltung ist die Besorgung gesetzlich übertragener Aufgaben durch das Gemeinwesen.»',
+    '«Verwaltung ist die Gesamtheit der Behörden und Verwaltungsträger, die mit dem Vollzug betraut sind.»',
+    '«Verwaltung ist jede Tätigkeit, die im öffentlichen Interesse liegt.»'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Die Verwaltungstätigkeit lässt sich schwer positiv definieren; deshalb arbeitet die Lehre mit einer <b>negativen Umschreibung</b>: Verwaltung ist alles staatliche Handeln ausserhalb von Rechtsetzung und Rechtsprechung.</p>' +
+    '<ul><li><b>Positiv:</b> «Verwaltung ist die Besorgung gesetzlich übertragener Aufgaben durch das Gemeinwesen.»</li>' +
+    '<li><b>Organisatorisch:</b> Gesamtheit der Behörden und Verwaltungsträger (Departemente, Ämter, Gemeindeverwaltungen, Anstalten). Das Script arbeitet mit dem <b>funktionellen</b> Begriff.</li>' +
+    '<li>Tätigkeiten im öffentlichen Interesse üben auch Private aus (Künstler, Ärzte, Landwirte) — das macht sie noch nicht zur Verwaltung.</li></ul>' +
+    '<div class="merkbox"><b>Merke:</b> Verwaltungsrecht ist <b>exekutives Recht</b> — es regelt, wie Gesetze im Einzelfall angewendet und vollzogen werden.</div>',
+  artikel: [] },
+
+{ id: 'T1F2', thema: 1, stufe: 2, typ: 'multi',
+  frage: 'Welche <b>vier Kategorien von Verwaltungsaufgaben</b> (Zweck) unterscheidet das Script?',
+  optionen: [
+    'Ordnungsaufgaben',
+    'Sozialpolitische Aufgaben',
+    'Lenkungsaufgaben',
+    'Infrastrukturaufgaben',
+    'Bedarfsaufgaben',
+    'Rechtsprechungsaufgaben',
+    'Rechtsetzungsaufgaben'
+  ],
+  richtig: [0, 1, 2, 3],
+  erklaerung: '<p>Die vier Kategorien nach dem <b>Zweck</b> der Aufgabe:</p>' +
+    '<ul><li><b>Ordnungsaufgaben</b> — Zustände aufrechterhalten oder gegen Störungen abschirmen (Betriebsbewilligung Bahn, Ausfuhrverbot für Kriegsmaterial, Enteignung).</li>' +
+    '<li><b>Sozialpolitische Aufgaben</b> — Ausgleich gesellschaftlicher und wirtschaftlicher Ungleichheiten (Ruhezeiten im ArG, Krankenkassenobligatorium).</li>' +
+    '<li><b>Lenkungsaufgaben</b> — anzustrebende Zustände konkretisieren; Anreize statt Verbote (Zigarettensteuer, Direktzahlungen).</li>' +
+    '<li><b>Infrastrukturaufgaben</b> — Bereitstellung öffentlicher Dienste, Service public (Kantonalbank, Büromaterial, Personal).</li></ul>' +
+    '<p><b>Bedarfsverwaltung</b> ist keine Aufgaben<i>kategorie</i>, sondern eine <i>Form</i> der Aufgabenerfüllung (→ Thema 2). Rechtsetzung und Rechtsprechung sind Staatsaufgaben <b>anderer</b> Gewalten.</p>',
+  artikel: [] },
+
+{ id: 'T1F3', thema: 1, stufe: 3, typ: 'zuordnen',
+  frage: 'Welchen Zweck erfüllen die folgenden Verwaltungsaufgaben? (Übungsblatt Aufgabe 1)',
+  optionen: ['Ordnungsaufgabe', 'Sozialpolitische Aufgabe', 'Lenkungsaufgabe', 'Infrastrukturaufgabe'],
+  zeilen: [
+    { links: 'Erteilung einer befristeten Betriebsbewilligung für den Bahnbetrieb', rechts: 'Ordnungsaufgabe' },
+    { links: 'Verpflichtung des Kantons Zürich, eine Kantonalbank zu betreiben', rechts: 'Infrastrukturaufgabe' },
+    { links: 'Vorschriften zur täglichen Ruhezeit im Arbeitsgesetz', rechts: 'Sozialpolitische Aufgabe' },
+    { links: 'Direktzahlungen für ökologische Betriebe', rechts: 'Lenkungsaufgabe' },
+    { links: 'Beschaffung von Büromaterialien', rechts: 'Infrastrukturaufgabe' },
+    { links: 'Ausfuhrverbot für Kriegsmaschinen', rechts: 'Ordnungsaufgabe' }
+  ],
+  erklaerung: '<p>Original-Lösungen des Übungsblatts. Achte auf die Logik: Die <b>Betriebsbewilligung</b> und das <b>Ausfuhrverbot</b> sichern bestimmte Zustände gegen Störungen ab (polizeilicher Einschlag). Die <b>Kantonalbank</b> und das <b>Büromaterial</b> stellen die Infrastruktur bzw. die Mittel des Service public bereit. Die <b>Ruhezeit</b> gleicht ein Ungleichgewicht zwischen Arbeitgeber und Arbeitnehmer aus. <b>Direktzahlungen</b> motivieren die Bauern zu einem bestimmten Verhalten (Anreiz statt Verbot).</p>',
+  artikel: [] },
+
+{ id: 'T1F4', thema: 1, stufe: 4, typ: 'multi',
+  frage: 'Welche Aufgabenkategorien werden mit den <b>Bildungsmassnahmen der Arbeitslosenversicherung</b> verfolgt?',
+  optionen: [
+    'Lenkungsaufgabe',
+    'Sozialpolitische Aufgabe',
+    'Ordnungsaufgabe',
+    'Infrastrukturaufgabe'
+  ],
+  richtig: [0, 1],
+  erklaerung: '<p><b>Mehrfachzuordnungen sind möglich und prüfungsrelevant.</b> Die Bildungsmassnahmen der ALV federn eine soziale Notlage ab (<b>sozialpolitisch</b>) und motivieren die Versicherten zugleich, sich weiterzubilden und rasch wieder eine Stelle zu finden (<b>Lenkung</b>).</p>' +
+    '<div class="merkbox"><b>Weitere Doppelzuordnungen aus dem Script:</b> Nacht- und Sonntagsfahrverbot = Ordnungs- <i>und</i> Lenkungsaufgabe · flächendeckendes E-Tankstellen-Netz = Infrastruktur- <i>und</i> Lenkungsaufgabe.</div>',
+  artikel: [] },
+
+{ id: 'T1F5', thema: 1, stufe: 5, typ: 'mc',
+  frage: 'Wann wird aus einer Tätigkeit, die im öffentlichen Interesse liegt, eine <b>Verwaltungsaufgabe</b>?',
+  optionen: [
+    'Wenn das Gesetz das Gemeinwesen zu ihrer Erfüllung verpflichtet und damit Verwaltungsbehörden beauftragt',
+    'Sobald sie faktisch von einer Behörde ausgeübt wird, auch ohne gesetzliche Grundlage',
+    'Sobald ein überwiegendes öffentliches Interesse an ihr besteht — eine gesetzliche Verankerung ist nicht nötig',
+    'Wenn sie in der Bundesverfassung als Staatsziel erwähnt wird'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Die Begriffe sind abgestuft:</p>' +
+    '<ul><li><b>Öffentliche Aufgabe</b> — jede Tätigkeit im öffentlichen Interesse, auch diejenige von Privaten (Künstler, Ärzte, Landwirte).</li>' +
+    '<li><b>Staatsaufgabe</b> — erst, wenn das <b>Gesetz</b> das Gemeinwesen verpflichtet, sie zu erfüllen. Staatsaufgaben nehmen auch Legislative, Justiz und Regierung wahr.</li>' +
+    '<li><b>Verwaltungsaufgabe</b> — wenn das Gesetz damit <b>Verwaltungsbehörden</b> beauftragt. Der Begriff ist also enger als derjenige der Staatsaufgabe.</li></ul>' +
+    '<p>Eine blosse Nützlichkeit oder ein Staatsziel in der Verfassung genügt nicht; ohne gesetzliche Grundlage darf die Verwaltung ohnehin nicht handeln (Art. 5 Abs. 1 BV).</p>',
+  artikel: ['Art. 5 Abs. 1 BV'] },
+
+{ id: 'T1F6', thema: 1, stufe: 6, typ: 'mc',
+  sachverhalt: 'Der Bund erhöht die Tabaksteuer deutlich. Ziel ist es, den Zigarettenkonsum zu senken; ein Teil der Erträge fliesst in Präventionsprogramme.',
+  frage: 'Wie ist die Tabaksteuer nach der Systematik der Verwaltungsaufgaben in erster Linie einzuordnen?',
+  optionen: [
+    'Als Lenkungsaufgabe — der Staat setzt einen finanziellen Anreiz, statt ein Verbot zu erlassen',
+    'Als Ordnungsaufgabe — der Staat schirmt einen bestehenden Zustand gegen Störungen ab',
+    'Als Infrastrukturaufgabe — der Staat finanziert damit den Service public',
+    'Als reine Bedarfsverwaltung — der Staat beschafft sich die nötigen Mittel'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Lenkungsaufgaben wollen Private <b>motivieren</b>, etwas zu tun oder zu unterlassen — <i>Anreize statt Verbote</i>. Genau das leistet eine Lenkungssteuer: Sie verbietet das Rauchen nicht, macht es aber teurer. Daneben lässt sich ein sozial- bzw. gesundheitspolitischer Zweck bejahen (Mehrfachzuordnung).</p>' +
+    '<p>Keine Ordnungsaufgabe: Es wird kein Zustand polizeilich abgeschirmt. Keine Infrastrukturaufgabe: Es wird kein öffentlicher Dienst bereitgestellt. Die Bedarfsverwaltung betrifft die interne Beschaffung von Sach- und Personalmitteln, nicht die Steuererhebung.</p>',
+  artikel: [] },
+
+{ id: 'T1F7', thema: 1, stufe: 7, typ: 'zuordnen',
+  frage: 'Ordne die folgenden — teilweise doppelt zu qualifizierenden — Massnahmen zu. Wähle jeweils die im Übungsblatt vorgesehene Antwort.',
+  optionen: [
+    'Ordnungsaufgabe',
+    'Ordnungs- und Lenkungsaufgabe',
+    'Lenkungs- und sozialpolitische Aufgabe',
+    'Infrastruktur- und Lenkungsaufgabe',
+    'Infrastrukturaufgabe'
+  ],
+  zeilen: [
+    { links: 'Nacht- und Sonntagsfahrverbot für schwere Motorwagen zur Güterbeförderung', rechts: 'Ordnungs- und Lenkungsaufgabe' },
+    { links: 'Erstellung eines flächendeckenden Netzes von E-Tankstellen', rechts: 'Infrastruktur- und Lenkungsaufgabe' },
+    { links: 'Bildungsmassnahmen der Arbeitslosenversicherung', rechts: 'Lenkungs- und sozialpolitische Aufgabe' },
+    { links: 'Befristete Betriebsbewilligung für den Bahnbetrieb', rechts: 'Ordnungsaufgabe' },
+    { links: 'Verpflichtung des Kantons Zürich, eine Kantonalbank zu betreiben', rechts: 'Infrastrukturaufgabe' }
+  ],
+  erklaerung: '<p>Das Nacht- und Sonntagsfahrverbot schützt die Nachtruhe (Ordnung) und will den Güterverkehr auf die Schiene verlagern (Lenkung). Das E-Tankstellen-Netz stellt Infrastruktur bereit <i>und</i> soll den Umstieg auf Elektromobilität fördern. Die ALV-Bildungsmassnahmen kombinieren sozialen Ausgleich mit Verhaltenslenkung.</p>' +
+    '<div class="merkbox"><b>Prüfungstipp:</b> Frage dich immer zuerst «Was will der Staat damit erreichen?». Ein Verbot deutet auf Ordnung, ein Anreiz auf Lenkung, eine Leistung an Schwächere auf Sozialpolitik und ein Angebot für alle auf Infrastruktur hin. Mehrfachnennungen sind ausdrücklich erwünscht.</div>',
+  artikel: [] },
+
+/* ==========  THEMA 2: Formen der Verwaltungstätigkeit (7)  ========== */
+{ id: 'T2F1', thema: 2, stufe: 1, typ: 'mc',
+  frage: 'Was kennzeichnet <b>hoheitliche</b> Verwaltungstätigkeit?',
+  optionen: [
+    'Einseitiges staatliches Handeln aufgrund der Überordnung des Staates mit Anordnungs- und Zwangsbefugnis',
+    'Handeln des Staates, bei dem er dem Privaten gleichgeordnet gegenübertritt',
+    'Jede Tätigkeit, die eine Behörde ausübt — unabhängig von der Rechtsform',
+    'Handeln, das ausschliesslich in der Form der Verfügung erfolgt'
+  ],
+  richtig: 0,
+  erklaerung: '<p><b>Hoheitlich</b> ist einseitiges staatliches Handeln, das sich aus der <b>Überordnung</b> des Staates ergibt: polizeiliche Massnahmen, Sozialversicherungsrecht, staatliche Monopole, Enteignung.</p>' +
+    '<p><b>Nicht hoheitlich</b> handelt der Staat, wenn er dem Privaten <b>gleichgeordnet</b> gegenübertritt, also keine einseitigen Anordnungen treffen und zwangsweise durchsetzen kann: Kantonalbank, staatliche Elektrizitätswerke, teilweise Bahn und Post — sowie der Abschluss verwaltungsrechtlicher Verträge.</p>' +
+    '<p>Hoheitliches Handeln erfolgt nicht nur durch Verfügung, sondern z. B. auch durch Realakt oder Allgemeinverfügung.</p>',
+  artikel: [] },
+
+{ id: 'T2F2', thema: 2, stufe: 2, typ: 'mc',
+  frage: 'Welche Merkhilfe und welche Definition passen zur <b>Eingriffsverwaltung</b>?',
+  optionen: [
+    'Sie macht das Leben «schwerer» — sie greift in Rechte und Freiheiten Privater ein und ist in der Regel hoheitlicher Natur',
+    'Sie macht das Leben «einfacher» — sie vermittelt Privaten wirtschaftliche und soziale Leistungen',
+    'Sie wirkt nur verwaltungsintern und entfaltet grundsätzlich keine Aussenwirkung',
+    'Sie überlässt die Aufgabenerfüllung Privaten und beschränkt sich auf die Aufsicht'
+  ],
+  richtig: 0,
+  erklaerung: '<p><b>Eingriffsverwaltung</b> greift in Rechte und Freiheiten Privater ein (Enteignung, Nachtfahrverbot, Ausfuhrverbot für Kriegsmaterial, Demonstrationsverbot). Die Privaten müssen die Einschränkung wegen des öffentlichen Wohls dulden.</p>' +
+    '<p>Die anderen Antworten beschreiben die <b>Leistungsverwaltung</b>, die <b>Bedarfsverwaltung</b> und die <b>Gewährleistungsverwaltung</b>.</p>' +
+    '<div class="merkbox"><b>Merke:</b> Sowohl die Eingriffs- als auch die Leistungsverwaltung brauchen stets eine gesetzliche Grundlage (Art. 5 Abs. 1 BV).</div>',
+  artikel: ['Art. 5 Abs. 1 BV', 'Art. 26 BV'] },
+
+{ id: 'T2F3', thema: 2, stufe: 3, typ: 'zuordnen',
+  frage: 'Welche Art der Aufgabenerfüllung liegt vor? (Übungsblatt Aufgabe 2)',
+  optionen: ['Eingriffsverwaltung', 'Leistungsverwaltung', 'Bedarfsverwaltung', 'Gewährleistungsverwaltung', 'Wirtschaftende Verwaltung'],
+  zeilen: [
+    { links: 'Die Stadt führt rechtmässige Enteignungen entlang der Bahnlinie durch', rechts: 'Eingriffsverwaltung' },
+    { links: 'Ausfuhrverbot von Kriegsmaterial', rechts: 'Eingriffsverwaltung' },
+    { links: 'Kantonale Prämienverbilligungen', rechts: 'Leistungsverwaltung' },
+    { links: 'Beschaffung von Büromaterial', rechts: 'Bedarfsverwaltung' },
+    { links: 'Zwei Telefonanbieter dürfen fusionieren (Wettbewerbsaufsicht)', rechts: 'Gewährleistungsverwaltung' },
+    { links: 'Die Gemeinde Y betreibt ein Hotel', rechts: 'Wirtschaftende Verwaltung' }
+  ],
+  erklaerung: '<p>Original-Lösungen des Übungsblatts. Bei den <b>Prämienverbilligungen</b> nennt die Musterlösung zusätzlich die <b>Erfüllungsverwaltung</b>: Der Kanton richtet die Leistung durch eigene Organe selbst aus.</p>' +
+    '<p>Die Bewilligung einer Fusion ist <b>Gewährleistungsverwaltung</b>: Der Staat erbringt die Telekomdienste nicht selbst, sondern beaufsichtigt, dass der Markt funktioniert.</p>',
+  artikel: [] },
+
+{ id: 'T2F4', thema: 2, stufe: 4, typ: 'mc',
+  frage: 'Welche Aussage zur <b>Bedarfsverwaltung</b> (administrative Hilfstätigkeit) trifft zu?',
+  optionen: [
+    'Sie stellt die nötigen Sach- und Personalmittel bereit, dient der Aufgabenerfüllung nur mittelbar und entfaltet grundsätzlich keine Aussenwirkung',
+    'Sie ist stets hoheitlich und greift unmittelbar in die Rechte Privater ein',
+    'Sie bezweckt die Gewinnerzielung am Markt',
+    'Sie überlässt die Aufgabenerfüllung Privaten unter staatlicher Aufsicht'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Beispiele der Bedarfsverwaltung: Anschaffung eines Schneepflugs, Beschaffung von Büromaterial, Einstellungen und Entlassungen im öffentlichen Personalwesen, Schul- und Spitalgebäude.</p>' +
+    '<div class="merkbox"><b>Merke:</b> «Nur mittelbar» und «keine Aussenwirkung» sind die beiden Stichworte, an denen du die Bedarfsverwaltung in der Prüfung erkennst.</div>',
+  artikel: [] },
+
+{ id: 'T2F5', thema: 2, stufe: 5, typ: 'zuordnen',
+  frage: 'Ordne die Kernmerkmale den Verwaltungsarten zu.',
+  optionen: ['Eingriffsverwaltung', 'Leistungsverwaltung', 'Bedarfsverwaltung', 'Gewährleistungsverwaltung', 'Wirtschaftende Verwaltung', 'Erfüllungsverwaltung'],
+  zeilen: [
+    { links: 'Der Staat erfüllt die Verwaltungsaufgabe selbst, durch eigene Organe und Betriebe (AHV-Ausgleichskasse, Kantonsschule)', rechts: 'Erfüllungsverwaltung' },
+    { links: 'Der Staat verzichtet auf die eigene Erfüllung und überlässt sie Privaten, leistet aber Gewähr für korrekte Erbringung (Grundversicherung nach KVG)', rechts: 'Gewährleistungsverwaltung' },
+    { links: 'Der Verwaltungsträger tritt am Markt auf, um Gewinn zu erzielen, ohne unmittelbaren Zusammenhang mit Staatsaufgaben (Betrieb eines Hotels)', rechts: 'Wirtschaftende Verwaltung' },
+    { links: 'Vermittlung wirtschaftlicher und sozialer Leistungen; hoheitlich oder nicht hoheitlich (AHV, Stipendien, Kehrichtabfuhr)', rechts: 'Leistungsverwaltung' },
+    { links: 'Eingriff in Rechte und Freiheiten Privater; in der Regel hoheitlich (Enteignung, Demonstrationsverbot)', rechts: 'Eingriffsverwaltung' },
+    { links: 'Bereitstellung von Sach- und Personalmitteln; nur mittelbar, keine Aussenwirkung (Schneepflug)', rechts: 'Bedarfsverwaltung' }
+  ],
+  erklaerung: '<p>Die <b>Erfüllungsverwaltung</b> ist das Gegenstück zur <b>Gewährleistungsverwaltung</b>: Dort erledigt der Staat die Aufgabe selbst, hier überlässt er sie Privaten und «leistet nur noch Gewähr» — unter Wahrung der Grundrechte und der rechtsstaatlichen Grundsätze.</p>' +
+    '<p>Weitere Beispiele der Gewährleistungsverwaltung: Strassenunterhalt durch private Unternehmen, Wettbewerbsaufsicht.</p>',
+  artikel: [] },
+
+{ id: 'T2F6', thema: 2, stufe: 6, typ: 'multi',
+  frage: 'Welche Aussagen zur <b>Leistungsverwaltung</b> treffen zu?',
+  optionen: [
+    'Sie kann hoheitlich sein (z. B. staatliche Sozialversicherung)',
+    'Sie kann nicht hoheitlich sein (z. B. öffentliche Versorgungsbetriebe wie Elektrizitäts- und Gaswerke)',
+    'Sie dient der unmittelbaren Erfüllung von Verwaltungsaufgaben',
+    'Auch sie benötigt stets eine gesetzliche Grundlage (Art. 5 Abs. 1 BV)',
+    'Sie ist immer nicht hoheitlich, weil sie den Privaten begünstigt',
+    'Sie benötigt keine gesetzliche Grundlage, weil sie niemanden belastet'
+  ],
+  richtig: [0, 1, 2, 3],
+  erklaerung: '<p>Die Leistungsverwaltung vermittelt Privaten staatliche Leistungen (AHV/IV/ALV, Stipendien und Fürsorge, Förderung der Landwirtschaft, Prämienverbilligungen, Kehrichtabfuhr, Post im Monopolbetrieb, Betrieb der ETH). Sie kann hoheitlich <b>oder</b> nicht hoheitlich ausgestaltet sein.</p>' +
+    '<div class="merkbox"><b>Anerkannt ist:</b> Sowohl Leistungs- als auch Eingriffsverwaltung brauchen <b>stets</b> eine gesetzliche Grundlage — Ausfluss des Legalitätsprinzips.</div>',
+  artikel: ['Art. 5 Abs. 1 BV'] },
+
+{ id: 'T2F7', thema: 2, stufe: 7, typ: 'mc',
+  sachverhalt: 'Der Bund legt für Milch einen fixen Preis fest. Dem einheimischen Bauern hilft der garantierte Preis. Ein besonders effizienter Produzent, der günstiger produzieren könnte, darf jedoch nicht unter diesem Preis anbieten.',
+  frage: 'Wie ist diese Massnahme einzuordnen?',
+  optionen: [
+    'Leistungs- und Eingriffsverwaltung können miteinander verbunden sein — hier liegt beides vor',
+    'Ausschliesslich Leistungsverwaltung, weil die Massnahme den Bauern hilft',
+    'Ausschliesslich Eingriffsverwaltung, weil ein Preis vorgeschrieben wird',
+    'Bedarfsverwaltung, weil der Staat den Markt mit Milch versorgt'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Das Script nennt genau dieses Beispiel: Ein fixer Milchpreis <b>hilft</b> dem einheimischen Bauern (Leistung), ist aber zugleich ein <b>Eingriff</b> für denjenigen, der die Milch nicht zu diesem Preis produzieren kann bzw. günstiger anbieten möchte (Wirtschaftsfreiheit, Art. 27 BV).</p>' +
+    '<div class="merkbox"><b>Prüfungstipp:</b> Frage bei Doppelqualifikationen immer «Wem nützt es, wen belastet es?» — dieselbe Massnahme kann beide Formen vereinen.</div>',
+  artikel: ['Art. 27 BV', 'Art. 5 Abs. 1 BV'] },
+
+/* ==========  THEMA 3: Rechtsquellen (6)  ========== */
+{ id: 'T3F1', thema: 3, stufe: 1, typ: 'multi',
+  frage: 'Welche Aussagen kennzeichnen das <b>Verwaltungsrecht</b>?',
+  optionen: [
+    'Es gehört zum öffentlichen Recht',
+    'Es ist grundsätzlich zwingendes Recht und kann von den Beteiligten nicht abgeändert werden',
+    'Es wird von Amtes wegen angewendet (Offizialmaxime)',
+    'Es dient der Wahrnehmung öffentlicher Interessen',
+    'Es ist dispositives Recht, von dem die Parteien abweichen dürfen',
+    'Es wird nur auf Antrag einer Partei angewendet (Dispositionsmaxime)'
+  ],
+  richtig: [0, 1, 2, 3],
+  erklaerung: '<p><b>Definition:</b> Verwaltungsrecht ist die Gesamtheit der Rechtssätze, welche die Organisation und das Verfahren der Verwaltungsbehörden sowie die Verwaltungstätigkeit bestimmen.</p>' +
+    '<p>Die Dispositionsmaxime und dispositives Recht sind Kennzeichen des <b>Zivilrechts</b>. Im Verwaltungsrecht gilt die <b>Offizialmaxime</b>: Die Behörde wendet das Recht von Amtes wegen an.</p>',
+  artikel: [] },
+
+{ id: 'T3F2', thema: 3, stufe: 2, typ: 'multi',
+  frage: 'Welche der folgenden Erlasse und Institute gehören zum <b>Rechtsquellenkatalog</b> des Verwaltungsrechts?',
+  optionen: [
+    'Verfassung',
+    'Gesetz im formellen Sinn',
+    'Rechtsverordnung',
+    'Autonome Satzung (z. B. von Universitäten oder der Post)',
+    'Völkerrechtliche Verträge',
+    'Konkordate zwischen Kantonen',
+    'Gewohnheitsrecht',
+    'Verwaltungsverordnung (Weisung, Kreisschreiben)',
+    'Lehrmeinungen einzelner Professoren'
+  ],
+  richtig: [0, 1, 2, 3, 4, 5, 6],
+  erklaerung: '<p>Zum Katalog gehören zusätzlich noch die <b>allgemeinen Rechtsgrundsätze</b> (z. B. Verzugszins, Verjährung), das <b>Richterrecht</b> (gefestigte Justizpraxis) sowie das <b>Notrecht</b> (Art. 185 BV) und die <b>polizeiliche Generalklausel</b> (Art. 36 Abs. 1 Satz 3 BV).</p>' +
+    '<p><b>Nicht</b> dazu gehört die <b>Verwaltungsverordnung</b>: Sie ist eine verwaltungsinterne Weisung, richtet sich an die Behörden und begründet keine Rechte und Pflichten der Privaten (→ Thema 11). Lehrmeinungen sind Rechtserkenntnisquellen, keine Rechtsquellen.</p>',
+  artikel: ['Art. 48 BV', 'Art. 185 BV', 'Art. 36 BV'] },
+
+{ id: 'T3F3', thema: 3, stufe: 3, typ: 'mc',
+  frage: 'Wie unterscheiden sich Gesetz im <b>formellen</b> und im <b>materiellen</b> Sinn?',
+  optionen: [
+    'Formell: vom Parlament im Gesetzgebungsverfahren erlassen und dem Referendum unterstellt — materiell: jeder generell-abstrakte Rechtssatz, unabhängig vom Erlassorgan',
+    'Formell: jeder generell-abstrakte Rechtssatz — materiell: nur die vom Volk angenommenen Erlasse',
+    'Formell: die Bundesverfassung — materiell: die Bundesgesetze',
+    'Formell: die schriftlich festgehaltene Norm — materiell: die ungeschriebene Norm (Gewohnheitsrecht)'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Der Unterschied ist eine klassische Prüfungsfrage:</p>' +
+    '<ul><li><b>Gesetz im formellen Sinn:</b> Kriterium ist das <b>Verfahren</b> — Erlass durch das Parlament, Unterstellung unter das Referendum.</li>' +
+    '<li><b>Gesetz im materiellen Sinn:</b> Kriterium ist der <b>Inhalt</b> — jeder generell-abstrakte Rechtssatz. Auch eine Verordnung des Bundesrates ist damit ein Gesetz im materiellen Sinn.</li></ul>' +
+    '<p>Bedeutung: Wichtige Rechtsnormen müssen in einem Gesetz im <b>formellen</b> Sinn stehen (Art. 164 Abs. 1 BV), schwerwiegende Grundrechtseingriffe im Gesetz selbst (Art. 36 Abs. 1 Satz 2 BV).</p>',
+  artikel: ['Art. 164 BV', 'Art. 36 BV'] },
+
+{ id: 'T3F4', thema: 3, stufe: 4, typ: 'mc',
+  frage: 'Worin unterscheiden sich <b>Vollziehungsverordnung</b> und <b>gesetzesvertretende Verordnung</b>?',
+  optionen: [
+    'Die Vollziehungsverordnung konkretisiert das Gesetz, die gesetzesvertretende Verordnung ergänzt es aufgrund einer Delegation',
+    'Die Vollziehungsverordnung ergänzt das Gesetz, die gesetzesvertretende Verordnung konkretisiert es bloss',
+    'Die Vollziehungsverordnung wird vom Parlament erlassen, die gesetzesvertretende vom Bundesrat',
+    'Die Vollziehungsverordnung untersteht dem Referendum, die gesetzesvertretende nicht'
+  ],
+  richtig: 0,
+  erklaerung: '<p><b>Vollziehungsverordnungen</b> führen das Gesetz aus und konkretisieren es — sie dürfen keine neuen Rechte und Pflichten schaffen und brauchen keine besondere Delegationsnorm.</p>' +
+    '<p><b>Gesetzesvertretende Verordnungen</b> ergänzen das Gesetz und regeln Fragen, die das Gesetz offen lässt. Sie sind <b>delegationsbedürftig</b>: Nötig ist eine Delegationsnorm in einem Gesetz im formellen Sinn (Art. 164 Abs. 2 BV).</p>' +
+    '<p>Beide werden von der Exekutive erlassen und unterstehen keinem Referendum. Die Rechtsverordnung richtet sich — anders als die Verwaltungsverordnung — an die Allgemeinheit und begründet Rechte und Pflichten.</p>',
+  artikel: ['Art. 164 BV'] },
+
+{ id: 'T3F5', thema: 3, stufe: 5, typ: 'multi',
+  frage: 'Welche Voraussetzungen müssen erfüllt sein, damit <b>Gewohnheitsrecht</b> entsteht?',
+  optionen: [
+    'Eine langjährige Praxis',
+    'Die Rechtsüberzeugung der Beteiligten (opinio iuris)',
+    'Das Gesetz muss Raum dafür lassen',
+    'Eine amtliche Publikation der Praxis',
+    'Die Zustimmung des Parlaments',
+    'Ein bestätigender Bundesgerichtsentscheid'
+  ],
+  richtig: [0, 1, 2],
+  erklaerung: '<p>Die drei kumulativen Voraussetzungen des Gewohnheitsrechts sind: <b>langjährige Praxis</b>, <b>Rechtsüberzeugung</b> (opinio iuris) und <b>Raum im Gesetz</b>. Gerade die dritte Voraussetzung wird oft vergessen — wo das Gesetz eine Frage abschliessend regelt, kann kein Gewohnheitsrecht entstehen.</p>' +
+    '<p>Davon zu unterscheiden ist das <b>Richterrecht</b>: eine längere, gefestigte Justizpraxis.</p>',
+  artikel: [] },
+
+{ id: 'T3F6', thema: 3, stufe: 6, typ: 'mc',
+  sachverhalt: 'Nach einem schweren Chemieunfall droht eine unmittelbare Gefahr für die Bevölkerung. Es besteht keine spezifische gesetzliche Grundlage für die nötigen Sofortmassnahmen.',
+  frage: 'Auf welche Grundlage kann sich die Behörde stützen?',
+  optionen: [
+    'Auf die polizeiliche Generalklausel (Art. 36 Abs. 1 Satz 3 BV) — sie erlaubt die Abwehr ernster, unmittelbarer und nicht anders abwendbarer Gefahren',
+    'Auf das Willkürverbot (Art. 9 BV), das der Behörde in Notlagen freie Hand gibt',
+    'Auf den Vertrauensschutz, weil die Bevölkerung auf staatlichen Schutz vertrauen darf',
+    'Auf keine Grundlage — ohne Gesetz darf die Verwaltung unter keinen Umständen handeln'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Die <b>polizeiliche Generalklausel</b> (Art. 36 Abs. 1 Satz 3 BV) und das <b>Notrecht</b> des Bundesrates (Art. 185 Abs. 3 BV) sind die anerkannten Ausnahmen vom Erfordernis der gesetzlichen Grundlage.</p>' +
+    '<p>Ihre Voraussetzungen sind eng: Die Gefahr muss <b>ernst</b>, <b>unmittelbar</b> und <b>nicht anders abwendbar</b> sein. Sie ist keine Blankovollmacht für unvorhergesehene, aber vorhersehbare Fälle.</p>' +
+    '<div class="merkbox"><b>Zweite Ausnahme:</b> Auf die formell-gesetzliche Grundlage kann auch bei der Sachherrschaft des Gemeinwesens über öffentliche Sachen im Gemeingebrauch verzichtet werden (z. B. Bewilligung für gesteigerten Gemeingebrauch einer Strasse) — Übungsblatt Aufgabe 33.</div>',
+  artikel: ['Art. 36 BV', 'Art. 185 BV', 'Art. 5 Abs. 1 BV'] },
+
+/* ==========  THEMA 4: Legalitätsprinzip & Gesetzesdelegation (8)  ========== */
+{ id: 'T4F1', thema: 4, stufe: 1, typ: 'mc',
+  frage: 'Welche Bestimmung verankert das <b>Legalitätsprinzip</b> und was besagt sie?',
+  optionen: [
+    'Art. 5 Abs. 1 BV — Grundlage und Schranke staatlichen Handelns ist das Recht',
+    'Art. 5 Abs. 2 BV — staatliches Handeln muss im öffentlichen Interesse liegen und verhältnismässig sein',
+    'Art. 9 BV — jede Person hat Anspruch auf willkürfreie Behandlung',
+    'Art. 8 Abs. 1 BV — alle Menschen sind vor dem Gesetz gleich'
+  ],
+  richtig: 0,
+  erklaerung: '<p><b>Art. 5 Abs. 1 BV:</b> «Grundlage und Schranke staatlichen Handelns ist das Recht.» Daraus folgt: <b>Jegliche</b> Verwaltungstätigkeit — Eingriffs- wie Leistungsverwaltung — muss auf einer gültigen gesetzlichen Grundlage beruhen.</p>' +
+    '<div class="merkbox"><b>Achtung, korrigierte Artikelnummern:</b> Das Script verweist teilweise auf BV 6–10. Korrekt sind: Gesetzmässigkeit → Art. 5 Abs. 1 BV · öffentliches Interesse und Verhältnismässigkeit → Art. 5 Abs. 2 BV · Treu und Glauben → Art. 5 Abs. 3 / Art. 9 BV · Rechtsgleichheit → Art. 8 BV · Willkürverbot → Art. 9 BV · Verfahrensgarantien → Art. 29 BV · gerichtliche Garantien → Art. 30 BV.</div>',
+  artikel: ['Art. 5 Abs. 1 BV', 'Art. 5 BV'] },
+
+{ id: 'T4F2', thema: 4, stufe: 2, typ: 'mc',
+  frage: 'Was bedeutet die Anforderung, dass eine Norm <b>generell-abstrakt</b> sein muss?',
+  optionen: [
+    'Generell: Anwendung auf eine unbestimmte Vielzahl von Personen — abstrakt: Erfassung einer unbestimmten Anzahl von Lebenssachverhalten',
+    'Generell: Anwendung auf einen einzelnen Sachverhalt — abstrakt: Anwendung auf eine bestimmte Person',
+    'Generell: allgemein verständlich formuliert — abstrakt: theoretisch, ohne Beispiele',
+    'Generell: für die ganze Schweiz gültig — abstrakt: unbefristet gültig'
+  ],
+  richtig: 0,
+  erklaerung: '<p><b>Generell</b> bezieht sich auf den <b>Adressatenkreis</b>, <b>abstrakt</b> auf die <b>Sachverhalte</b>. Das ist die Grundstruktur des Rechtssatzes: Er gilt für alle und wird von der Legislative erlassen; referendumspflichtige Erlasse werden amtlich veröffentlicht.</p>' +
+    '<div class="merkbox"><b>Merke das Raster (→ Thema 11):</b> generell-abstrakt = Rechtsverordnung · generell-konkret = Plan / Allgemeinverfügung · individuell-konkret = Verfügung / verwaltungsrechtlicher Vertrag.</div>',
+  artikel: [] },
+
+{ id: 'T4F3', thema: 4, stufe: 3, typ: 'multi',
+  frage: 'Welchen Zwecken dient das Legalitätsprinzip?',
+  optionen: [
+    'Der Rechtssicherheit — staatliches Handeln wird voraussehbar',
+    'Der Rechtsstaatlichkeit — Gewaltentrennung zwischen Exekutive und Legislative',
+    'Der demokratischen Legitimation staatlichen Handelns',
+    'Der Verfahrensbeschleunigung in der Verwaltung',
+    'Der Entlastung der Gerichte von Beschwerden'
+  ],
+  richtig: [0, 1, 2],
+  erklaerung: '<p>Dem Legalitätsprinzip kommt eine <b>rechtsstaatliche</b> und eine <b>demokratische</b> Funktion zu:</p>' +
+    '<ul><li><b>Rechtsstaatlich:</b> Rechtssicherheit und Voraussehbarkeit; die Verwaltung darf nicht mehr, als das Gesetz erlaubt (Gewaltentrennung).</li>' +
+    '<li><b>Demokratisch:</b> Die wichtigen Entscheidungen fällt das vom Volk gewählte Parlament, nicht die Verwaltung.</li></ul>',
+  artikel: ['Art. 5 Abs. 1 BV'] },
+
+{ id: 'T4F4', thema: 4, stufe: 4, typ: 'mc',
+  frage: 'Was verlangt das <b>Erfordernis der genügenden Normstufe</b>?',
+  optionen: [
+    'Wichtige Rechtsnormen gehören in ein Gesetz im formellen Sinn (Art. 164 Abs. 1 BV)',
+    'Jede Verwaltungstätigkeit muss in der Bundesverfassung selbst vorgesehen sein',
+    'Jede Norm muss von einer eidgenössischen Volksabstimmung getragen sein',
+    'Verordnungen dürfen nur von den Kantonen, nicht vom Bund erlassen werden'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Die <b>Rechtsetzungsstufe</b> muss stimmen: Je gewichtiger die Regelung, desto höher die erforderliche Normstufe. Wichtige rechtsetzende Bestimmungen sind in der Form des <b>Bundesgesetzes</b> zu erlassen (Art. 164 Abs. 1 BV) — dahinter steht die demokratisch ausreichende Legitimation.</p>' +
+    '<p>Bei <b>schwerwiegenden Grundrechtseingriffen</b> verlangt zudem Art. 36 Abs. 1 Satz 2 BV, dass die Einschränkung im Gesetz <b>selbst</b> vorgesehen ist.</p>',
+  artikel: ['Art. 164 BV', 'Art. 36 BV'] },
+
+{ id: 'T4F5', thema: 4, stufe: 5, typ: 'multi',
+  frage: 'Unter welchen <b>kumulativen</b> Voraussetzungen ist eine Gesetzesdelegation an den Verordnungsgeber zulässig?',
+  optionen: [
+    'Die Delegation ist nicht durch die Verfassung ausgeschlossen',
+    'Die Delegationsnorm ist in einem Gesetz im formellen Sinn enthalten',
+    'Die Delegationsnorm bezieht sich auf eine bestimmte, genau umschriebene Materie',
+    'Die Delegationsnorm regelt die Materie in den Grundzügen bereits selbst',
+    'Die Delegation ist auf höchstens fünf Jahre befristet',
+    'Der Verordnungsgeber ist gleichzeitig zur Volksabstimmung verpflichtet'
+  ],
+  richtig: [0, 1, 2, 3],
+  erklaerung: '<p>Die vier Voraussetzungen der Gesetzesdelegation (vgl. Art. 164 Abs. 2 BV) sind <b>kumulativ</b> — eine klassische Aufzählungsfrage in der Prüfung.</p>' +
+    '<p>Eine Befristung oder eine zusätzliche Volksabstimmung ist nicht verlangt. Entscheidend ist, dass das Parlament die <b>Grundzüge</b> selbst festlegt und nicht eine Blankovollmacht erteilt.</p>',
+  artikel: ['Art. 164 BV'] },
+
+{ id: 'T4F6', thema: 4, stufe: 6, typ: 'mc',
+  frage: 'Was verlangt das <b>Bestimmtheitsgebot</b>?',
+  optionen: [
+    'Die gesetzliche Grundlage muss so klar sein, dass das Handeln des Staates für den Einzelnen voraussehbar ist',
+    'Das Gesetz muss jeden denkbaren Einzelfall ausdrücklich regeln',
+    'Das Gesetz darf keine unbestimmten Rechtsbegriffe enthalten',
+    'Das Gesetz muss der Behörde jedes Ermessen entziehen'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Das Bestimmtheitsgebot ist die <b>qualitative</b> Komponente des Legalitätsprinzips (neben Rechtssatz und Normstufe). Massstab ist die <b>Voraussehbarkeit</b> für den Einzelnen.</p>' +
+    '<p>Es verlangt jedoch keine kasuistische Regelung: <b>Unbestimmte Rechtsbegriffe</b> und <b>Ermessensspielräume</b> sind zulässig und teilweise sogar nötig, damit die Behörde dem Einzelfall gerecht werden kann (→ Thema 5). Je schwerer der Eingriff, desto höher die Anforderungen an die Bestimmtheit.</p>',
+  artikel: ['Art. 5 Abs. 1 BV'] },
+
+{ id: 'T4F7', thema: 4, stufe: 7, typ: 'mc',
+  frage: 'Was gilt für das Legalitätsprinzip im <b>Abgaberecht</b>?',
+  optionen: [
+    'Es gilt besonders streng: Kreis der Abgabepflichtigen, Gegenstand und Bemessung sind in den Grundzügen im Gesetz selbst zu regeln (Art. 127 Abs. 1 BV)',
+    'Es gilt abgeschwächt, weil Abgaben keine Grundrechtseingriffe sind',
+    'Es gilt nur für Steuern, nicht für Gebühren und Kausalabgaben',
+    'Es gilt nicht, weil Abgaben stets im überwiegenden fiskalischen Interesse liegen'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Im Abgaberecht ist das Legalitätsprinzip <b>verschärft</b>: Abgabesubjekt, Abgabeobjekt und Bemessungsgrundlage gehören in den Grundzügen ins Gesetz selbst (Art. 127 Abs. 1 BV).</p>' +
+    '<p><b>Anwendungsfall BGE 125 I 173</b> (Basler Numerus clausus): Das Bundesgericht schützte die Zulassungsbeschränkung zum Medizinstudium, hob aber die <b>Gebühr für den Eignungstest</b> auf — ihr fehlte die gesetzliche Grundlage.</p>',
+  artikel: ['Art. 127 BV', 'BGE 125 I 173'] },
+
+{ id: 'T4F8', thema: 4, stufe: 8, typ: 'mc',
+  sachverhalt: 'Eine Gemeinde führt eine neue Hundesteuer ein. Grundlage ist ein Beschluss des Gemeinderats; ein kommunaler Erlass, der eine solche Abgabe vorsieht, besteht nicht.',
+  frage: 'Wie ist die Erhebung der Abgabe zu beurteilen?',
+  optionen: [
+    'Unzulässig — es fehlt an einer gesetzlichen Grundlage, die im Abgaberecht zudem den Kreis der Pflichtigen, den Gegenstand und die Bemessung in den Grundzügen selbst festlegen muss',
+    'Zulässig — der Gemeinderat ist die zuständige Exekutive und darf im Rahmen der Gemeindeautonomie Abgaben festsetzen',
+    'Zulässig, sofern die Steuer verhältnismässig und nicht übermässig hoch ist',
+    'Zulässig, solange alle Hundehalter gleich behandelt werden (Art. 8 Abs. 1 BV)'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Musterantwort zu Übungsblatt Aufgabe 5: «Eine Gemeinde darf eine Hundesteuer nur erheben, wenn ein <b>Rechtssatz</b> dies vorsieht.» Die Verhältnismässigkeit und die Rechtsgleichheit sind <b>zusätzliche</b> Anforderungen — sie können die fehlende gesetzliche Grundlage nicht ersetzen.</p>' +
+    '<div class="merkbox"><b>Prüfungsschema für staatliches Handeln:</b> 1. gesetzliche Grundlage (Art. 5 Abs. 1 BV) → 2. öffentliches Interesse (Art. 5 Abs. 2 BV) → 3. Verhältnismässigkeit (Art. 5 Abs. 2 BV) → 4. bei Grundrechten zusätzlich Kerngehalt (Art. 36 Abs. 4 BV). Fehlt Stufe 1, erübrigt sich der Rest.</div>',
+  artikel: ['Art. 5 Abs. 1 BV', 'Art. 127 BV', 'Art. 8 BV'] },
+
+/* ==========  THEMA 5: Ermessen & unbestimmte Rechtsbegriffe (7)  ========== */
+{ id: 'T5F1', thema: 5, stufe: 1, typ: 'mc',
+  frage: 'Was versteht man unter <b>Ermessen</b>?',
+  optionen: [
+    'Die Entscheidungsbefugnis, die der Gesetzgeber den Verwaltungsbehörden mittels offener Normierungen überträgt — ein Freiraum in der Rechtsanwendung',
+    'Die Befugnis der Behörde, vom Gesetz abzuweichen, wenn ihr das Ergebnis unbillig erscheint',
+    'Die Freiheit des Gerichts, den Sachverhalt nach eigener Überzeugung zu würdigen',
+    'Die Möglichkeit der Behörde, auf ein Verfahren ganz zu verzichten'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Ermessen ist ein vom <b>Gesetzgeber gewollter Freiraum</b>: Er formuliert die Voraussetzungen oder die Rechtsfolgen offen und überlässt der Behörde die Feinsteuerung im Einzelfall.</p>' +
+    '<div class="merkbox"><b>Merke:</b> Ermessen ist <b>pflichtgemäss</b> auszuüben. Die Behörde muss es ausüben (sonst Unterschreitung), darf es nicht mit sachfremden Motiven füllen (Missbrauch) und ist an Verhältnismässigkeit und Rechtsgleichheit gebunden. Verletzt sie das, greift zusätzlich das Willkürverbot (Art. 9 BV).</div>',
+  artikel: ['Art. 9 BV'] },
+
+{ id: 'T5F2', thema: 5, stufe: 2, typ: 'zuordnen',
+  frage: 'Ordne die drei Ermessensarten den Leitfragen zu.',
+  optionen: ['Entschliessungsermessen', 'Auswahlermessen', 'Tatbestandsermessen'],
+  zeilen: [
+    { links: '<b>Ob</b> eine Massnahme überhaupt getroffen werden soll — typische Formulierung: «kann»', rechts: 'Entschliessungsermessen' },
+    { links: '<b>Welche</b> von mehreren im Gesetz vorgesehenen Massnahmen getroffen wird', rechts: 'Auswahlermessen' },
+    { links: '<b>Ob die Tatbestandsvoraussetzungen erfüllt sind</b> — die Behörde beurteilt z. B., ob eine Ausnahmesituation vorliegt', rechts: 'Tatbestandsermessen' }
+  ],
+  erklaerung: '<p>Das <b>Entschliessungsermessen</b> erkennst du meist am Wort «kann». Beim <b>Auswahlermessen</b> stellt das Gesetz einen Massnahmenkatalog zur Verfügung (z. B. gegen fehlbare Schüler). Das <b>Tatbestandsermessen</b> ist die Sonderfigur des Lerntexts: Offenheit auf der «Wenn-Seite», aber als echter Beurteilungsspielraum verstanden.</p>',
+  artikel: [] },
+
+{ id: 'T5F3', thema: 5, stufe: 3, typ: 'mc',
+  frage: 'Wann liegt ein <b>unbestimmter Rechtsbegriff</b> vor?',
+  optionen: [
+    'Wenn der Rechtssatz die Voraussetzungen der Rechtsfolge oder die Rechtsfolge selbst in offener, unbestimmter Weise umschreibt',
+    'Wenn das Gesetz für einen Sachverhalt überhaupt keine Regelung enthält',
+    'Wenn zwei Gesetzesbestimmungen einander widersprechen',
+    'Wenn die Behörde zwischen mehreren Massnahmen auswählen darf'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Beispiele aus dem Script: «wichtige Gründe», «leichter» bzw. «schwerer Fall», «berechtigte Interessen», «Gefährdung der Sittlichkeit».</p>' +
+    '<p>Kein Gesetz für einen Sachverhalt = <b>echte Lücke</b>. Auswahl zwischen mehreren Massnahmen = <b>Auswahlermessen</b>.</p>' +
+    '<div class="merkbox"><b>Abgrenzung:</b> Beim unbestimmten Rechtsbegriff geht es um die <b>Auslegung des Tatbestands</b> — eine Rechtsfrage, die grundsätzlich voll überprüfbar ist. Beim Ermessen geht es um einen <b>Entscheidungsspielraum auf der Rechtsfolgeseite</b>, der nur auf Rechtsfehler hin überprüft wird.</div>',
+  artikel: [] },
+
+{ id: 'T5F4', thema: 5, stufe: 4, typ: 'zuordnen',
+  frage: 'Verfügt die Behörde über Ermessen oder muss sie einen unbestimmten Rechtsbegriff auslegen? (Übungsblatt Aufgabe 3)',
+  optionen: ['Unbestimmter Rechtsbegriff', 'Entschliessungsermessen', 'Auswahlermessen', 'Tatbestandsermessen'],
+  zeilen: [
+    { links: '«Einrichtungen, die die öffentliche Ordnung gefährden, sind verboten.»', rechts: 'Unbestimmter Rechtsbegriff' },
+    { links: '«Die Bewilligungsbehörde <b>kann</b> ausserhalb der Kernzone Gebäude bis zur zonenmässigen Höhe zulassen, namentlich um eine bessere Überbauung mit vermehrten Freiräumen zu schaffen.»', rechts: 'Entschliessungsermessen' },
+    { links: '«Gegen fehlbare Schüler sind, je nach Schwere der Verfehlung, folgende Massnahmen zu ergreifen: schriftliche Verwarnung, Strafarbeit, Wegweisung aus dem Unterricht, dauernder Schulverweis.»', rechts: 'Auswahlermessen' },
+    { links: '«Das Zivilstandsamt weist Vornamen zurück, welche die Interessen des Kindes offensichtlich verletzen.»', rechts: 'Unbestimmter Rechtsbegriff' }
+  ],
+  erklaerung: '<p>Original-Lösungen des Übungsblatts. Merkhilfen:</p>' +
+    '<ul><li>«gefährden die öffentliche Ordnung» und «Interessen des Kindes offensichtlich verletzen» sind <b>offene Tatbestandsmerkmale</b>, die ausgelegt werden müssen — die Rechtsfolge selbst ist zwingend («sind verboten», «weist zurück»).</li>' +
+    '<li>«kann» → <b>Entschliessungsermessen</b> auf der Rechtsfolgeseite.</li>' +
+    '<li>Massnahmenkatalog → <b>Auswahlermessen</b>: Dass gehandelt werden <i>muss</i>, steht fest; offen ist nur, <i>welche</i> Massnahme.</li></ul>',
+  artikel: [] },
+
+{ id: 'T5F5', thema: 5, stufe: 5, typ: 'mc',
+  frage: 'Der Lerntext gibt für die Prüfung eine Faustregel zur Abgrenzung. Wie lautet sie?',
+  optionen: [
+    'Zeigt die Norm eine offen formulierte Voraussetzung, lautet die erwartete Antwort «unbestimmter Rechtsbegriff»; «Tatbestandsermessen» nur, wenn die Behörde ausdrücklich einen Beurteilungsspielraum hat',
+    'Bei jeder offen formulierten Voraussetzung lautet die Antwort «Tatbestandsermessen»',
+    'Offene Formulierungen auf der Rechtsfolgeseite sind stets unbestimmte Rechtsbegriffe',
+    'Steht im Gesetz das Wort «kann», liegt immer ein unbestimmter Rechtsbegriff vor'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Diese Faustregel entspricht der Musterlösung des Übungsblatts: Offene <b>Voraussetzungen</b> (Wenn-Seite) sind in der Regel unbestimmte Rechtsbegriffe. Das <b>Tatbestandsermessen</b> bleibt der Fall, in dem der Gesetzgeber der Behörde bei der Beurteilung des Tatbestands ausdrücklich einen Spielraum einräumt.</p>' +
+    '<p>Das Wort «kann» steht dagegen für <b>Entschliessungsermessen</b> auf der Rechtsfolgeseite.</p>',
+  artikel: [] },
+
+{ id: 'T5F6', thema: 5, stufe: 6, typ: 'zuordnen',
+  frage: 'Ordne die Ermessensfehler den Beschreibungen zu.',
+  optionen: ['Ermessensüberschreitung', 'Ermessensunterschreitung', 'Ermessensmissbrauch', 'Kein Rechtsfehler (blosse Unangemessenheit)'],
+  zeilen: [
+    { links: 'Die Behörde übt Ermessen aus, wo ihr gar keines zusteht', rechts: 'Ermessensüberschreitung' },
+    { links: 'Die Behörde verzichtet auf das ihr eingeräumte Ermessen und entscheidet schematisch', rechts: 'Ermessensunterschreitung' },
+    { links: 'Die Behörde hält sich formal im Rahmen, lässt sich aber von unsachlichen Motiven leiten oder verletzt Verhältnismässigkeit und Rechtsgleichheit', rechts: 'Ermessensmissbrauch' },
+    { links: 'Der Entscheid liegt im Rahmen des Ermessens, erscheint aber nicht als die zweckmässigste Lösung', rechts: 'Kein Rechtsfehler (blosse Unangemessenheit)' }
+  ],
+  erklaerung: '<p>Nur die ersten drei sind <b>Rechtsfehler</b> und damit vor einer Rechtsmittelinstanz rügbar. Die blosse <b>Unangemessenheit</b> ist kein Rechtsfehler — sie kann nur gerügt werden, wenn das Verfahrensrecht die Angemessenheitskontrolle ausdrücklich zulässt.</p>' +
+    '<div class="merkbox"><b>Merke:</b> Ermessen ist immer <b>pflichtgemäss</b> auszuüben — es ist Freiraum, nicht Freiheit.</div>',
+  artikel: ['Art. 9 BV'] },
+
+{ id: 'T5F7', thema: 5, stufe: 7, typ: 'mc',
+  sachverhalt: 'Ein kantonales Gesetz bestimmt: «Die Behörde <i>kann</i> in Härtefällen eine Ausnahmebewilligung erteilen.» Die zuständige Amtsstelle teilt allen Gesuchstellern mit, sie erteile «aus grundsätzlichen Überlegungen nie» Ausnahmebewilligungen, und prüft die Gesuche inhaltlich nicht.',
+  frage: 'Welcher Ermessensfehler liegt vor?',
+  optionen: [
+    'Ermessensunterschreitung — die Behörde verzichtet auf das ihr eingeräumte Ermessen',
+    'Ermessensüberschreitung — die Behörde übt Ermessen aus, wo ihr keines zusteht',
+    'Ermessensmissbrauch — die Behörde lässt sich von sachfremden Motiven leiten',
+    'Kein Fehler — «kann» bedeutet, dass die Behörde frei entscheiden darf, ob sie das Institut überhaupt anwendet'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Der Gesetzgeber hat der Behörde bewusst ein <b>Entschliessungsermessen</b> eingeräumt. Wer es durch eine generelle Praxis von vornherein ausschaltet und den Einzelfall gar nicht prüft, <b>unterschreitet</b> sein Ermessen — ein Rechtsfehler.</p>' +
+    '<p>Zugleich verletzt die Behörde den Anspruch auf rechtliches Gehör und den Grundsatz, dass Ermessen pflichtgemäss auszuüben ist. Bei krasser Unhaltbarkeit kommt das Willkürverbot (Art. 9 BV) hinzu.</p>',
+  artikel: ['Art. 9 BV', 'Art. 29 Abs. 2 BV'] },
+
+/* ==========  THEMA 6: Öffentliches Interesse & Verhältnismässigkeit (7)  ========== */
+{ id: 'T6F1', thema: 6, stufe: 1, typ: 'mc',
+  frage: 'Welche Bestimmung verlangt, dass staatliches Handeln im <b>öffentlichen Interesse</b> liegt und <b>verhältnismässig</b> ist?',
+  optionen: [
+    'Art. 5 Abs. 2 BV',
+    'Art. 5 Abs. 1 BV',
+    'Art. 5 Abs. 3 BV',
+    'Art. 29 Abs. 2 BV'
+  ],
+  richtig: 0,
+  erklaerung: '<p><b>Art. 5 Abs. 2 BV:</b> «Staatliches Handeln muss im öffentlichen Interesse liegen und verhältnismässig sein.» Beide Anforderungen stehen im selben Absatz und werden in der Fallprüfung <b>nacheinander</b> geprüft.</p>' +
+    '<p>Art. 5 Abs. 1 BV = Legalitätsprinzip · Art. 5 Abs. 3 BV = Treu und Glauben · Art. 29 Abs. 2 BV = rechtliches Gehör.</p>' +
+    '<div class="merkbox"><b>Merke:</b> Das «öffentliche Interesse» ist selbst ein <b>unbestimmter Rechtsbegriff</b> und örtlich wie zeitlich wandelbar.</div>',
+  artikel: ['Art. 5 Abs. 2 BV', 'Art. 5 BV'] },
+
+{ id: 'T6F2', thema: 6, stufe: 2, typ: 'zuordnen',
+  frage: 'Welche öffentlichen Interessen werden mit den folgenden Massnahmen verfolgt? (Übungsblatt Aufgabe 4)',
+  optionen: ['Polizeiliche Interessen', 'Fiskalische Interessen', 'Umweltpolitische Interessen', 'Planerische Interessen', 'Soziale Interessen'],
+  zeilen: [
+    { links: 'Aufenthaltsbewilligung für Ausländer', rechts: 'Polizeiliche Interessen' },
+    { links: 'Autobahnvignette', rechts: 'Fiskalische Interessen' },
+    { links: 'Erteilung einer Praxisbewilligung für Physiotherapie', rechts: 'Polizeiliche Interessen' },
+    { links: 'Standgebühr für Taxistandplätze', rechts: 'Fiskalische Interessen' },
+    { links: 'Wegweisungsverfügung', rechts: 'Polizeiliche Interessen' },
+    { links: 'Kehrichtsackgebühr', rechts: 'Umweltpolitische Interessen' },
+    { links: 'Verbot des Medikamentenverkaufs durch Ärzte', rechts: 'Polizeiliche Interessen' }
+  ],
+  erklaerung: '<p>Original-Lösungen des Übungsblatts. Die <b>polizeilichen Interessen</b> umfassen die öffentliche Sicherheit (Aufenthaltsbewilligung, Wegweisung, Einschränkung des Postverkehrs in einer Strafanstalt) und die <b>öffentliche Gesundheit</b> (Praxisbewilligung Physiotherapie, Verbot des Medikamentenverkaufs durch Ärzte).</p>' +
+    '<p>Die <b>Kehrichtsackgebühr</b> verfolgt umweltpolitische Interessen nach dem <b>Verursacherprinzip</b> (Art. 74 Abs. 2 BV) — sie ist der klassische Stolperstein, weil man sie leicht als fiskalisch einordnet.</p>',
+  artikel: ['Art. 74 BV', 'Art. 5 Abs. 2 BV'] },
+
+{ id: 'T6F3', thema: 6, stufe: 3, typ: 'reihenfolge',
+  frage: 'Bringe die drei Teilgehalte der <b>Verhältnismässigkeit</b> in die richtige Prüfungsreihenfolge.',
+  items: [
+    'Geeignetheit (Zwecktauglichkeit) — die Massnahme muss das im öffentlichen Interesse liegende Ziel erreichen können',
+    'Erforderlichkeit — keine gleich geeignete, mildere Massnahme führt zum selben Ziel (Gebot des mildesten Mittels)',
+    'Zumutbarkeit (Verhältnismässigkeit im engeren Sinn) — Abwägung zwischen privaten und öffentlichen Interessen'
+  ],
+  anzeige: [2, 0, 1],
+  erklaerung: '<p>Die drei Teilgehalte müssen <b>kumulativ</b> erfüllt sein und werden in dieser Reihenfolge geprüft. Fällt die Massnahme schon bei der Geeignetheit durch, erübrigt sich der Rest.</p>' +
+    '<p>Die <b>Erforderlichkeit</b> ist in vierfacher Hinsicht zu prüfen: in <b>sachlicher</b>, <b>räumlicher</b>, <b>zeitlicher</b> und <b>personeller</b> Hinsicht.</p>',
+  artikel: ['Art. 5 Abs. 2 BV', 'Art. 36 BV'] },
+
+{ id: 'T6F4', thema: 6, stufe: 4, typ: 'mc',
+  frage: 'Was verlangt die <b>Erforderlichkeit</b> einer Massnahme?',
+  optionen: [
+    'Dass keine gleich geeignete, mildere Massnahme zum selben Ziel führt — in sachlicher, räumlicher, zeitlicher und personeller Hinsicht',
+    'Dass die Massnahme das Ziel überhaupt erreichen kann',
+    'Dass das öffentliche Interesse das private Interesse überwiegt',
+    'Dass die Massnahme in einem Gesetz im formellen Sinn vorgesehen ist'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Die Erforderlichkeit ist das <b>Gebot des mildesten Mittels</b>. Die vier Hinsichten sind prüfungsrelevant:</p>' +
+    '<ul><li><b>sachlich</b> — genügt eine weniger einschneidende Massnahme (z. B. Auflage statt Verbot)?</li>' +
+    '<li><b>räumlich</b> — genügt eine Beschränkung auf ein kleineres Gebiet?</li>' +
+    '<li><b>zeitlich</b> — genügt eine befristete Massnahme?</li>' +
+    '<li><b>personell</b> — genügt es, nur einzelne Personen zu erfassen?</li></ul>' +
+    '<p>Die anderen Antworten beschreiben Geeignetheit, Zumutbarkeit und das Legalitätsprinzip.</p>',
+  artikel: ['Art. 5 Abs. 2 BV'] },
+
+{ id: 'T6F5', thema: 6, stufe: 5, typ: 'mc',
+  frage: 'Welche Aussage über <b>fiskalische Interessen</b> trifft zu?',
+  optionen: [
+    'Rein finanzielle Interessen genügen allein nicht, um einen Eingriff in Freiheitsrechte zu rechtfertigen',
+    'Fiskalische Interessen rechtfertigen jeden Eingriff, weil der Staat auf Einnahmen angewiesen ist',
+    'Fiskalische Interessen sind keine öffentlichen Interessen',
+    'Fiskalische Interessen gehen den polizeilichen Interessen stets vor'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Fiskalische und wirtschaftspolitische Interessen sind zwar <b>anerkannte</b> öffentliche Interessen (Standgebühr für Taxistandplätze, Autobahnvignette), aber <b>rein finanzielle</b> Motive genügen für einen Eingriff in Freiheitsrechte nicht.</p>' +
+    '<p><b>Die Kategorien öffentlicher Interessen:</b> a) polizeiliche · b) planerische · c) soziale und sozialpolitische · d) rechtsstaatliche (Art. 29 BV) · e) Staatsaufgaben wie Umwelt-, Gewässer- und Tierschutz · f) fiskalische und wirtschaftspolitische.</p>',
+  artikel: ['Art. 5 Abs. 2 BV', 'Art. 27 BV'] },
+
+{ id: 'T6F6', thema: 6, stufe: 6, typ: 'mc',
+  frage: 'Was wird bei der <b>Zumutbarkeit</b> (Verhältnismässigkeit im engeren Sinn) geprüft?',
+  optionen: [
+    'Ob der Eingriffszweck in einem vernünftigen Verhältnis zur Eingriffswirkung steht — Abwägung zwischen privaten und öffentlichen Interessen',
+    'Ob die Massnahme technisch durchführbar ist',
+    'Ob die Behörde für die Massnahme zuständig ist',
+    'Ob die Massnahme dem Betroffenen vorgängig angekündigt wurde'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Die Zumutbarkeit ist die eigentliche <b>Interessenabwägung</b>: Sie stellt Eingriffszweck und Eingriffswirkung einander gegenüber. Damit staatliches Handeln gerechtfertigt ist, muss das öffentliche Interesse allfällig entgegenstehende private oder andere öffentliche Interessen <b>überwiegen</b>.</p>' +
+    '<p>Zuständigkeit und vorgängige Anhörung sind eigenständige Anforderungen (Verfahrensrecht, Art. 29 Abs. 2 BV) und gehören nicht zur Verhältnismässigkeit.</p>',
+  artikel: ['Art. 5 Abs. 2 BV', 'Art. 29 Abs. 2 BV'] },
+
+{ id: 'T6F7', thema: 6, stufe: 7, typ: 'mc',
+  sachverhalt: 'An einer bewilligten Kundgebung verhält sich ein einzelner Demonstrant renitent und stört den Ablauf. Die Polizei löst daraufhin die gesamte Kundgebung auf.',
+  frage: 'Welcher Teilgehalt der Verhältnismässigkeit ist verletzt?',
+  optionen: [
+    'Die Erforderlichkeit — die Wegweisung des einzelnen Störers wäre das mildere, gleich geeignete Mittel gewesen',
+    'Die Geeignetheit — die Auflösung kann die Störung nicht beenden',
+    'Die gesetzliche Grundlage — für polizeiliches Handeln fehlt sie stets',
+    'Der Kerngehalt der Versammlungsfreiheit — dieser ist bei jeder Auflösung verletzt'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Musterantwort zu Übungsblatt Aufgabe 5: «Gegen einen einzelnen renitenten Demonstranten ist die <b>Wegweisung</b> das mildere Mittel als die Auflösung der ganzen Kundgebung.» Verletzt ist damit die <b>Erforderlichkeit</b> — in <b>personeller</b> Hinsicht.</p>' +
+    '<p>Geeignet wäre die Auflösung durchaus (sie beendet die Störung); die gesetzliche Grundlage für polizeiliches Handeln besteht in den Polizeigesetzen; der Kerngehalt der Versammlungsfreiheit (Art. 22 BV) ist erst bei einem Totalverbot jeglicher Meinungskundgabe berührt.</p>',
+  artikel: ['Art. 5 Abs. 2 BV', 'Art. 22 BV', 'Art. 36 BV'] },
+
+/* ==========  THEMA 7: Grundrechtsbeschränkung (Art. 36 BV) (6)  ========== */
+{ id: 'T7F1', thema: 7, stufe: 1, typ: 'reihenfolge',
+  frage: 'Bringe die vier <b>kumulativen</b> Voraussetzungen einer Grundrechtseinschränkung nach Art. 36 BV in die richtige Prüfungsreihenfolge.',
+  items: [
+    'Gesetzliche Grundlage (Art. 36 Abs. 1 BV)',
+    'Öffentliches Interesse oder Schutz von Grundrechten Dritter (Art. 36 Abs. 2 BV)',
+    'Verhältnismässigkeit (Art. 36 Abs. 3 BV)',
+    'Wahrung des Kerngehalts (Art. 36 Abs. 4 BV)'
+  ],
+  anzeige: [2, 0, 3, 1],
+  erklaerung: '<p>Die Reihenfolge entspricht dem Aufbau von Art. 36 BV und ist das <b>Standardschema</b> jeder Grundrechtsprüfung. Vorgelagert ist immer die Frage, ob überhaupt ein <b>Eingriff in den Schutzbereich</b> eines Grundrechts vorliegt.</p>' +
+    '<div class="merkbox"><b>Merke:</b> Alle vier Voraussetzungen müssen <b>kumulativ</b> erfüllt sein. Der Kerngehalt ist <b>absolut</b> geschützt — hier findet keine Abwägung mehr statt.</div>',
+  artikel: ['Art. 36 BV'] },
+
+{ id: 'T7F2', thema: 7, stufe: 2, typ: 'mc',
+  frage: 'Welche Anforderung stellt Art. 36 Abs. 1 Satz 2 BV an <b>schwerwiegende</b> Grundrechtseingriffe?',
+  optionen: [
+    'Sie müssen im Gesetz selbst — also in einem Gesetz im formellen Sinn — vorgesehen sein',
+    'Sie müssen in einer Verordnung des Bundesrates ausdrücklich genannt sein',
+    'Sie müssen vom Bundesgericht vorgängig genehmigt werden',
+    'Sie müssen in der Bundesverfassung ausdrücklich erwähnt sein'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Je schwerer der Eingriff, desto höher die verlangte <b>Normstufe</b>: Leichte Eingriffe können sich auf eine Verordnung stützen, <b>schwerwiegende</b> Eingriffe brauchen eine Grundlage im formellen Gesetz selbst.</p>' +
+    '<p><b>Ausnahme:</b> Art. 36 Abs. 1 Satz 3 BV — Fälle ernster, unmittelbarer und nicht anders abwendbarer Gefahr (polizeiliche Generalklausel).</p>',
+  artikel: ['Art. 36 BV', 'Art. 164 BV'] },
+
+{ id: 'T7F3', thema: 7, stufe: 3, typ: 'multi',
+  frage: 'Welche Voraussetzungen muss eine Gefahr erfüllen, damit die <b>polizeiliche Generalklausel</b> greift?',
+  optionen: [
+    'Die Gefahr muss ernst sein',
+    'Die Gefahr muss unmittelbar drohen',
+    'Die Gefahr darf nicht anders abwendbar sein',
+    'Die Gefahr muss von einer Privatperson ausgehen',
+    'Die Gefahr muss vom Parlament als solche anerkannt sein',
+    'Die Gefahr muss mindestens zehn Personen betreffen'
+  ],
+  richtig: [0, 1, 2],
+  erklaerung: '<p>Die polizeiliche Generalklausel (Art. 36 Abs. 1 Satz 3 BV) ist eine <b>eng begrenzte</b> Ausnahme vom Erfordernis der gesetzlichen Grundlage. Alle drei Voraussetzungen müssen kumulativ vorliegen.</p>' +
+    '<p>Wer die Gefahr verursacht und wie viele Personen betroffen sind, ist nicht entscheidend. Auf Bundesebene tritt daneben das <b>Notrecht</b> des Bundesrates (Art. 185 Abs. 3 BV).</p>',
+  artikel: ['Art. 36 BV', 'Art. 185 BV'] },
+
+{ id: 'T7F4', thema: 7, stufe: 4, typ: 'mc',
+  frage: 'Was gilt für den <b>Kerngehalt</b> eines Grundrechts?',
+  optionen: [
+    'Er ist absolut geschützt — hier findet keine Interessenabwägung mehr statt',
+    'Er darf eingeschränkt werden, wenn das öffentliche Interesse besonders gewichtig ist',
+    'Er darf nur mit Zustimmung der betroffenen Person angetastet werden',
+    'Er ist nur bei den Verfahrensgarantien von Bedeutung'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Art. 36 Abs. 4 BV: «Der Kerngehalt der Grundrechte ist unantastbar.» Der Kerngehalt bildet die <b>absolute Schranke</b> jeder Einschränkung — anders als bei den Stufen 1–3 gibt es hier keine Abwägung mehr.</p>' +
+    '<p>Auch die Zustimmung der betroffenen Person hilft nicht: Kerngehalte stehen nicht zur Disposition.</p>',
+  artikel: ['Art. 36 BV'] },
+
+{ id: 'T7F5', thema: 7, stufe: 5, typ: 'mc',
+  sachverhalt: 'Die Schulordnung einer Gemeinde verbietet das Tragen jeglicher Kopfbedeckung im Unterricht. Einer muslimischen Schülerin wird gestützt darauf untersagt, den Hijab zu tragen. (BGE 142 I 49 / BGer 2C_121/2015, Kopftuchverbot St. Margrethen)',
+  frage: 'Wie hat das Bundesgericht entschieden?',
+  optionen: [
+    'Der Eingriff in die Glaubens- und Gewissensfreiheit war unverhältnismässig — das Verbot war für einen geordneten Schulbetrieb nicht erforderlich; die Beschwerde der Schulgemeinde wurde abgewiesen',
+    'Der Eingriff war zulässig, weil die Schule als Anstalt ihre Ordnung frei bestimmen darf',
+    'Es lag gar kein Eingriff in ein Grundrecht vor, weil das Verbot alle Kopfbedeckungen gleich behandelte',
+    'Der Kerngehalt der Glaubens- und Gewissensfreiheit war verletzt, weshalb sich eine Verhältnismässigkeitsprüfung erübrigte'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Das Bundesgericht qualifizierte das Verbot als <b>Eingriff in die Glaubens- und Gewissensfreiheit</b> (Art. 15 BV) und prüfte Art. 36 BV durch. Es scheiterte an der <b>Verhältnismässigkeit</b>: Für einen geordneten Schulbetrieb war das Verbot nicht erforderlich, und die Schülerin wurde faktisch vor die Wahl zwischen religiösem Gebot und öffentlichem Schulunterricht gestellt.</p>' +
+    '<p>Dass ein Verbot formell alle gleich trifft, schliesst einen Eingriff nicht aus. Der Kerngehalt war nicht angetastet — der Entscheid fiel auf der Stufe der Verhältnismässigkeit.</p>' +
+    '<div class="merkbox"><b>Merke:</b> Musterfall für die Prüfungsreihenfolge von Art. 36 BV.</div>',
+  artikel: ['BGE 142 I 49', 'Art. 15 BV', 'Art. 36 BV'] },
+
+{ id: 'T7F6', thema: 7, stufe: 6, typ: 'mc',
+  sachverhalt: 'Ein Ehepaar in Möhlin (AG) beleuchtet Haus und Garten das ganze Jahr hindurch. Die Gemeinde beschränkt die Beleuchtungsdauer: unter dem Jahr bis 22.00 Uhr, in der Weihnachtszeit vom 1. Advent bis zum 6. Januar bis 01.00 Uhr. (BGE 140 II 33)',
+  frage: 'Wie hat das Bundesgericht entschieden?',
+  optionen: [
+    'Die Anordnung wurde geschützt: Künstliches Licht ist eine Einwirkung im Sinne des USG; die zeitliche Beschränkung ist eine verhältnismässige Emissionsbegrenzung und verletzt weder die persönliche Freiheit noch die Eigentumsgarantie',
+    'Die Anordnung wurde aufgehoben: Licht ist keine Einwirkung im Sinne des Umweltschutzgesetzes',
+    'Die Anordnung wurde aufgehoben, weil ein Eingriff in die Eigentumsgarantie stets eine Entschädigung voraussetzt',
+    'Die Anordnung wurde geschützt, weil die Gemeinde in Umweltfragen über absolutes Ermessen verfügt'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Künstliches Licht fällt als Einwirkung unter das <b>Vorsorgeprinzip</b> des Umweltschutzgesetzes (Art. 1 Abs. 2, Art. 11 Abs. 2 USG). Die <b>zeitliche</b> Beschränkung ist ein typisches Beispiel für das mildeste Mittel: Die Beleuchtung wird nicht verboten, sondern nur begrenzt — und in der Weihnachtszeit sogar grosszügiger.</p>' +
+    '<div class="merkbox"><b>Merke:</b> Beispiel für Interessenabwägung und Verhältnismässigkeitsprüfung bei der Eingriffsverwaltung.</div>',
+  artikel: ['BGE 140 II 33', 'Art. 1 USG', 'Art. 11 USG', 'Art. 26 BV', 'Art. 10 BV'] },
+
+/* ==========  THEMA 8: Treu und Glauben & Vertrauensschutz (8)  ========== */
+{ id: 'T8F1', thema: 8, stufe: 1, typ: 'multi',
+  frage: 'Welche <b>drei Teilgehalte</b> umfasst das Gebot von Treu und Glauben?',
+  optionen: [
+    'Verbot widersprüchlichen Verhaltens',
+    'Verbot des Rechtsmissbrauchs',
+    'Vertrauensschutz',
+    'Verbot der Rückwirkung von Gesetzen',
+    'Anspruch auf rechtliches Gehör',
+    'Gebot der Öffentlichkeit des Verfahrens'
+  ],
+  richtig: [0, 1, 2],
+  erklaerung: '<p>Das Gebot von Treu und Glauben ist einerseits <b>allgemeiner Rechtsgrundsatz</b> (Art. 5 Abs. 3 BV) und andererseits <b>verfassungsmässiges Recht</b> (Art. 9 BV), auf das sich der Einzelne direkt berufen kann.</p>' +
+    '<ul><li><b>Verbot widersprüchlichen Verhaltens:</b> Ein einmal eingenommener Standpunkt darf nicht ohne sachlichen Grund gewechselt werden. Praxisänderungen aufgrund neuer konkreter Erkenntnisse bleiben erlaubt.</li>' +
+    '<li><b>Rechtsmissbrauchsverbot:</b> Verboten ist, ein Rechtsinstitut zweckentfremdet für Interessen einzusetzen, die es nicht schützen soll.</li>' +
+    '<li><b>Vertrauensschutz:</b> Behörden müssen vertrauenswürdig handeln; Private haben Anspruch auf Schutz ihres berechtigten Vertrauens.</li></ul>',
+  artikel: ['Art. 5 Abs. 3 BV', 'Art. 9 BV'] },
+
+{ id: 'T8F2', thema: 8, stufe: 2, typ: 'mc',
+  frage: 'Wie lautet die Definition des <b>Vertrauensschutzes</b>?',
+  optionen: [
+    'Der Anspruch von Privaten, in ihrem berechtigten Vertrauen in behördliche Zusicherungen oder in anderes, bestimmte Erwartungen begründendes Verhalten der Behörden geschützt zu werden',
+    'Der Anspruch von Privaten, dass die Behörde jede erteilte Auskunft unabhängig von ihrer Richtigkeit einhält',
+    'Der Anspruch der Behörde darauf, dass sich Private an ihre Zusicherungen halten',
+    'Der Anspruch von Privaten auf Entschädigung, wenn eine Verfügung aufgehoben wird'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Musterantwort zu Übungsblatt Aufgabe 8. Ziele des Vertrauensschutzes: <b>Verlässlichkeit des Staates</b> sowie <b>Rechtssicherheit und Vorhersehbarkeit</b> staatlichen Handelns.</p>' +
+    '<div class="merkbox"><b>Prüfungshinweis des Dozenten:</b> Der Vertrauensschutz kommt <b>immer</b> an der Prüfung — auch an der Diplomprüfung. Die Voraussetzungen sind in der richtigen Reihenfolge zu prüfen.</div>',
+  artikel: ['Art. 9 BV', 'Art. 5 Abs. 3 BV'] },
+
+{ id: 'T8F3', thema: 8, stufe: 3, typ: 'reihenfolge',
+  frage: 'Bringe die vier <b>kumulativen</b> Voraussetzungen des Vertrauensschutzes in die richtige Prüfungsreihenfolge.',
+  items: [
+    'Vertrauensgrundlage — ein staatliches Verhalten, das bestimmte Erwartungen weckt (genügend individualisiert und bestimmt)',
+    'Gutgläubiges Vertrauen — der Private konnte die Unrichtigkeit nach Treu und Glauben nicht erkennen',
+    'Vertrauensbetätigung — eine nachteilige Disposition, die nicht ohne Nachteil rückgängig gemacht werden kann',
+    'Interessenabwägung — privates Interesse am Vertrauensschutz gegen das öffentliche Interesse an der richtigen Rechtsanwendung'
+  ],
+  anzeige: [3, 1, 0, 2],
+  erklaerung: '<p>Die Reihenfolge ist prüfungsrelevant: <b>1. Vertrauensgrundlage → 2. Gutgläubigkeit → 3. Vertrauensbetätigung → 4. Interessenabwägung.</b></p>' +
+    '<p>Als Vertrauensgrundlage kommen in Betracht: eine Verfügung, ein verwaltungsrechtlicher Vertrag, eine Verwaltungs- oder Gerichtspraxis, eine Auskunft oder ein Plan. Sie muss <b>genügend individualisiert und bestimmt</b> sein.</p>',
+  artikel: ['Art. 9 BV'] },
+
+{ id: 'T8F4', thema: 8, stufe: 4, typ: 'mc',
+  frage: 'In welchem Verhältnis stehen <b>Vertrauensschutz</b> und <b>Legalitätsprinzip</b>?',
+  optionen: [
+    'In einem Spannungsverhältnis — der Vertrauensschutz kann ausnahmsweise dazu führen, dass eine Behörde an einer objektiv rechtswidrigen Grundlage festgehalten wird',
+    'In einem Verhältnis der Gleichrangigkeit — beide werden nie gegeneinander abgewogen',
+    'Der Vertrauensschutz geht dem Legalitätsprinzip stets vor',
+    'Das Legalitätsprinzip schliesst den Vertrauensschutz vollständig aus'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Musterantwort zu Übungsblatt Aufgabe 8: Es besteht eine <b>enge Verbindung</b> zwischen Vertrauensschutz und Rechtssicherheit sowie ein <b>Spannungsverhältnis</b> zwischen Vertrauensschutz und Legalitätsprinzip.</p>' +
+    '<p>Genau deshalb steht am Ende der Prüfung immer die <b>Interessenabwägung</b>: Sie entscheidet, welches der beiden Prinzipien sich im Einzelfall durchsetzt. Ein genereller Vorrang des einen oder anderen besteht nicht.</p>',
+  artikel: ['Art. 9 BV', 'Art. 5 Abs. 1 BV'] },
+
+{ id: 'T8F5', thema: 8, stufe: 5, typ: 'multi',
+  frage: 'Welche Voraussetzungen müssen erfüllt sein, damit sich ein Privater auf eine <b>unrichtige behördliche Auskunft</b> berufen kann?',
+  optionen: [
+    'Eignung der Auskunft — sie muss inhaltlich bestimmt sein (vage, allgemeine Angaben genügen nicht)',
+    'Zuständigkeit der Behörde — der Private musste nach Treu und Glauben nicht an der Zuständigkeit zweifeln',
+    'Nachteilige Disposition gestützt auf die Auskunft, die nicht ohne Nachteil rückgängig gemacht werden kann',
+    'Keine Änderung der Sach- oder Rechtslage seit der Auskunftserteilung',
+    'Interessenabwägung — das private Interesse überwiegt das öffentliche Interesse an der richtigen Rechtsanwendung',
+    'Die Auskunft muss schriftlich und unterzeichnet erteilt worden sein',
+    'Die Auskunft muss von einem Mitglied der Exekutive persönlich stammen'
+  ],
+  richtig: [0, 1, 2, 3, 4],
+  erklaerung: '<p>Fünf kumulative Voraussetzungen — eine klassische Prüfungsaufzählung. Eine bestimmte <b>Form</b> ist nicht verlangt: Auch eine mündliche Auskunft am Schalter kann Vertrauensgrundlage sein, sofern sie inhaltlich genügend bestimmt ist (Beweisfragen bleiben davon unberührt).</p>' +
+    '<p>Die Voraussetzung «Zuständigkeit» ist relativ: Entscheidend ist nicht, ob die Behörde <i>wirklich</i> zuständig war, sondern ob der Private <b>nach Treu und Glauben</b> an der Zuständigkeit zweifeln musste.</p>',
+  artikel: ['Art. 9 BV'] },
+
+{ id: 'T8F6', thema: 8, stufe: 6, typ: 'multi',
+  frage: 'Welche <b>Folgen</b> kann der Vertrauensschutz haben?',
+  optionen: [
+    'Bestandesschutz — der Widerruf einer Verfügung wird verhindert, eine Praxisänderung kann untersagt sein',
+    'Wiederherstellung von Fristen, z. B. bei falscher Rechtsmittelbelehrung',
+    'Übergangsregelungen bei Rechtsänderungen',
+    'Entschädigung — allerdings nur subsidiär, da Entschädigungen eine gesetzliche Grundlage brauchen',
+    'Ein Anspruch auf Bestrafung der fehlbaren Amtsperson',
+    'Die Nichtigkeit der unrichtigen Verfügung von Anfang an'
+  ],
+  richtig: [0, 1, 2, 3],
+  erklaerung: '<p>Die <b>Rangordnung</b> ist wichtig: Zuerst wird versucht, den Vertrauenden so zu stellen, wie er es erwarten durfte (<b>Bestandesschutz</b>, Fristwiederherstellung, Übergangsfrist). Erst wenn das nicht möglich ist, kommt eine <b>Entschädigung</b> in Betracht — und diese nur <b>subsidiär</b>, weil sie ihrerseits eine gesetzliche Grundlage braucht.</p>' +
+    '<p>Aus mangelhafter Eröffnung darf den Parteien kein Nachteil erwachsen (Art. 38 VwVG) — das ist der praktische Hauptfall der Fristwiederherstellung.</p>',
+  artikel: ['Art. 9 BV', 'Art. 38 VwVG'] },
+
+{ id: 'T8F7', thema: 8, stufe: 7, typ: 'mc',
+  sachverhalt: 'Ein Bauherr fragt beim Bauamt nach, ob sein Vorhaben bewilligungsfähig sei. Der Sachbearbeiter bejaht dies schriftlich und konkret. Der Bauherr lässt daraufhin Pläne erstellen und beginnt mit den Vorbereitungsarbeiten. Später zeigt sich: Das Vorhaben war von Anfang an nach dem Baurecht überhaupt nicht bewilligungsfähig.',
+  frage: 'Wie fällt die Interessenabwägung nach dem Lerntext aus?',
+  optionen: [
+    'Das öffentliche Interesse an der richtigen Anwendung des Baurechts überwiegt — was ursprünglich nicht bewilligungsfähig war, kann auch nachträglich nicht bewilligt werden; dem Bauherrn bleibt allenfalls eine Entschädigung',
+    'Der Bauherr erhält die Baubewilligung, weil die Auskunft eine Vertrauensgrundlage bildet und er disponiert hat',
+    'Der Vertrauensschutz scheitert bereits an der Vertrauensgrundlage, weil eine Auskunft nie Vertrauensgrundlage sein kann',
+    'Der Bauherr hat keinerlei Ansprüche, weil er die Rechtslage selbst hätte abklären müssen'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Der Lerntext unterscheidet klar:</p>' +
+    '<ul><li>War das Bauvorhaben <b>ursprünglich nicht bewilligungsfähig</b>, kann es auch nachträglich nicht bewilligt werden — das öffentliche Interesse an der richtigen Anwendung des Baurechts (Legalitätsprinzip) <b>überwiegt</b>. Der Private verliert.</li>' +
+    '<li>Wäre das Vorhaben <b>grundsätzlich möglich</b> gewesen, gewinnt der Private.</li></ul>' +
+    '<p>Eine Auskunft <i>kann</i> sehr wohl Vertrauensgrundlage sein — hier scheitert der Anspruch erst auf der <b>vierten</b> Stufe, der Interessenabwägung. Als Folge bleibt allenfalls die (subsidiäre) Entschädigung.</p>',
+  artikel: ['Art. 9 BV', 'Art. 5 Abs. 1 BV'] },
+
+{ id: 'T8F8', thema: 8, stufe: 8, typ: 'multi',
+  sachverhalt: 'Ein Konservatorium erteilte gestützt auf eine mangelhaft durchgeführte Abschlussprüfung ein Diplom. Die Aufsichtsbehörde widerrief den Prüfungsentscheid nach Ablauf der Rechtsmittelfrist. (BGE 137 I 69)',
+  frage: 'Welche Grundsätze hat das Bundesgericht in diesem Leitentscheid festgehalten?',
+  optionen: [
+    'Eine materiell unrichtige Verfügung kann auch nach Ablauf der Rechtsmittelfrist zurückgenommen werden',
+    'Abzuwägen sind das Interesse an der richtigen Durchführung des objektiven Rechts und das Interesse am Vertrauensschutz',
+    'Das Vertrauensschutzinteresse ist nur zu berücksichtigen, wenn dessen Voraussetzungen überhaupt erfüllt sind',
+    'Ein Widerruf ist in der Regel ausgeschlossen, wenn die Verfügung ein subjektives Recht begründet hat',
+    'Ein Widerruf ist in der Regel ausgeschlossen, wenn die Verfügung in einem Verfahren mit allseitiger Interessenprüfung erging',
+    'Ein Widerruf ist in der Regel ausgeschlossen, wenn der Private von der eingeräumten Befugnis bereits Gebrauch gemacht hat',
+    'Nach Ablauf der Rechtsmittelfrist ist ein Widerruf ausnahmslos ausgeschlossen',
+    'Der Vertrauensschutz geht dem objektiven Recht immer vor'
+  ],
+  richtig: [0, 1, 2, 3, 4, 5],
+  erklaerung: '<p>BGE 137 I 69 ist der Brückenentscheid zwischen <b>Vertrauensschutz</b> (Teil II) und <b>Widerruf von Verfügungen</b> (Teil III).</p>' +
+    '<p>Die drei «in der Regel»-Ausschlussgründe sind keine absoluten Schranken: Ein besonders gewichtiges öffentliches Interesse kann ihnen vorgehen. Umgekehrt gilt aber auch kein genereller Vorrang des Vertrauensschutzes — es bleibt bei der Abwägung im Einzelfall.</p>',
+  artikel: ['BGE 137 I 69', 'Art. 9 BV'] },
+
+/* ==========  THEMA 9: Rechtsgleichheit & Willkürverbot (7)  ========== */
+{ id: 'T9F1', thema: 9, stufe: 1, typ: 'mc',
+  frage: 'Wie lautet der Grundsatz der <b>Rechtsgleichheit</b> (Art. 8 Abs. 1 BV)?',
+  optionen: [
+    'Gleiches ist nach Massgabe seiner Gleichheit gleich, Ungleiches nach Massgabe seiner Ungleichheit ungleich zu behandeln',
+    'Alle Menschen sind in jeder Hinsicht und ausnahmslos gleich zu behandeln',
+    'Der Staat darf nur dann unterscheiden, wenn das Gesetz die Unterscheidung ausdrücklich vorsieht',
+    'Jede Ungleichbehandlung ist eine Diskriminierung'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Die Formel hat <b>zwei Richtungen</b>: Gleiches gleich <i>und</i> Ungleiches ungleich. Eine schematische Gleichbehandlung ungleicher Sachverhalte verletzt die Rechtsgleichheit ebenso wie eine sachlich unbegründete Ungleichbehandlung.</p>' +
+    '<p>Entscheidend ist stets, dass sich die Zuteilung «gleich» oder «ungleich» auf <b>ernsthafte, sachliche Gründe</b> stützt. Die <b>Diskriminierung</b> (Art. 8 Abs. 2 BV) ist der qualifizierte Sonderfall der Anknüpfung an ein verpöntes Merkmal.</p>',
+  artikel: ['Art. 8 BV'] },
+
+{ id: 'T9F2', thema: 9, stufe: 2, typ: 'mc',
+  frage: 'Worin unterscheiden sich Rechtsgleichheit in der <b>Rechtsetzung</b> und in der <b>Rechtsanwendung</b>?',
+  optionen: [
+    'In der Rechtsetzung muss der Erlass selbst gleiche Sachverhalte gleich regeln; in der Rechtsanwendung sind gleich gelagerte Fälle bei der Anwendung der Bestimmungen gleich zu behandeln',
+    'In der Rechtsetzung gilt der Grundsatz nur für Bundesgesetze, in der Rechtsanwendung nur für kantonale Erlasse',
+    'In der Rechtsetzung geht es um die Gleichheit vor dem Richter, in der Rechtsanwendung um die Gleichheit vor dem Parlament',
+    'Es besteht kein Unterschied — es handelt sich um zwei Bezeichnungen für dasselbe'
+  ],
+  richtig: 0,
+  erklaerung: '<p><b>Rechtsetzungsgleichheit</b> richtet sich an den Gesetzgeber: Der Erlass selbst darf keine sachlich unbegründeten Unterscheidungen treffen. <b>Rechtsanwendungsgleichheit</b> richtet sich an Verwaltung und Gerichte: Gleich gelagerte Fälle sind gleich zu entscheiden.</p>' +
+    '<p>Der <b>ständigen Praxis</b> kommt dabei grosse Bedeutung zu: Rechtsgleichheit und Rechtssicherheit verlangen, dass an einer konstanten Praxis in der Regel festgehalten wird (Stichworte: Richterrecht, Präjudizien).</p>',
+  artikel: ['Art. 8 BV'] },
+
+{ id: 'T9F3', thema: 9, stufe: 3, typ: 'multi',
+  frage: 'Unter welchen <b>kumulativen</b> Voraussetzungen ist eine <b>Praxisänderung</b> zulässig?',
+  optionen: [
+    'Ernsthafte, sachliche Gründe sprechen für die Änderung',
+    'Die beabsichtigte Änderung ist grundlegend',
+    'Das Interesse an der neuen Regelung überwiegt gegenüber der Rechtssicherheit der bisherigen Praxis',
+    'Die Änderung verstösst nicht gegen Treu und Glauben (keine stossenden Ungerechtigkeiten)',
+    'Die Änderung wird vom Parlament genehmigt',
+    'Die Änderung wird mindestens ein Jahr im Voraus angekündigt'
+  ],
+  richtig: [0, 1, 2, 3],
+  erklaerung: '<p>Vier kumulative Voraussetzungen. Weder eine parlamentarische Genehmigung noch eine bestimmte Ankündigungsfrist ist verlangt — wohl aber kann der <b>Vertrauensschutz</b> im Einzelfall eine Übergangsregelung gebieten (→ Thema 8).</p>' +
+    '<p>Beachte den Zusammenhang zum Verbot widersprüchlichen Verhaltens: Ein einmal eingenommener Standpunkt darf nicht <i>ohne sachlichen Grund</i> gewechselt werden — mit sachlichem Grund hingegen schon.</p>',
+  artikel: ['Art. 8 BV', 'Art. 9 BV'] },
+
+{ id: 'T9F4', thema: 9, stufe: 4, typ: 'multi',
+  frage: 'Wann ist ein Entscheid <b>willkürlich</b> (Art. 9 BV)?',
+  optionen: [
+    'Wenn er auf einem offensichtlich falschen Sachverhalt beruht',
+    'Wenn er offensichtlich gegen ein Gesetz verstösst',
+    'Wenn er die allgemeinen Rechtsgrundsätze offensichtlich verletzt',
+    'Wenn er krass gegen das Gerechtigkeitsempfinden verstösst',
+    'Wenn er auf groben Ermessensfehlern beruht',
+    'Wenn eine andere Lösung ebenfalls vertretbar oder sogar vorzuziehen wäre',
+    'Wenn die Rechtsmittelinstanz selbst anders entschieden hätte'
+  ],
+  richtig: [0, 1, 2, 3, 4],
+  erklaerung: '<p>Das Willkürverbot schützt vor <b>offensichtlich unhaltbaren</b> Entscheiden — es ist kein Anspruch auf den besten oder richtigsten Entscheid.</p>' +
+    '<p>Nach ständiger Rechtsprechung genügt es <b>nicht</b>, dass eine andere Lösung ebenfalls vertretbar oder gar vorzuziehen wäre. Behörden haben in Auslegung und Sachverhaltswürdigung einen Spielraum; willkürlich ist erst die <b>qualifizierte Unrichtigkeit</b>: im Ergebnis offensichtlich unhaltbar, in klarem Widerspruch zur tatsächlichen Situation, krass gegen das Gerechtigkeitsempfinden.</p>',
+  artikel: ['Art. 9 BV'] },
+
+{ id: 'T9F5', thema: 9, stufe: 5, typ: 'mc',
+  sachverhalt: 'Fahrzeuglenkerinnen und Fahrzeuglenker müssen sich ab dem vollendeten 75. Altersjahr alle zwei Jahre einer vertrauensärztlichen Kontrolluntersuchung der Fahreignung unterziehen; jüngere Lenker nicht (Art. 15d Abs. 2 SVG).',
+  frage: 'Wie ist diese Regelung unter dem Gesichtspunkt der Rechtsgleichheit zu beurteilen?',
+  optionen: [
+    'Zulässig — die Ungleichbehandlung stützt sich auf einen ernsthaften, sachlichen Grund (statistisch nachlassende Fahreignung im Alter); verglichen werden dürfen 75-Jährige mit 75-Jährigen',
+    'Unzulässig — jede Anknüpfung an das Alter ist eine verbotene Diskriminierung nach Art. 8 Abs. 2 BV',
+    'Unzulässig — die Rechtsgleichheit verlangt, dass alle Fahrzeuglenker identisch behandelt werden',
+    'Zulässig — die Rechtsgleichheit gilt im Strassenverkehrsrecht nicht'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Beispiel aus dem Script (im Script noch «ab 70» — seit dem 1.1.2019 gilt die Untersuchungspflicht erst ab dem <b>75.</b> Altersjahr, Art. 15d Abs. 2 SVG).</p>' +
+    '<p>Massgebend ist, ob der Grund für die Ungleichbehandlung <b>sachlich</b> ist. Man darf 75-Jährige mit 75-Jährigen vergleichen, aber nicht mit 30-Jährigen. Das Alter ist zwar ein in Art. 8 Abs. 2 BV genanntes Merkmal, doch führt dies nur zu einer <b>qualifizierten Rechtfertigungspflicht</b>, nicht zu einem absoluten Verbot.</p>',
+  artikel: ['Art. 8 BV', 'Art. 15d SVG'] },
+
+{ id: 'T9F6', thema: 9, stufe: 6, typ: 'mc',
+  sachverhalt: 'Eine Gemeinde bewilligt seit Jahren gesetzwidrig Verkaufsstände auf dem Dorfplatz — allerdings nur ortsansässigen Händlern. Ein auswärtiger Händler verlangt, gleich behandelt zu werden.',
+  frage: 'Was gilt nach dem Grundsatz «Legalität vor Egalität»?',
+  optionen: [
+    'Grundsätzlich besteht kein Anspruch auf Gleichbehandlung im Unrecht; ausnahmsweise aber doch, wenn die Behörde in ständiger Praxis vom Gesetz abweicht und zu erkennen gibt, dass sie auch künftig nicht gesetzeskonform entscheiden wird',
+    'Der Händler hat immer Anspruch darauf, gleich behandelt zu werden — sonst wäre Art. 8 Abs. 1 BV wertlos',
+    'Der Händler hat nie Anspruch auf Gleichbehandlung im Unrecht; Ausnahmen bestehen keine',
+    'Der Händler kann nur Schadenersatz verlangen, nicht aber eine Bewilligung'
+  ],
+  richtig: 0,
+  erklaerung: '<p><b>Grundsatz:</b> Wer sieht, dass andere rechtswidrig begünstigt werden, kann nicht verlangen, ebenfalls rechtswidrig begünstigt zu werden. Er kann nur verlangen, dass das Recht — auf ihn <i>und</i> die anderen — richtig angewendet wird.</p>' +
+    '<p><b>Enge Ausnahme:</b> Weicht die Behörde in ständiger Praxis vom Gesetz ab und gibt sie zu erkennen, dass sie auch künftig nicht gesetzeskonform entscheiden wird, würde der Einzelne sonst als <b>Einziger</b> dem Gesetz unterworfen — das wäre seinerseits stossend.</p>' +
+    '<p>Im vorliegenden Fall liegt eine langjährige Praxis vor; entscheidend ist, ob die Gemeinde signalisiert, daran festzuhalten. Erklärt sie glaubhaft, die Praxis nun zu ändern, entfällt die Ausnahme.</p>',
+  artikel: ['Art. 8 BV', 'Art. 5 Abs. 1 BV'] },
+
+{ id: 'T9F7', thema: 9, stufe: 7, typ: 'multi',
+  sachverhalt: 'Der Regierungsrat Basel-Stadt beschränkte die Zulassung zum Medizinstudium mittels Eignungstest; für den Test wurde eine Gebühr erhoben. (BGE 125 I 173, Basler Numerus clausus)',
+  frage: 'Welche Aussagen zum Entscheid treffen zu?',
+  optionen: [
+    'Die Wirtschaftsfreiheit (Art. 27 BV) verleiht keinen Anspruch auf freien Zugang zum Universitätsstudium',
+    'Die formell-gesetzliche Grundlage für die Zulassungsbeschränkung war gegeben',
+    'Dass der Numerus clausus nur für die Medizin und nur in der Deutschschweiz galt, verletzt die Rechtsgleichheit nicht — sachlicher Grund sind die beschränkten, teuren Ausbildungskapazitäten',
+    'Aufgehoben wurde einzig die Gebühr für den Eignungstest, weil ihr die gesetzliche Grundlage fehlte',
+    'Das Bundesgericht hob die ganze Zulassungsbeschränkung als rechtsungleich auf',
+    'Für Gebühren gilt das Legalitätsprinzip weniger streng als für andere Eingriffe'
+  ],
+  richtig: [0, 1, 2, 3],
+  erklaerung: '<p>Der Entscheid verbindet zwei Themen: <b>Rechtsgleichheit</b> (unterschiedliche Behandlung von Studienrichtungen und Landesteilen ist bei sachlichem Grund zulässig) und <b>Legalitätsprinzip im Abgaberecht</b> (Art. 127 Abs. 1 BV — dort gilt es besonders <b>streng</b>).</p>' +
+    '<div class="merkbox"><b>Merke:</b> Rechtsungleichheit liegt nicht schon deshalb vor, weil eine Regelung nur einen Teilbereich erfasst. Entscheidend ist der sachliche Grund für die Abgrenzung.</div>',
+  artikel: ['BGE 125 I 173', 'Art. 27 BV', 'Art. 8 BV', 'Art. 127 BV'] },
+
+/* ==========  THEMA 10: Anspruch auf rechtliches Gehör (6)  ========== */
+{ id: 'T10F1', thema: 10, stufe: 1, typ: 'mc',
+  frage: 'Wo ist der Anspruch auf <b>rechtliches Gehör</b> heute verankert und was besagt er?',
+  optionen: [
+    'Art. 29 Abs. 2 BV — jeder Private muss in einem Verfahren seinen Standpunkt angemessen und wirksam vertreten können',
+    'Art. 9 BV — er ist bis heute ein blosser Teilgehalt des Willkürverbots ohne eigenständige Bedeutung',
+    'Art. 30 BV — er gilt nur in gerichtlichen, nicht in Verwaltungsverfahren',
+    'Art. 8 BV — er ist Ausfluss der Rechtsgleichheit'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Das Script leitet den Gehörsanspruch aus dem Willkürverbot ab — historisch wurde er aus Art. 4 der alten BV abgeleitet. <b>Heute</b> ist er eine <b>selbständige Verfahrensgarantie</b> in Art. 29 Abs. 2 BV.</p>' +
+    '<p>Art. 30 BV betrifft die Garantien im <b>gerichtlichen</b> Verfahren (unabhängiges Gericht); der Gehörsanspruch gilt dagegen in Verfahren vor <b>Gerichts- und Verwaltungsinstanzen</b>.</p>',
+  artikel: ['Art. 29 Abs. 2 BV', 'Art. 29 BV', 'Art. 30 BV'] },
+
+{ id: 'T10F2', thema: 10, stufe: 2, typ: 'multi',
+  frage: 'Welche <b>Teilgehalte</b> umfasst der Anspruch auf rechtliches Gehör?',
+  optionen: [
+    'Recht auf vorgängige Äusserung vor Erlass eines belastenden Entscheids',
+    'Recht auf Akteneinsicht in die entscheidwesentlichen Akten',
+    'Recht auf Mitwirkung an der Beweiserhebung und Stellungnahme zum Beweisergebnis',
+    'Anspruch auf Prüfung der Vorbringen und auf Begründung des Entscheids',
+    'Anspruch auf eine mündliche öffentliche Verhandlung in jedem Verfahren',
+    'Anspruch auf unentgeltliche Vertretung durch einen Anwalt in jedem Verfahren'
+  ],
+  richtig: [0, 1, 2, 3],
+  erklaerung: '<p>Für das Bundesverwaltungsverfahren sind die Teilgehalte konkretisiert: vorgängige Äusserung (Art. 30 VwVG), Akteneinsicht (Art. 26 VwVG), Begründungspflicht (Art. 35 VwVG).</p>' +
+    '<p>Der Anspruch auf <b>unentgeltliche Rechtspflege</b> ist separat in Art. 29 Abs. 3 BV geregelt und setzt Bedürftigkeit und Nichtaussichtslosigkeit voraus. Eine öffentliche mündliche Verhandlung verlangt Art. 29 Abs. 2 BV nicht.</p>',
+  artikel: ['Art. 29 Abs. 2 BV', 'Art. 26 VwVG', 'Art. 30 VwVG', 'Art. 35 VwVG'] },
+
+{ id: 'T10F3', thema: 10, stufe: 3, typ: 'mc',
+  frage: 'Welche Rechtsfolge hat eine <b>Verletzung</b> des rechtlichen Gehörs?',
+  optionen: [
+    'Der Anspruch ist formeller Natur — seine Verletzung führt grundsätzlich zur Aufhebung des Entscheids, unabhängig davon, ob dieser inhaltlich richtig wäre',
+    'Der Entscheid bleibt bestehen, sofern er inhaltlich richtig ist',
+    'Der Entscheid ist stets nichtig und von Anfang an unwirksam',
+    'Die Verletzung führt lediglich zu einer Kostenauflage zulasten der Behörde'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Der Gehörsanspruch ist <b>formeller Natur</b>: Es kommt nicht darauf an, ob der Entscheid bei korrektem Vorgehen gleich ausgefallen wäre.</p>' +
+    '<p><b>Heilung</b> ist ausnahmsweise möglich, wenn der Mangel <b>nicht schwer wiegt</b> und die Rechtsmittelinstanz den Sachverhalt und die Rechtslage <b>frei überprüfen</b> kann.</p>' +
+    '<p>Nichtigkeit tritt nur bei besonders schweren und offensichtlichen Mängeln ein (Evidenztheorie, → Thema 13) — ein Gehörsverstoss führt in der Regel zur Anfechtbarkeit, nicht zur Nichtigkeit.</p>',
+  artikel: ['Art. 29 Abs. 2 BV'] },
+
+{ id: 'T10F4', thema: 10, stufe: 4, typ: 'mc',
+  sachverhalt: 'In einem Verfahren über die nächtliche Öffnung eines Clubs lässt die Lärmbekämpfungsstelle den Lärmpegel dreimal <b>unangemeldet</b> messen. Der Clubbesitzer verlangt, er hätte zu den Messungen eingeladen werden müssen.',
+  frage: 'Verlangt er das zu Recht? (BGE 104 Ia 69)',
+  optionen: [
+    'Nein — bei Beweiserhebungen, die ihren Zweck nur unangemeldet erfüllen (namentlich Augenscheine und Messungen im Immissionsschutz), ist das Gehör gewahrt, wenn das Beweisergebnis nachträglich zur Stellungnahme unterbreitet wird',
+    'Ja — der Private hat ausnahmslos Anspruch darauf, an allen Beweiserhebungen teilzunehmen',
+    'Nein — im Verwaltungsverfahren besteht überhaupt kein Anspruch auf Teilnahme an Beweiserhebungen',
+    'Ja — Lärmmessungen sind ohne Anwesenheit des Betroffenen von vornherein unverwertbar'
+  ],
+  richtig: 0,
+  erklaerung: '<p><b>Grundsatz:</b> Der am Verwaltungsverfahren beteiligte Private hat Anspruch darauf, an Beweiserhebungen teilzunehmen.</p>' +
+    '<p><b>Ausnahme:</b> Beweiserhebungen, die ihren Zweck nur unangemeldet erfüllen können. Gerade im Immissionsschutz ist das unumgänglich — sonst würde in der Messnacht einfach leiser gespielt.</p>' +
+    '<p><b>Kompensation:</b> Das festgehaltene Beweisergebnis muss nachträglich zur Stellungnahme unterbreitet werden. Der Gehörsanspruch wird also nicht aufgehoben, sondern zeitlich verschoben.</p>',
+  artikel: ['BGE 104 Ia 69', 'Art. 29 Abs. 2 BV'] },
+
+{ id: 'T10F5', thema: 10, stufe: 5, typ: 'mc',
+  sachverhalt: 'Ein Kandidat hat ein schriftliches Examen nicht bestanden. Er vermutet eine rechtsungleiche Bewertung und verlangt Einsicht in die Prüfungsakten <b>aller anderen</b> Prüflinge.',
+  frage: 'Wie ist das zu beurteilen? (BGE 121 I 225)',
+  optionen: [
+    'Die Arbeiten anderer Kandidaten gehören im Allgemeinen nicht zu den einsehbaren Akten — bei einer Eignungsprüfung ist massgebend, ob der einzelne Kandidat die Eignung besitzt; anders als bei Wettbewerben bildet der Quervergleich nicht die Entscheidgrundlage',
+    'Die Einsicht ist zu gewähren, weil sich die Rechtsgleichheit nur durch einen Vergleich überprüfen lässt',
+    'Die Einsicht ist zu gewähren, sofern die anderen Kandidaten anonymisiert werden',
+    'Die Einsicht ist zu verweigern, weil im Prüfungsverfahren gar kein Anspruch auf rechtliches Gehör besteht'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Die Akteneinsicht nach Art. 29 Abs. 2 BV erstreckt sich auf alle <b>entscheidwesentlichen</b> Akten. Ihre Grenzen liegen bei öffentlichen Geheimhaltungsinteressen und berechtigten Interessen Dritter.</p>' +
+    '<p>Bei einer <b>Eignungsprüfung</b> geht es darum, ob der einzelne Kandidat die Eignung besitzt — <b>nicht</b> darum, aus mehreren Bewerbern die besten herauszusuchen (so wäre es beim <b>Wettbewerb</b>). In eine Bewertung fliesst zwar unweigerlich ein Quervergleich ein; daraus folgt aber nicht, dass dieser die Entscheidgrundlage bildet.</p>',
+  artikel: ['BGE 121 I 225', 'Art. 29 Abs. 2 BV', 'Art. 26 VwVG'] },
+
+{ id: 'T10F6', thema: 10, stufe: 6, typ: 'mc',
+  sachverhalt: 'Eine Partei wirft ihre Stellungnahme am letzten Tag der Frist um 23.55 Uhr in einen Briefkasten der Schweizer Post ein und lässt dies von zwei Zeugen handschriftlich bestätigen. Die Rechtsmittelinstanz berücksichtigt die Eingabe nicht.',
+  frage: 'Welches verfahrensrechtliche Recht verletzt die Instanz? (BGE 115 Ia 8)',
+  optionen: [
+    'Den Anspruch auf rechtliches Gehör (Art. 29 Abs. 2 BV) — sie muss dem Beschwerdeführer Gelegenheit geben, bei der Beweiserhebung mitzuwirken oder zumindest zum Ergebnis Stellung zu nehmen; lässt sich die rechtzeitige Übergabe durch Zeugen beweisen, ist die Eingabe rechtzeitig erfolgt',
+    'Das Willkürverbot (Art. 9 BV) — die Beweiswürdigung war offensichtlich unhaltbar',
+    'Die Rechtsweggarantie (Art. 29a BV) — der Zugang zum Gericht wurde verwehrt',
+    'Keines — der Einwurf in den Briefkasten ist stets erst am Folgetag rechtswirksam'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Musterantwort zu Übungsblatt Aufgabe 10. Der Kern liegt beim <b>Beweis</b>: Die Rechtzeitigkeit einer Postaufgabe darf mit <b>Zeugen</b> bewiesen werden — der Poststempel ist nicht das einzige zulässige Beweismittel. Verweigert die Instanz die Mitwirkung an dieser Beweiserhebung oder die Stellungnahme dazu, verletzt sie Art. 29 Abs. 2 BV.</p>' +
+    '<div class="merkbox"><b>Merke:</b> Fristwahrung heisst Übergabe an die Post <b>am letzten Tag</b> — 23.55 Uhr genügt, wenn sie sich beweisen lässt.</div>',
+  artikel: ['BGE 115 Ia 8', 'Art. 29 Abs. 2 BV'] },
+
+/* ==========  THEMA 11: Handlungsformen der Verwaltung (7)  ========== */
+{ id: 'T11F1', thema: 11, stufe: 1, typ: 'zuordnen',
+  frage: 'Ordne die Handlungsformen in das Raster ein: Ist die Anordnung generell oder individuell, abstrakt oder konkret?',
+  optionen: ['Generell-abstrakt', 'Generell-konkret', 'Individuell-konkret'],
+  zeilen: [
+    { links: 'Rechtsverordnung (Rechtssatz)', rechts: 'Generell-abstrakt' },
+    { links: 'Verfügung', rechts: 'Individuell-konkret' },
+    { links: 'Verwaltungsrechtlicher Vertrag', rechts: 'Individuell-konkret' },
+    { links: 'Nutzungs- bzw. Zonenplan', rechts: 'Generell-konkret' },
+    { links: 'Allgemeinverfügung (z. B. Reitverbot entlang der Töss)', rechts: 'Generell-konkret' }
+  ],
+  erklaerung: '<p><b>Das Raster:</b></p>' +
+    '<table class="spick-tabelle"><tr><th></th><th>Generell (unbestimmter Adressatenkreis)</th><th>Individuell (bestimmte Adressaten)</th></tr>' +
+    '<tr><td><b>Abstrakt</b> (unbestimmte Vielzahl von Sachverhalten)</td><td>Rechtsverordnung (Rechtssatz)</td><td>—</td></tr>' +
+    '<tr><td><b>Konkret</b> (einzelner Sachverhalt)</td><td>Plan / Allgemeinverfügung</td><td>Verfügung / verwaltungsrechtlicher Vertrag</td></tr></table>' +
+    '<p>Der <b>Zonenplan</b> ist generell-konkret: Er betrifft konkrete Grundstücke, richtet sich aber an einen offenen Adressatenkreis. Das Feld «individuell-abstrakt» bleibt leer.</p>',
+  artikel: [] },
+
+{ id: 'T11F2', thema: 11, stufe: 2, typ: 'mc',
+  frage: 'Was ist ein <b>Realakt</b>?',
+  optionen: [
+    'Ein Sammelbegriff für Verwaltungsverrichtungen, die nicht auf Rechtswirkungen, sondern auf einen Taterfolg gerichtet sind; er kommt formlos zustande',
+    'Eine einseitige hoheitliche Anordnung, die ein Rechtsverhältnis verbindlich regelt',
+    'Eine verwaltungsinterne Weisung an nachgeordnete Behörden',
+    'Ein Vertrag zwischen dem Gemeinwesen und einem Privaten'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Beispiele: Aktenstudium, Besprechungen, Warnungen, Auskünfte, informelle Absprachen; der Gemeinderat benennt eine Strasse; die Lehrerin zieht Mobiltelefone ein; das Kantonsspital führt eine Obduktion durch; die Steuerabteilung erteilt Auskunft; die Stipendienstelle berät beim Ausfüllen des Antragsformulars.</p>' +
+    '<div class="merkbox"><b>Abgrenzung (Übungsblatt Aufgabe 15):</b> Der Realakt führt einen <b>Taterfolg</b> herbei; die Verfügung ist ein <b>Rechtsakt</b>, der auf die Regelung eines Rechtsverhältnisses abzielt.</div>',
+  artikel: [] },
+
+{ id: 'T11F3', thema: 11, stufe: 3, typ: 'mc',
+  frage: 'Was kennzeichnet die <b>Verwaltungsverordnung</b> («Gesetze der Verwaltung»)?',
+  optionen: [
+    'Sie richtet sich an die Behörden, nicht an die Privaten; sie begründet keine Rechte und Pflichten der Bürger und ist kein Anfechtungsobjekt',
+    'Sie richtet sich an die Allgemeinheit und begründet Rechte und Pflichten der Privaten',
+    'Sie ist eine individuell-konkrete Anordnung gegenüber einem Untergebenen',
+    'Sie ist ein Rechtssatz, der dem Referendum untersteht'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Verwaltungsverordnungen sind verwaltungsinterne <b>Richtlinien, Weisungen und Kreisschreiben</b> — Beispiel: Richtlinien zum Bauen ausserhalb der Bauzone.</p>' +
+    '<div class="merkbox"><b>Nicht verwechseln:</b> Die <b>Rechts</b>verordnung ist ein generell-abstrakter Rechtssatz der Exekutive; sie richtet sich an die <b>Allgemeinheit</b> und begründet Rechte und Pflichten. Die <b>Verwaltungs</b>verordnung wirkt nur nach innen.</div>',
+  artikel: [] },
+
+{ id: 'T11F4', thema: 11, stufe: 4, typ: 'mc',
+  frage: 'Was ist ein <b>Dienstbefehl</b>?',
+  optionen: [
+    'Eine individuell-konkrete Anordnung im Verhältnis zwischen Vorgesetzten und Unterstellten (Sonderstatusverhältnis)',
+    'Eine generell-abstrakte Weisung an alle Angestellten des Gemeinwesens',
+    'Eine an Private gerichtete Anordnung mit unmittelbarer Zwangswirkung',
+    'Ein Realakt, weil er keine Rechtswirkungen entfaltet'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Beispiele aus dem Script: Der leitende Kommandant befiehlt seiner Einheit, wegen einer unbewilligten Demonstration auszurücken; ein Vorgesetzter weist einen Mitarbeiter der Finanzverwaltung an, die zahllosen Pflanzen aus dem Büro zu entfernen (zwei mittelgrosse Topfpflanzen darf er behalten); Marschbefehl.</p>' +
+    '<p>Kennzeichnend ist das <b>Sonderstatusverhältnis</b>: Der Dienstbefehl wirkt im besonderen Rechtsverhältnis zwischen Staat und seinen Angestellten bzw. Angehörigen, nicht gegenüber beliebigen Privaten.</p>',
+  artikel: [] },
+
+{ id: 'T11F5', thema: 11, stufe: 5, typ: 'zuordnen',
+  frage: 'Welche Form von Verwaltungshandeln liegt vor? (Übungsblatt Aufgaben 29 und 30)',
+  optionen: ['Realakt', 'Dienstbefehl', 'Allgemeinverfügung', 'Verfügung mit Suspensivbedingung', 'Verfügung mit Befristung', 'Verfügung mit Auflage'],
+  zeilen: [
+    { links: 'Die Steuerabteilung der Gemeinde A erteilt Herrn B eine Auskunft über die Abzugsfähigkeit von Auslagen', rechts: 'Realakt' },
+    { links: 'Die Lehrerin einer Volksschule zieht zu Beginn der Unterrichtsstunde alle Mobiltelefone ein', rechts: 'Realakt' },
+    { links: 'Der Gemeinderat benennt eine neu gebaute Strasse «Wilhelm Tell»', rechts: 'Realakt' },
+    { links: 'Der Gemeinderat erlässt auf einem 4 km langen Wegstück entlang der Töss ein Reitverbot', rechts: 'Allgemeinverfügung' },
+    { links: 'Ein Mitarbeiter der Finanzverwaltung wird von seinem Vorgesetzten angewiesen, die Pflanzen aus seinem Büro zu entfernen', rechts: 'Dienstbefehl' },
+    { links: 'Die Stipendienstelle spricht einem Studenten ein Stipendium zu, wenn er die Aufnahmeprüfung besteht', rechts: 'Verfügung mit Suspensivbedingung' },
+    { links: 'Eine Abteilungsleiterin in der Bundesverwaltung stellt eine Mitarbeiterin für die Dauer von fünf Jahren ein', rechts: 'Verfügung mit Befristung' }
+  ],
+  erklaerung: '<p>Original-Lösungen des Übungsblatts. Beachte: Die <b>Beratung</b> beim Ausfüllen eines Formulars und die <b>Auskunft</b> sind Realakte — sie regeln kein Rechtsverhältnis. Erst der Entscheid über das Stipendium ist eine <b>Verfügung</b>.</p>' +
+    '<p>Das Einziehen der Mobiltelefone ist ein Realakt (Taterfolg), obwohl es faktisch stark in die Rechte der Schüler eingreift. Die Anstellung für fünf Jahre wird in der Musterlösung als Verfügung mit Befristung bzw. als befristeter Arbeitsvertrag qualifiziert.</p>',
+  artikel: [] },
+
+{ id: 'T11F6', thema: 11, stufe: 6, typ: 'mc',
+  frage: 'Was gilt für den <b>verwaltungsrechtlichen Vertrag</b>?',
+  optionen: [
+    'Er regelt verwaltungsrechtliche Rechtsverhältnisse und ist keine Verfügung: Der Betroffene wirkt mit — es liegt ein zweiseitiges Rechtsgeschäft mit übereinstimmenden Willenserklärungen vor',
+    'Er ist eine besondere Form der Verfügung, bei der die Behörde einseitig anordnet',
+    'Er kommt nur zwischen zwei Gemeinwesen in Frage, nie zwischen Staat und Privaten',
+    'Er untersteht vollumfänglich dem Obligationenrecht'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Zwei Arten:</p>' +
+    '<ul><li><b>Koordinationsrechtlicher Vertrag</b> — zwischen gleichgeordneten Hoheitsträgern.</li>' +
+    '<li><b>Subordinationsrechtlicher Vertrag</b> — zwischen Hoheitsträger und Privatem, z. B. Enteignungsvertrag.</li></ul>' +
+    '<p><b>Abgrenzung (Übungsblatt Aufgabe 15):</b> Die Verfügung ist eine <b>einseitige</b> Anordnung im Einzelfall; der Vertrag beruht auf <b>übereinstimmenden Willenserklärungen</b> zweier Rechtssubjekte. Er kommt dort zum Zug, wo er zweckmässiger erscheint als die einseitige Anordnung.</p>' +
+    '<p>Davon zu unterscheiden ist der <b>zivilrechtliche</b> Vertrag des Gemeinwesens (Kauf von Büromaterial, Miete) — dort gelten OR und ZGB.</p>',
+  artikel: [] },
+
+{ id: 'T11F7', thema: 11, stufe: 7, typ: 'mc',
+  sachverhalt: 'Karl Pechvogel ist Chemielaborant bei der EMPA (Forschungsstelle der ETH). Das Entsorgen nicht mehr benötigter Schwefelsäure gehört zu seinen Arbeitspflichten. In Eile giesst er die Säure aus dem Fenster; sie ergiesst sich auf den Kühler eines Mercedes und löst den Lack ab. Schaden: CHF 2’800.',
+  frage: 'Wie ist die Handlung einzuordnen und worauf kommt es für die Staatshaftung an?',
+  optionen: [
+    'Es handelt sich um einen Realakt; für die Staatshaftung ist entscheidend, dass die Handlung «in Ausübung dienstlicher Verrichtungen» erfolgte (Art. 3 Abs. 1 VG)',
+    'Es handelt sich um eine Verfügung, weil die Entsorgung eine hoheitliche Aufgabe ist',
+    'Es handelt sich um privatrechtliches Handeln; es gilt ausschliesslich Art. 41 OR',
+    'Es handelt sich um einen Dienstbefehl, weil die Entsorgung zu den Arbeitspflichten gehört'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Die EMPA ist eine Forschungsstelle der ETH; die ETH ist eine <b>öffentlich-rechtliche Anstalt des Bundes</b> und nimmt als Verwaltungseinheit Verwaltungsaufgaben wahr. Das Ausgiessen der Säure ist ein <b>Realakt</b> — es zielt auf einen Taterfolg, nicht auf die Regelung eines Rechtsverhältnisses.</p>' +
+    '<p>Für die Erfolgsaussichten einer <b>Staatshaftungsklage</b> ist massgebend, dass die Handlung «in Ausübung dienstlicher Verrichtungen» vorgenommen wurde (Verantwortlichkeitsgesetz, Art. 3 Abs. 1 VG). Die Haftung trifft dann den Bund, nicht den Angestellten persönlich.</p>',
+  artikel: ['Art. 3 VG'] },
+
+/* ==========  THEMA 12: Die Verfügung — Begriff, Elemente & Aufbau (8)  ========== */
+{ id: 'T12F1', thema: 12, stufe: 1, typ: 'mc',
+  frage: 'Wie lautet die Definition der <b>Verfügung</b>?',
+  optionen: [
+    'Ein individueller, an den Einzelnen gerichteter Hoheitsakt, durch den eine konkrete verwaltungsrechtliche Rechtsbeziehung rechtsgestaltend oder feststellend in verbindlicher und erzwingbarer Weise geregelt wird',
+    'Ein generell-abstrakter Rechtssatz, der von der Exekutive erlassen wird',
+    'Eine verwaltungsinterne Weisung an nachgeordnete Behörden',
+    'Eine Verwaltungsverrichtung, die auf einen Taterfolg gerichtet ist'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Die <b>Legaldefinition</b> für das Bundesrecht findet sich in Art. 5 Abs. 1 VwVG: Anordnungen der Behörden im Einzelfall, gestützt auf öffentliches Recht des Bundes, mit denen Rechte oder Pflichten begründet, geändert, aufgehoben oder festgestellt werden — oder mit denen entsprechende Begehren abgewiesen werden bzw. auf sie nicht eingetreten wird.</p>' +
+    '<p>Die anderen Antworten beschreiben die Rechtsverordnung, die Verwaltungsverordnung und den Realakt.</p>',
+  artikel: ['Art. 5 VwVG'] },
+
+{ id: 'T12F2', thema: 12, stufe: 2, typ: 'multi',
+  frage: 'Welche <b>Elemente des materiellen Verfügungsbegriffs</b> nennt der Lerntext?',
+  optionen: [
+    'Hoheitliche, einseitige Anordnung einer Behörde',
+    'Individuell-konkrete Anordnung (kein Rechtssatz)',
+    'Anwendung von Verwaltungsrecht',
+    'Auf Rechtswirkungen ausgerichtete Anordnung (Begründung von Rechten und Pflichten)',
+    'Verbindlichkeit und Erzwingbarkeit, sofern die Verfügung rechtskräftig ist',
+    'Zustimmung der betroffenen Person',
+    'Vorgängige Genehmigung durch eine Aufsichtsbehörde'
+  ],
+  richtig: [0, 1, 2, 3, 4],
+  erklaerung: '<p><b>Einseitigkeit</b> heisst gerade: <b>ohne</b> Zustimmung des Betroffenen rechtswirksam. Die Anordnung kann sich auf ein <b>Tun, Dulden oder Unterlassen</b> beziehen. Hinzu kommt die <b>Form</b> — grundsätzlich schriftlich.</p>' +
+    '<p>Zum Element «Anwendung von Verwaltungsrecht»: Es kommt nicht darauf an, von welcher Behörde die Verfügung ausgeht. Nach herrschender Lehre gilt dies auch für <b>Private</b>, soweit sie in Erfüllung ihnen übertragener öffentlicher Aufgaben handeln (z. B. Krankenkassen).</p>',
+  artikel: ['Art. 5 VwVG'] },
+
+{ id: 'T12F3', thema: 12, stufe: 3, typ: 'zuordnen',
+  frage: 'Ordne die vier <b>Funktionen der Verfügung</b> ihren Beschreibungen zu.',
+  optionen: ['Materiell-rechtliche Funktion', 'Verfahrensrechtliche Funktion', 'Demokratische Funktion', 'Rechtsstaatliche Funktion'],
+  zeilen: [
+    { links: 'Regelung von Verwaltungsrechtsverhältnissen', rechts: 'Materiell-rechtliche Funktion' },
+    { links: 'Anfechtungsobjekt im Rechtsmittelverfahren', rechts: 'Verfahrensrechtliche Funktion' },
+    { links: 'Konkretisierung der Regeln des Gesetz- und Verordnungsgebers und Verwirklichung von deren Zielsetzungen im Einzelfall', rechts: 'Demokratische Funktion' },
+    { links: 'Rechtssicherheit durch ein geregeltes Verfahren zur Sicherstellung von Rechtmässigkeit und Rationalität', rechts: 'Rechtsstaatliche Funktion' }
+  ],
+  erklaerung: '<p>Die Verfügung hat im Verwaltungsrecht zentrale Bedeutung. Besonders praxisrelevant ist die <b>verfahrensrechtliche</b> Funktion: Ohne Verfügung fehlt in der Regel das <b>Anfechtungsobjekt</b> — deshalb ist die Frage «Liegt überhaupt eine Verfügung vor?» oft der erste Prüfungspunkt im Rechtsmittelverfahren.</p>',
+  artikel: ['Art. 5 VwVG'] },
+
+{ id: 'T12F4', thema: 12, stufe: 4, typ: 'mc',
+  frage: 'Können auch <b>Private</b> Verfügungen erlassen?',
+  optionen: [
+    'Ja — nach herrschender Lehre, soweit sie in Erfüllung ihnen übertragener öffentlicher Aufgaben handeln (z. B. Krankenkassen)',
+    'Nein — Verfügungen können ausschliesslich von staatlichen Behörden erlassen werden',
+    'Ja — jeder Private kann verfügen, sofern er ein schutzwürdiges Interesse nachweist',
+    'Nein — Private können nur verwaltungsrechtliche Verträge abschliessen'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Massgebend ist nicht die <b>Rechtsform</b> des Handelnden, sondern die <b>Aufgabe</b>: Wer öffentliche Aufgaben erfüllt und dabei Verwaltungsrecht anwendet, kann verfügen. Klassisches Beispiel sind die <b>Krankenkassen</b> in der obligatorischen Grundversicherung (vgl. Gewährleistungsverwaltung, Thema 2).</p>',
+  artikel: ['Art. 5 VwVG'] },
+
+{ id: 'T12F5', thema: 12, stufe: 5, typ: 'multi',
+  frage: 'Welche Angaben gehören zu den <b>formellen Elementen</b> einer Verfügung?',
+  optionen: [
+    'Bezeichnung der verfügenden Behörde und des Adressaten',
+    'Ort und Datum',
+    'Bezeichnung als Verfügung sowie Betreff',
+    'Sachverhalt, Rechtsgrundlagen und Erwägungen',
+    'Entscheid (Dispositiv) mit sachlicher Anordnung, Kosten und Mitteilung',
+    'Rechtsmittelbelehrung sowie Absender und Unterschrift',
+    'Eine eigenhändige Unterschrift des zuständigen Regierungsrats',
+    'Eine Kopie an das Bundesgericht'
+  ],
+  richtig: [0, 1, 2, 3, 4, 5],
+  erklaerung: '<p>Aufbau nach dem Lerntext: <b>Verfügende Behörde — Adressat — Ort, Datum · Bezeichnung als Verfügung — Betreff · Sachverhalt — Rechtsgrundlagen — Erwägungen · Entscheid (Dispositiv: a. sachliche Anordnung, b. Kosten, c. Mitteilung) · Rechtsmittelbelehrung — Absender, Unterschrift.</b></p>' +
+    '<p>Die <b>Eigenhändigkeit</b> der Unterschrift ist nicht erforderlich. Zulässig sind auch andere Bezeichnungen als «Verfügung» — etwa «-ausweis», «Bewilligung» oder «-schein». Die Verfügung wird in der Amtssprache des jeweiligen Kantons erlassen.</p>',
+  artikel: ['Art. 34 VwVG', 'Art. 35 VwVG', '§ 10 VRG ZH'] },
+
+{ id: 'T12F6', thema: 12, stufe: 6, typ: 'reihenfolge',
+  frage: 'Bringe die Bestandteile einer Verfügung in die richtige Reihenfolge (Prüfungsschema zum Verfassen einer Verfügung).',
+  items: [
+    'Verfügungskopf (verfügende Behörde, Adressat, Ort und Datum)',
+    'Verfügungstitel',
+    'Sachverhalt',
+    'Gesetzliche Grundlagen',
+    'Erwägungen (Subsumtion)',
+    'Dispositiv',
+    'Rechtsmittelbelehrung',
+    'Mitteilungssatz und Unterschrift'
+  ],
+  anzeige: [2, 0, 5, 3, 7, 1, 6, 4],
+  erklaerung: '<p>Dieses Schema (Kopf — Titel — Sachverhalt — Rechtsgrundlagen — Erwägungen — Dispositiv — Rechtsmittelbelehrung — Mitteilung) ist das <b>Prüfungsschema für das Verfassen einer Verfügung</b> (Übungsblatt Aufgabe 31, Fall «Muster AG»).</p>' +
+    '<div class="merkbox"><b>Merkhilfe:</b> Erst <i>wer an wen</i>, dann <i>worum es geht</i>, dann <i>was passiert ist</i>, dann <i>welche Normen gelten</i>, dann <i>warum</i> — und erst am Schluss <i>was gilt</i> und <i>wie man sich wehrt</i>.</div>',
+  artikel: ['§ 10 VRG ZH', 'Art. 35 VwVG'] },
+
+{ id: 'T12F7', thema: 12, stufe: 7, typ: 'multi',
+  frage: 'Welche Aussagen zu <b>Begründung, Dispositiv und Rechtsmittelbelehrung</b> treffen zu?',
+  optionen: [
+    'Das Dispositiv (Verfügungsformel) enthält den Entscheid über Rechte und Pflichten sowie die Kostenregelung — z. B. «Die Bewilligung wird erteilt» oder «Auf das Gesuch wird nicht eingetreten»',
+    'Die Rechtsmittelbelehrung nennt das zulässige ordentliche Rechtsmittel, die Rechtsmittelinstanz und die Frist',
+    'Aus mangelhafter Eröffnung darf den Parteien kein Nachteil erwachsen (Art. 38 VwVG)',
+    'Im Kanton Zürich kann auf die Begründung verzichtet werden, wenn dem Begehren der betroffenen Person vollumfänglich entsprochen wird (§ 10a VRG ZH)',
+    'Der Mitteilungssatz bestimmt, wem die Verfügung zugestellt bzw. eröffnet wird',
+    'Fehlt die Rechtsmittelbelehrung, ist die Verfügung stets nichtig',
+    'Die Begründung darf immer weggelassen werden, wenn die Behörde unter Zeitdruck steht'
+  ],
+  richtig: [0, 1, 2, 3, 4],
+  erklaerung: '<p>Eine <b>mangelhafte Eröffnung</b> — etwa eine fehlende oder falsche Rechtsmittelbelehrung — macht die Verfügung nicht nichtig. Sie darf aber den Parteien nicht zum Nachteil gereichen (Art. 38 VwVG): Typische Folge ist die <b>Wiederherstellung der Frist</b> (Verbindung zum Vertrauensschutz, Thema 8).</p>' +
+    '<p>Der Begründungsverzicht nach § 10a VRG ZH ist die einzige im Lerntext genannte Ausnahme — und er greift nur, wenn dem Begehren <b>vollumfänglich</b> entsprochen wird. Dann fehlt schlicht die Beschwer.</p>',
+  artikel: ['Art. 35 VwVG', 'Art. 38 VwVG', '§ 10 VRG ZH', '§ 10a VRG ZH'] },
+
+{ id: 'T12F8', thema: 12, stufe: 8, typ: 'multi',
+  sachverhalt: 'Die Muster AG lagert auf ihrem ausserhalb des Baugebiets gelegenen Grundstück Produktionsabfälle ab. Die mündliche Aufforderung des Bauverwalters vom 10.10.2019 blieb erfolglos (Kontrolle vom 22.1.2020). Die Gemeinde erlässt eine Verfügung. (Übungsblatt Aufgabe 31)',
+  frage: 'Welche Elemente gehören nach der Musterlösung in diese Verfügung?',
+  optionen: [
+    'Als gesetzliche Grundlagen u. a. Art. 30e USG (Ablagerung nur auf bewilligten Deponien) und die Bestimmungen des kantonalen Abfallgesetzes',
+    'Im Dispositiv die Pflicht zur Entfernung und ordnungsgemässen Entsorgung bis zu einem bestimmten Datum, bei Säumnis Ersatzvornahme auf Kosten der Muster AG',
+    'Die Androhung der Bestrafung nach Art. 292 StGB für die Berichterstattungspflicht',
+    'Eine Gebühr für die Verfügung, gestützt auf das kommunale Gebührenreglement',
+    'Eine Rechtsmittelbelehrung mit Frist, Antrag und Begründungserfordernis',
+    'Eine sofortige Verhaftung des Verwaltungsrats der Muster AG',
+    'Ein Antrag an das Bundesgericht auf Genehmigung der Verfügung'
+  ],
+  richtig: [0, 1, 2, 3, 4],
+  erklaerung: '<p>Kern der Musterlösung: Die Ablagerung verstösst gegen Bundes- und kantonales Umweltrecht (Art. 30e USG; § 14 Abs. 1 AbfG ZH: Verbot des Ablagerns im Freien; § 17 Abs. 1 AbfG ZH: Behandlungs- und Kostentragungspflicht des Abfallinhabers; § 39 AbfG ZH: Busse bis CHF 50’000).</p>' +
+    '<p><b>Zwei Vollstreckungsinstrumente</b> stehen nebeneinander: die <b>Ersatzvornahme</b> (exekutorisch — ein Fachunternehmen entsorgt auf Kosten der Muster AG) und die <b>Strafandrohung nach Art. 292 StGB</b> (repressiv — Druckmittel für die Berichterstattung). Die Fristansetzung ist Ausfluss der Verhältnismässigkeit.</p>',
+  artikel: ['Art. 30e USG', 'Art. 292 StGB', 'Art. 41 VwVG', 'Art. 5 Abs. 2 BV'] },
+
+/* ==========  THEMA 13: Nebenbestimmungen, Fehler & Vollstreckung (8)  ========== */
+{ id: 'T13F1', thema: 13, stufe: 1, typ: 'mc',
+  frage: 'Wie lautet der Merksatz zur Unterscheidung von <b>Auflage</b> und <b>Bedingung</b>?',
+  optionen: [
+    'Die Bedingung suspendiert, zwingt aber nicht. Die Auflage zwingt, suspendiert aber nicht.',
+    'Die Auflage suspendiert, zwingt aber nicht. Die Bedingung zwingt, suspendiert aber nicht.',
+    'Beide suspendieren die Verfügung bis zur Erfüllung.',
+    'Beide sind selbständig anfechtbar, wirken sich aber nie auf die Gültigkeit aus.'
+  ],
+  richtig: 0,
+  erklaerung: '<p><b>Auflage:</b> Sie zwingt den Adressaten zu einem Tun, Dulden oder Unterlassen. Hält er sich nicht daran, bleibt die Verfügung <b>gültig</b> — die Auflage kann aber separat durchgesetzt und vollstreckt werden, vor allem mittels <b>Ersatzvornahme</b>. Die Verletzung kann zudem als Ungehorsam nach Art. 292 StGB verfolgt werden.</p>' +
+    '<p><b>Bedingung:</b> Ein in der Zukunft liegendes, ungewisses Ereignis, das sich <b>ohne weiteres Zutun</b> auf die Gültigkeit der Verfügung auswirkt.</p>',
+  artikel: ['Art. 292 StGB'] },
+
+{ id: 'T13F2', thema: 13, stufe: 2, typ: 'zuordnen',
+  frage: 'Welche Nebenbestimmung bzw. welche Art von Verfügung liegt vor? (Übungsblatt Aufgaben 28 und 29)',
+  optionen: ['Auflage', 'Aufschiebende Bedingung (Suspensivbedingung)', 'Auflösende Bedingung (Resolutivbedingung)', 'Befristung', 'Allgemeinverfügung', 'Feststellungsverfügung'],
+  zeilen: [
+    { links: 'Die Baubewilligung erlischt bei Nichtgebrauch nach einem Jahr seit ihrer Rechtskraft', rechts: 'Befristung' },
+    { links: 'Die Baubewilligung erlangt erst Gültigkeit, wenn das Grundstück mit der Kanalisation erschlossen ist', rechts: 'Aufschiebende Bedingung (Suspensivbedingung)' },
+    { links: 'Die Bauherrin muss für die wöchentliche Reinigung der verschmutzten Zufahrtsstrasse sorgen', rechts: 'Auflage' },
+    { links: 'Der Führerausweis trägt den Vermerk «(01) Muss Brille oder Kontaktlinsen tragen»', rechts: 'Auflage' },
+    { links: 'Ein Mitarbeiter des Bundes wird für die Dauer von vier Jahren angestellt', rechts: 'Befristung' },
+    { links: 'Im Bundesblatt stellt die Bundeskanzlei fest: «Die eingereichte Initiative entspricht den gesetzlichen Anforderungen.»', rechts: 'Feststellungsverfügung' },
+    { links: 'Der Gemeinderat erlässt auf einem 4 km langen Wegstück entlang der Töss ein Reitverbot', rechts: 'Allgemeinverfügung' }
+  ],
+  erklaerung: '<p>Original-Lösungen des Übungsblatts. Die <b>Befristung</b> ist eine Sonderform der Resolutivbedingung, bei welcher der Endtermin <b>gewiss</b> ist.</p>' +
+    '<p>Beim Stipendium («wird zugesprochen, wenn die Aufnahmeprüfung bestanden wird; entfällt bei Nichtbestehen») nennt die Musterlösung die <b>Suspensivbedingung</b>. Die <b>Feststellungsverfügung</b> stellt Bestand, Nichtbestand oder Umfang von Rechten und Pflichten verbindlich fest (Art. 25 VwVG).</p>',
+  artikel: ['Art. 25 VwVG'] },
+
+{ id: 'T13F3', thema: 13, stufe: 3, typ: 'mc',
+  frage: 'Worin unterscheidet sich eine <b>fehlerhafte</b> von einer <b>nichtigen</b> Verfügung?',
+  optionen: [
+    'Die fehlerhafte Verfügung ist grundsätzlich gültig und muss mit dem ordentlichen Rechtsmittel angefochten werden; die nichtige Verfügung ist von Anfang an unwirksam, und die Nichtigkeit ist an keine Frist gebunden',
+    'Die fehlerhafte Verfügung ist von Anfang an unwirksam; die nichtige Verfügung muss angefochten werden',
+    'Beide sind unwirksam, die nichtige aber erst ab Feststellung durch das Gericht',
+    'Es besteht kein praktischer Unterschied — beide entfalten keine Rechtswirkungen'
+  ],
+  richtig: 0,
+  erklaerung: '<div class="merkbox"><b>Grundregel:</b> Fehlerhafte Verfügungen sind in der Regel bloss <b>anfechtbar</b> und nur ausnahmsweise nichtig.</div>' +
+    '<p>Die fehlerhafte Verfügung entfaltet ihre volle Rechtswirksamkeit und ist vollstreckbar, sofern der Mangel nicht mit dem ordentlichen Rechtsmittel gerügt wird. Wird die Frist verpasst, wird sie rechtskräftig — trotz des Fehlers.</p>' +
+    '<p>Nichtige Verfügungen sind gänzlich unbeachtlich und als nie entstanden zu betrachten. Die Nichtigkeit kann <b>jederzeit</b> und von <b>jedermann</b> geltend gemacht werden; die Behörde hat sie von Amtes wegen zu berücksichtigen.</p>',
+  artikel: [] },
+
+{ id: 'T13F4', thema: 13, stufe: 4, typ: 'multi',
+  frage: 'Wann ist eine Verfügung nach der <b>Evidenztheorie</b> nichtig? (kumulative Voraussetzungen)',
+  optionen: [
+    'Der Mangel ist besonders schwer (z. B. sachliche oder funktionelle Unzuständigkeit, schwerste Verfahrens- oder Eröffnungsfehler)',
+    'Der Mangel ist offensichtlich oder zumindest leicht erkennbar',
+    'Die Rechtssicherheit wird durch die Annahme der Nichtigkeit nicht ernsthaft gefährdet',
+    'Der Mangel wurde innert 30 Tagen gerügt',
+    'Die Verfügung wurde nicht amtlich publiziert',
+    'Die Verfügung belastet den Adressaten finanziell'
+  ],
+  richtig: [0, 1, 2],
+  erklaerung: '<p>Drei kumulative Voraussetzungen. Die dritte ist die eigentliche Bremse: Selbst bei schwerem und offensichtlichem Mangel wird keine Nichtigkeit angenommen, wenn dadurch die Rechtssicherheit ernsthaft gefährdet würde (z. B. bei bereits vollzogenen, weitreichenden Verhältnissen).</p>' +
+    '<p>Eine <b>Rügefrist</b> gibt es gerade nicht — das ist der zentrale Unterschied zur Anfechtbarkeit.</p>',
+  artikel: [] },
+
+{ id: 'T13F5', thema: 13, stufe: 5, typ: 'zuordnen',
+  frage: 'Welche der folgenden Verfügungen können <b>nachträglich fehlerhaft</b> werden? (Übungsblatt Aufgabe 22)',
+  optionen: ['Ja — Dauerrechtsverhältnis', 'Nein — abgeschlossener Einzelakt'],
+  zeilen: [
+    { links: 'Ablehnung des Gesuchs betreffend eine Baubewilligung', rechts: 'Nein — abgeschlossener Einzelakt' },
+    { links: 'Ordnungsbusse wegen Überschreitens der zulässigen Parkzeit', rechts: 'Nein — abgeschlossener Einzelakt' },
+    { links: 'Verfügung zur Bestimmung des Pensionsanspruchs', rechts: 'Ja — Dauerrechtsverhältnis' }
+  ],
+  erklaerung: '<p><b>Ursprüngliche Fehlerhaftigkeit:</b> Die Verfügung ist schon im Zeitpunkt ihres Erlasses mit einem Rechtsfehler behaftet.</p>' +
+    '<p><b>Nachträgliche Fehlerhaftigkeit:</b> Der Mangel tritt erst nach dem Verfügungserlass ein — durch eine Änderung der tatsächlichen oder rechtlichen Verhältnisse.</p>' +
+    '<div class="merkbox"><b>Merke:</b> Nachträgliche Fehlerhaftigkeit kann <b>nur</b> bei Verfügungen vorkommen, die ein <b>Dauerrechtsverhältnis</b> regeln. Ein einmaliger, abgeschlossener Akt (Bussenverfügung, Ablehnung eines Baugesuchs) kann nicht nachträglich fehlerhaft werden.</div>',
+  artikel: [] },
+
+{ id: 'T13F6', thema: 13, stufe: 6, typ: 'mc',
+  frage: 'Was gilt für den <b>Widerruf</b> einer formell rechtskräftigen Verfügung?',
+  optionen: [
+    'Es sind das Interesse an der richtigen Durchführung des objektiven Rechts und das Interesse am Vertrauensschutz gegeneinander abzuwägen; in der Regel ausgeschlossen ist der Widerruf bei subjektiven Rechten, bei allseitiger Interessenprüfung im Verfahren und wenn der Private von der Befugnis bereits Gebrauch gemacht hat',
+    'Ein Widerruf ist nach Ablauf der Rechtsmittelfrist ausnahmslos ausgeschlossen',
+    'Ein Widerruf ist jederzeit und voraussetzungslos zulässig, weil die Verwaltung an das objektive Recht gebunden ist',
+    'Ein Widerruf ist nur zulässig, wenn der Private zustimmt'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Der Lerntext unterscheidet zwei Fragen:</p>' +
+    '<ul><li><b>Wiedererwägung</b> (verfahrensrechtliche Phase): Bestehen ausreichende Gründe, um auf die formell rechtskräftige Verfügung überhaupt zurückzukommen?</li>' +
+    '<li><b>Widerruf</b>: Bestehen ausreichende Gründe für die Aufhebung der formell rechtskräftigen Verfügung?</li></ul>' +
+    '<p>Massgebend ist BGE 137 I 69. Die drei «in der Regel»-Ausschlussgründe können durch ein besonders gewichtiges öffentliches Interesse durchbrochen werden.</p>',
+  artikel: ['BGE 137 I 69', 'Art. 9 BV'] },
+
+{ id: 'T13F7', thema: 13, stufe: 7, typ: 'zuordnen',
+  frage: 'Ordne die Vollstreckungsmittel zu: Handelt es sich um eine exekutorische oder eine repressive Sanktion?',
+  optionen: ['Exekutorische Sanktion', 'Repressive Sanktion'],
+  zeilen: [
+    { links: 'Ersatzvornahme — die Behörde lässt die verweigerte Handlung auf Kosten des Pflichtigen durch einen Dritten erledigen', rechts: 'Exekutorische Sanktion' },
+    { links: 'Unmittelbarer Zwang gegenüber dem Pflichtigen (meist durch die Polizei)', rechts: 'Exekutorische Sanktion' },
+    { links: 'Vollstreckung einer Geldforderung auf dem Weg der Schuldbetreibung', rechts: 'Exekutorische Sanktion' },
+    { links: 'Bestrafung wegen Ungehorsams gegen amtliche Verfügungen nach Art. 292 StGB', rechts: 'Repressive Sanktion' },
+    { links: 'Verwaltungsstrafen (Geld- oder Freiheitsstrafe) nach den anwendbaren Verwaltungsgesetzen', rechts: 'Repressive Sanktion' },
+    { links: 'Disziplinarstrafen bei Personen in einem besonderen Rechtsverhältnis zum Staat', rechts: 'Repressive Sanktion' }
+  ],
+  erklaerung: '<p>Musterantwort zu Übungsblatt Aufgabe 27:</p>' +
+    '<ul><li><b>Exekutorische</b> Sanktionen bezwecken die Aufrechterhaltung oder Wiederherstellung der gesetzlichen Ordnung — sie setzen die Pflicht <b>unmittelbar</b> durch.</li>' +
+    '<li><b>Repressive</b> Sanktionen sollen zur Beachtung der Rechtsordnung <b>anhalten</b> — sie üben Druck aus, vollziehen die Pflicht aber nicht selbst.</li></ul>' +
+    '<p>Wird eine vollstreckbare Verfügung nicht freiwillig befolgt, muss sie aus Gründen der Gesetzmässigkeit, Rechtssicherheit und Rechtsgleichheit <b>von Amtes wegen</b> durchgesetzt werden. Aus Gründen der Verhältnismässigkeit setzt die Behörde vorgängig in der Regel eine Frist zur Erfüllung an.</p>',
+  artikel: ['Art. 41 VwVG', 'Art. 292 StGB', 'Art. 38 SchKG'] },
+
+{ id: 'T13F8', thema: 13, stufe: 8, typ: 'multi',
+  sachverhalt: 'Die allgemeine Schulordnung des Kantons X kennt keine Regeln über das Rauchen auf Schulanlagen. Die Schulleitung der Sekundarschule Z. verhängt ein Rauchverbot für alle Schülerinnen und Schüler auf dem Schulgelände. (Übungsblatt Aufgabe 26)',
+  frage: 'Welche Aussagen treffen zu?',
+  optionen: [
+    'Das Rauchverbot ist eine Allgemeinverfügung: Der Adressatenkreis ist offen (Mutationen im Schülerbestand, unbestimmte Geltungsdauer), das Anordnungsobjekt aber bestimmt',
+    'Die Allgemeinverfügung ist generell-konkret: Sie richtet sich an einen unbestimmten Personenkreis, regelt aber einen örtlich und zeitlich eng begrenzten Einzelfall',
+    'Die Betroffenen müssen vor Erlass nicht angehört werden; die Publikation wie bei einem Rechtssatz genügt',
+    'Es besteht eine amtliche Publikationspflicht, weil die Allgemeinverfügung teilweise den Charakter eines Erlasses aufweist',
+    'Allgemeinverfügungen sind anfechtbar und werden prozessual den Individualverfügungen gleichgestellt; eine Rechtsmittelbelehrung ist erforderlich',
+    'Das Verbot ist rechtmässig: Es ist mit dem Anstaltszweck (Bildungsauftrag) und einem geordneten Anstaltsbetrieb vereinbar und verhältnismässig',
+    'Das Rauchverbot ist eine Rechtsverordnung, weil es generell-abstrakt gilt',
+    'Das Rauchverbot ist nichtig, weil die Schulordnung des Kantons dazu schweigt'
+  ],
+  richtig: [0, 1, 2, 3, 4, 5],
+  erklaerung: '<p>Die <b>Allgemeinverfügung</b> ist der Zwitter zwischen Rechtssatz und Verfügung: Beim <b>Adressatenkreis</b> verhält sie sich wie ein Erlass (deshalb Publikationspflicht statt Anhörung), beim <b>Regelungsgegenstand</b> wie eine Verfügung (deshalb Anfechtbarkeit mit Rechtsmittelbelehrung).</p>' +
+    '<p>Weitere Beispiele: örtliche Verkehrsregelungen, Typengenehmigungen, das Reitverbot auf 4 km entlang der Töss.</p>' +
+    '<p>Keine Rechtsverordnung: Der Sachverhalt ist <b>konkret</b> (Rauchverbot auf einem bestimmten Areal), nicht abstrakt. Und keine Nichtigkeit: Das Verbot hält sich im Rahmen des Anstaltszwecks.</p>',
+  artikel: ['Art. 29 Abs. 2 BV', 'Art. 5 Abs. 2 BV'] },
+
+/* ==========  THEMA 14: Bewilligungen, Konzessionen & Subventionen (8)  ========== */
+{ id: 'T14F1', thema: 14, stufe: 1, typ: 'mc',
+  frage: 'Was ist eine <b>Bewilligung</b> und welchen Zweck verfolgt sie?',
+  optionen: [
+    'Eine Verfügung, die es einer Privatperson erlaubt, eine bestimmte, gesetzlich geregelte Tätigkeit auszuüben; Zweck ist die präventive behördliche Kontrolle zum Schutz öffentlicher Interessen',
+    'Ein Vertrag, mit dem der Staat einem Privaten ein Monopolrecht überträgt',
+    'Eine nicht rückzahlbare Geldleistung zur Unterstützung einer Tätigkeit im öffentlichen Interesse',
+    'Eine verwaltungsinterne Weisung, mit der eine Tätigkeit freigegeben wird'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Musterantwort zu Übungsblatt Aufgabe 32. Der Kern ist die <b>präventive Kontrolle</b>: Der Staat schaut <b>vorher</b> hin, statt erst nachträglich einzuschreiten.</p>' +
+    '<p>Die anderen Antworten beschreiben die <b>Konzession</b>, die <b>Subvention</b> und die Verwaltungsverordnung.</p>',
+  artikel: ['Art. 5 VwVG'] },
+
+{ id: 'T14F2', thema: 14, stufe: 2, typ: 'multi',
+  frage: 'Welche Voraussetzungen müssen für das Statuieren einer <b>Bewilligungspflicht</b> vorliegen — und welche Ausnahmen bestehen?',
+  optionen: [
+    'Die Bewilligungspflicht muss in einem Gesetz im formellen Sinn vorgesehen sein',
+    'Es muss ein öffentliches Interesse an der Bewilligungspflicht bestehen',
+    'Die Bewilligungspflicht muss verhältnismässig sein (geeignet, erforderlich, zumutbar)',
+    'Ausnahmsweise kann auf die formell-gesetzliche Grundlage verzichtet werden im Anwendungsbereich der polizeilichen Generalklausel',
+    'Ausnahmsweise kann darauf verzichtet werden bei der Sachherrschaft des Gemeinwesens über öffentliche Sachen im Gemeingebrauch',
+    'Die Bewilligungspflicht muss vom Bundesrat genehmigt werden',
+    'Die Bewilligungspflicht darf höchstens zehn Jahre gelten'
+  ],
+  richtig: [0, 1, 2, 3, 4],
+  erklaerung: '<p>Die Bewilligungspflicht schränkt regelmässig Grundrechte ein — namentlich die <b>Wirtschaftsfreiheit</b> (Art. 27 BV). Deshalb sind die Voraussetzungen von <b>Art. 36 BV</b> einzuhalten.</p>' +
+    '<p>Die beiden Ausnahmen stammen aus der Musterlösung zu Übungsblatt Aufgabe 33. Beispiel für die zweite: die Bewilligung für den <b>gesteigerten Gemeingebrauch</b> einer Strasse (Marktstand, Demonstration, Baustelleninstallation).</p>',
+  artikel: ['Art. 36 BV', 'Art. 27 BV'] },
+
+{ id: 'T14F3', thema: 14, stufe: 3, typ: 'zuordnen',
+  frage: 'Ordne die Beispiele den <b>Bewilligungsarten</b> zu.',
+  optionen: ['Personenbezogene Bewilligung', 'Sachbezogene Bewilligung', 'Ermessensbewilligung', 'Ausnahmebewilligung', 'Ordentliche Bewilligung (Polizeibewilligung)'],
+  zeilen: [
+    { links: 'Führerausweis, Jagdpatent, Skilehrerpatent, Waffenerwerbsschein', rechts: 'Personenbezogene Bewilligung' },
+    { links: 'Fahrzeugausweis', rechts: 'Sachbezogene Bewilligung' },
+    { links: 'Aufenthaltsbewilligung — die Erteilung steht im Ermessen der Behörde', rechts: 'Ermessensbewilligung' },
+    { links: 'Bewilligung für Bauten ausserhalb der Bauzone (Art. 24 RPG)', rechts: 'Ausnahmebewilligung' },
+    { links: 'Baubewilligung innerhalb der Bauzone', rechts: 'Ordentliche Bewilligung (Polizeibewilligung)' }
+  ],
+  erklaerung: '<p><b>Personenbezogene</b> Bewilligungen knüpfen an persönliche Anforderungen an und sind grundsätzlich <b>nicht übertragbar</b>, weil sie mit den persönlichen Eigenschaften des Inhabers verknüpft sind. <b>Sachbezogene</b> Bewilligungen knüpfen an das Sachobjekt an und können in der Regel <b>mit der Sache</b> auf Dritte übertragen werden (Fahrzeugausweis, Baubewilligung).</p>' +
+    '<p>Die <b>Ausnahmebewilligung</b> gestattet eine Abweichung vom gesetzlichen Verbot und braucht dafür eine gesetzliche Grundlage. Weiter kennt der Lerntext die <b>Bewilligung mit Rechtsanspruch</b> (Halten gefährlicher Hunde) und die <b>Dauerbewilligung</b> (Rente).</p>',
+  artikel: ['Art. 24 RPG', 'Art. 22 RPG'] },
+
+{ id: 'T14F4', thema: 14, stufe: 4, typ: 'mc',
+  frage: 'Was versteht man unter einer <b>Polizeibewilligung</b>?',
+  optionen: [
+    'Eine Bewilligung, die dem Schutz der Polizeigüter dient — erfüllt der Gesuchsteller die gesetzlichen Voraussetzungen, hat er Anspruch auf Erteilung (z. B. Baubewilligung)',
+    'Eine Bewilligung, deren Erteilung stets im freien Ermessen der Polizei steht',
+    'Eine Bewilligung, die nur von der Kantonspolizei erteilt werden darf',
+    'Eine Bewilligung, die eine Abweichung von einem gesetzlichen Verbot gestattet'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Musterantwort zu Übungsblatt Aufgabe 35: Die Polizeibewilligung dient dem Schutz der <b>Polizeigüter</b> (insbesondere öffentliche Sicherheit und Ordnung). Der zentrale Punkt für die Prüfung: Bei Erfüllung der Voraussetzungen besteht ein <b>Rechtsanspruch</b> auf Erteilung — die Behörde hat kein Entschliessungsermessen.</p>' +
+    '<p>Der Gegensatz ist die <b>Ermessensbewilligung</b> (Aufenthaltsbewilligung). Die letzte Antwort beschreibt die <b>Ausnahmebewilligung</b>.</p>',
+  artikel: ['Art. 22 RPG'] },
+
+{ id: 'T14F5', thema: 14, stufe: 5, typ: 'mc',
+  frage: 'Wie lautet die Definition der <b>Konzession</b>?',
+  optionen: [
+    'Die Verleihung eines Rechts zur Ausübung einer monopolisierten Tätigkeit oder zur Sondernutzung einer öffentlichen Sache',
+    'Die Erlaubnis, eine gesetzlich geregelte, grundsätzlich jedermann offenstehende Tätigkeit auszuüben',
+    'Eine zweckgebundene Geldleistung des Gemeinwesens an einen Privaten',
+    'Die Übertragung einer Verwaltungsaufgabe zur eigenständigen hoheitlichen Erfüllung'
+  ],
+  richtig: 0,
+  erklaerung: '<p>Mit der Konzession überträgt der Staat einer Drittperson ein Recht zur Ausübung einer wirtschaftlichen Tätigkeit, die grundsätzlich dem Gemeinwesen vorbehalten ist, weil dieses über ein <b>Monopol</b> verfügt. Als Gegenleistung bezahlt die Drittperson eine <b>Konzessionsgebühr</b>.</p>' +
+    '<ul><li><b>Monopolkonzession:</b> Recht zur Ausübung einer dem Staat vorbehaltenen Tätigkeit — z. B. Wasserkraftnutzung, früher das Salzregal.</li>' +
+    '<li><b>Sondernutzungskonzession:</b> Recht zur ausschliesslichen Benutzung einer öffentlichen Sache — z. B. Bootssteg an einem öffentlichen Gewässer.</li></ul>' +
+    '<div class="merkbox"><b>Abgrenzung zur Bewilligung:</b> Die Bewilligung erlaubt eine Tätigkeit, die grundsätzlich jedermann offensteht (Kontrolle). Die Konzession <b>verleiht</b> ein Recht, das sonst niemand hat.</div>',
+  artikel: [] },
+
+{ id: 'T14F6', thema: 14, stufe: 6, typ: 'multi',
+  frage: 'Welche <b>Pflichten</b> treffen den Konzessionär? (Übungsblatt Aufgabe 38)',
+  optionen: [
+    'Ausübungspflicht, sofern an der Ausübung ein öffentliches Interesse besteht',
+    'Abgabepflicht durch Bezahlung der Konzessionsgebühr an das Gemeinwesen',
+    'Duldung der Aufsicht durch die Konzessionsbehörde',
+    'Pflicht zur Beschäftigung von Personal des Gemeinwesens',
+    'Pflicht zur jährlichen Gewinnablieferung an den Bund'
+  ],
+  richtig: [0, 1, 2],
+  erklaerung: '<p>Drei Pflichten: <b>Ausübungspflicht</b>, <b>Abgabepflicht</b>, <b>Duldung der Aufsicht</b>. Im Script stehen sie unter dem Titel «Subventionen» — inhaltlich gehören sie zu den Konzessionen.</p>',
+  artikel: [] },
+
+{ id: 'T14F7', thema: 14, stufe: 7, typ: 'mc',
+  frage: 'Welche <b>staatlichen Monopole</b> werden unterschieden? (Übungsblatt Aufgabe 36)',
+  optionen: [
+    'Rechtliche Monopole (beruhen auf einem Rechtssatz) und faktische Monopole (ergeben sich aus den tatsächlichen Gegebenheiten, insbesondere aus der Sachherrschaft des Gemeinwesens über eine öffentliche Sache)',
+    'Nationale und kantonale Monopole',
+    'Befristete und unbefristete Monopole',
+    'Wirtschaftliche und polizeiliche Monopole'
+  ],
+  richtig: 0,
+  erklaerung: '<p><b>Rechtliche Monopole</b> beruhen auf einem Rechtssatz — der Gesetzgeber behält eine Tätigkeit dem Staat vor. <b>Faktische Monopole</b> ergeben sich aus den tatsächlichen Gegebenheiten, namentlich aus der <b>Sachherrschaft</b> des Gemeinwesens über eine öffentliche Sache (z. B. der öffentliche Grund selbst).</p>' +
+    '<p>Diese Unterscheidung hängt mit Thema 3 und 14 zusammen: Bei der Sachherrschaft über öffentliche Sachen im Gemeingebrauch kann ausnahmsweise auf die formell-gesetzliche Grundlage verzichtet werden.</p>',
+  artikel: ['Art. 27 BV'] },
+
+{ id: 'T14F8', thema: 14, stufe: 8, typ: 'multi',
+  frage: 'Welche Aussagen zur <b>Subvention</b> treffen zu?',
+  optionen: [
+    'Subventionen sind nicht rückzahlbare, zweckgebundene Geld- oder geldwerte Leistungen eines Gemeinwesens an Dritte',
+    'Die Empfänger üben eine eigene, selbst gewählte Tätigkeit aus, die zusätzlich im öffentlichen Interesse liegt',
+    'Die Leistung des Gemeinwesens erfolgt ohne marktübliche Gegenleistung',
+    'Mit der Subvention wird eine gewisse Verhaltenslenkung beim Empfänger bezweckt',
+    'Zu unterscheiden sind Anspruchssubventionen und Ermessenssubventionen',
+    'Der Empfänger übt eine Tätigkeit aus, die dem Staat vorbehalten ist und ihm verliehen wird',
+    'Subventionen müssen bei Zweckerreichung zurückbezahlt werden'
+  ],
+  richtig: [0, 1, 2, 3, 4],
+  erklaerung: '<p>Beispiele: Unterstützung der medizinischen Forschung, Direktzahlungen an Landwirte für Erhalt und Pflege von Kulturland, Unterstützung der einheimischen Produktion.</p>' +
+    '<p>Auf Bundesebene regelt das <b>Subventionsgesetz</b> (SuG, SR 616.1) die Finanzhilfen und Abgeltungen. <b>Anspruchssubventionen</b> begründen bei Erfüllung der gesetzlichen Voraussetzungen einen Rechtsanspruch; <b>Ermessenssubventionen</b> stehen im Ermessen der Behörde und meist unter Kreditvorbehalt.</p>' +
+    '<div class="merkbox"><b>Drei Institute auseinanderhalten:</b> Die <b>Bewilligung</b> kontrolliert eine Tätigkeit präventiv · die <b>Konzession</b> verleiht ein Recht, das sonst niemand hat · die <b>Subvention</b> fördert eine selbst gewählte Tätigkeit finanziell.</div>',
+  artikel: [] }
+
+];
+
+/* =====================  APP-LOGIK  ===================== */
+const KEY = 'verwaltungsrecht-lernprogramm-v1';
+
+function ladeStore() {
+  try { return JSON.parse(localStorage.getItem(KEY)) || { status: {} }; }
+  catch (e) { return { status: {} }; }
+}
+let store = ladeStore();
+function speichern() {
+  try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) { /* z. B. Privatmodus: Fortschritt bleibt nur in dieser Sitzung */ }
+}
+
+const session = {};
+function sess(q) {
+  if (!session[q.id]) session[q.id] = { sel: null, set: new Set(), zuord: {}, ordnung: [], perm: null, hilfe: false, korrekt: false, geprueft: false, loesungOffen: false };
+  return session[q.id];
+}
+
+/* Zufällige Anzeigereihenfolge der Antwortoptionen (pro Frage und Sitzung stabil) */
+function permFuer(st, n) {
+  if (!st.perm || st.perm.length !== n) {
+    const a = Array.from({ length: n }, (_, i) => i);
+    for (let i = n - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const h = a[i]; a[i] = a[j]; a[j] = h;
+    }
+    st.perm = a;
+  }
+  return st.perm;
+}
+
+let ansicht = { seite: 'home', thema: 1, frage: 0 };
+
+function fragenZu(nr) { return FRAGEN.filter(f => f.thema === nr); }
+function statusVon(q) { return store.status[q.id] || null; }
+function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+function maxStufe(nr) { return fragenZu(nr).reduce((m, f) => Math.max(m, f.stufe), 1); }
+
+function artBadges(liste) {
+  if (!liste || !liste.length) return '';
+  const b = liste.map(a => '<button type="button" class="art" title="' + esc(GESETZ[a] || '') + '" onclick="zeigeGesetz(this, &quot;' + a + '&quot;)">' + a + '</button>').join(' ');
+  return '<div class="art-zeile"><span class="hint">Rechtsgrundlagen und Entscheide (antippen für den Text):</span> ' + b + '</div>' +
+    '<div class="gesetzbox" id="gesetzbox" style="display:none"></div>';
+}
+
+/* Gesetzestext ein-/ausblenden — funktioniert auch auf dem Touchscreen */
+function zeigeGesetz(el, key) {
+  const box = document.getElementById('gesetzbox');
+  if (!box) return;
+  const offen = box.getAttribute('data-key') === key && box.style.display !== 'none';
+  document.querySelectorAll('.art').forEach(a => a.classList.remove('art-offen'));
+  if (offen) { box.style.display = 'none'; box.setAttribute('data-key', ''); return; }
+  box.innerHTML = '<b>' + key + '</b><br>' + esc(GESETZ[key] || 'Kein Text hinterlegt.');
+  box.setAttribute('data-key', key);
+  box.style.display = 'block';
+  el.classList.add('art-offen');
+}
+
+/* Schwierigkeit: 5 Sterne, skaliert auf die Fragenzahl des Themas */
+function sterne(stufe, max) {
+  const voll = Math.max(1, Math.ceil(stufe / max * 5));
+  let s = '';
+  for (let i = 1; i <= 5; i++) s += i <= voll ? '★' : '<span class="stern-leer">★</span>';
+  return '<span class="stufe-sterne" title="Schwierigkeitsstufe ' + stufe + ' von ' + max + '">' + s +
+    '<span class="stufe-text">Stufe ' + stufe + '/' + max + '</span></span>';
+}
+
+const TYP_LABEL = { mc: 'Multiple Choice', multi: 'Mehrfachauswahl', zuordnen: 'Zuordnen', reihenfolge: 'Reihenfolge' };
+
+/* ---------- Startseite ---------- */
+function renderHome() {
+  const total = FRAGEN.length;
+  let gel = 0, hil = 0;
+  FRAGEN.forEach(q => { const st = statusVon(q); if (st === 'geloest') gel++; else if (st === 'hilfe') hil++; });
+  const pct = Math.round((gel + hil) / total * 100);
+
+  let letzterTeil = '';
+  const karten = THEMEN.map(t => {
+    const fs = fragenZu(t.nr);
+    const fertig = fs.filter(q => statusVon(q)).length;
+    const dots = fs.map(q => {
+      const st = statusVon(q);
+      return '<span class="qdot ' + (st === 'geloest' ? 'd-geloest' : st === 'hilfe' ? 'd-hilfe' : '') + '"></span>';
+    }).join('');
+    const badge = fertig === fs.length
+      ? '<span class="badge badge-done">✓ abgeschlossen</span>'
+      : fertig > 0 ? '<span class="badge badge-hilfe">' + fertig + '/' + fs.length + '</span>'
+      : '<span class="badge badge-open">' + fs.length + ' Aufgaben</span>';
+    const karte = '<button class="thema-card" onclick="oeffneThema(' + t.nr + ')">' +
+      '<span class="thema-nr">' + t.icon + ' Thema ' + t.nr + '</span>' +
+      '<span class="thema-titel">' + t.titel + '</span>' +
+      '<span class="thema-kurz">' + t.kurz + '</span>' +
+      '<span class="thema-fuss"><span class="qdots">' + dots + '</span>' + badge + '</span>' +
+      '</button>';
+    let vor = '';
+    if (t.teil !== letzterTeil) {
+      vor = (letzterTeil ? '</div>' : '') + '<div class="teil-titel">' + t.teil + '</div><div class="themen-grid">';
+      letzterTeil = t.teil;
+    }
+    return vor + karte;
+  }).join('') + '</div>';
+
+  document.getElementById('app').innerHTML =
+    '<div class="home-header">' +
+      '<h1>Verwaltungsrecht I – Lernprogramm</h1>' +
+      '<p class="untertitel">14 Themen · 100 Aufgaben mit aufsteigendem Schwierigkeitsgrad · nach der Zusammenfassung «Verwaltungsrecht I» und dem Übungsblatt «Staats- und Verwaltungsrecht III» (KV Business School Zürich)</p>' +
+      '<div class="home-stats">' +
+        '<div class="stat"><div class="stat-zahl">' + gel + '</div><div class="stat-label">selbständig gelöst</div></div>' +
+        '<div class="stat"><div class="stat-zahl">' + hil + '</div><div class="stat-label">mit Lösungshilfe</div></div>' +
+        '<div class="stat"><div class="stat-zahl">' + (total - gel - hil) + '</div><div class="stat-label">offen</div></div>' +
+      '</div>' +
+      '<div class="balken"><div style="width:' + pct + '%"></div></div>' +
+      '<div class="home-actions">' +
+        '<button class="btn" onclick="zeigeSpick()">📋 Spickzettel</button>' +
+        '<button class="btn btn-ghost" onclick="allesZuruecksetzen()">Fortschritt zurücksetzen</button>' +
+      '</div>' +
+    '</div>' +
+    '<p class="hinweis-methodik">Innerhalb jedes Themas steigt die Schwierigkeit: zuerst Grundwissen und Definitionen, dann Zuordnungen und Abgrenzungen, zuletzt Struktur- und Fallaufgaben (inkl. Leitentscheide). Grün = selbständig gelöst, Gelb = mit Lösungshilfe.</p>' +
+    karten;
+  window.scrollTo(0, 0);
+}
+
+function oeffneThema(nr) {
+  ansicht = { seite: 'thema', thema: nr, frage: 0 };
+  const fs = fragenZu(nr);
+  const erste = fs.findIndex(q => !statusVon(q));
+  if (erste > 0) ansicht.frage = erste;
+  render();
+}
+
+function allesZuruecksetzen() {
+  if (!confirm('Ganzen Fortschritt löschen?')) return;
+  store = { status: {} };
+  speichern();
+  Object.keys(session).forEach(k => delete session[k]);
+  render();
+}
+
+/* ---------- Fragenansicht ---------- */
+function renderThema() {
+  const t = THEMEN[ansicht.thema - 1];
+  const fs = fragenZu(t.nr);
+  const q = fs[ansicht.frage];
+  const st = sess(q);
+  const gespeichert = statusVon(q);
+
+  const nav = fs.map((f, i) => {
+    const s = statusVon(f);
+    const cls = ['fnav'];
+    if (i === ansicht.frage) cls.push('f-aktiv');
+    if (s === 'geloest') cls.push('f-geloest');
+    if (s === 'hilfe') cls.push('f-hilfe');
+    return '<button class="' + cls.join(' ') + '" onclick="geheZuFrage(' + i + ')" title="Aufgabe ' + (i + 1) + '">' + (i + 1) + '</button>';
+  }).join('');
+
+  let inhalt = '';
+  if (q.typ === 'mc') inhalt = uiMC(q, st);
+  else if (q.typ === 'multi') inhalt = uiMulti(q, st);
+  else if (q.typ === 'zuordnen') inhalt = uiZuordnen(q, st);
+  else if (q.typ === 'reihenfolge') inhalt = uiReihenfolge(q, st);
+
+  const fertig = st.korrekt || gespeichert;
+  let feedback = '';
+  if (st.korrekt) feedback = '<div class="fb fb-ok">✓ Richtig' + (st.hilfe ? ' — mit Lösungshilfe gelöst.' : ' gelöst!') + '</div>';
+  else if (st.geprueft) feedback = '<div class="fb fb-bad">✗ Noch nicht richtig — ' + st.fbText + '</div>';
+  else if (gespeichert && !st.korrekt) feedback = '<div class="fb fb-info">Diese Aufgabe hast du bereits ' + (gespeichert === 'geloest' ? 'selbständig gelöst' : 'mit Lösungshilfe gelöst') + '. Du kannst sie erneut bearbeiten.</div>';
+
+  const loesung = st.loesungOffen ? '<div class="solution-box"><h4>Lösung &amp; Erklärung</h4>' + loesungsInhalt(q) + q.erklaerung + '</div>' : '';
+
+  const weiter = ansicht.frage < fs.length - 1
+    ? '<button class="btn btn-primary" onclick="geheZuFrage(' + (ansicht.frage + 1) + ')">Nächste Aufgabe →</button>'
+    : '<button class="btn btn-primary" onclick="zurUebersicht()">Thema abschliessen ✓</button>';
+
+  document.getElementById('app').innerHTML =
+    '<div class="top-bar">' +
+      '<button class="btn btn-ghost" onclick="zurUebersicht()">← Zur Übersicht</button>' +
+      '<button class="btn" onclick="zeigeSpick()">📋 Spickzettel</button>' +
+    '</div>' +
+    '<div class="thema-header">' +
+      '<div class="thema-kopf"><h2>' + t.icon + ' Thema ' + t.nr + ': ' + t.titel + '</h2><span class="badge badge-thema">Aufgabe ' + (ansicht.frage + 1) + ' von ' + fs.length + '</span></div>' +
+      '<div class="frage-nav">' + nav + '</div>' +
+    '</div>' +
+    '<div class="frage-card">' +
+      '<div class="frage-head">' +
+        '<span><span class="frage-nrchip">Aufgabe ' + (ansicht.frage + 1) + '</span> ' + sterne(q.stufe, maxStufe(t.nr)) + '</span>' +
+        '<span class="typ-label">' + TYP_LABEL[q.typ] + '</span>' +
+      '</div>' +
+      (q.sachverhalt ? '<div class="sachverhalt"><div class="sachverhalt-titel">Sachverhalt</div>' + q.sachverhalt + '</div>' : '') +
+      '<div class="frage-text">' + q.frage + '</div>' +
+      inhalt +
+      '<div class="frage-actions">' +
+        (!st.korrekt ? '<button class="btn btn-primary" onclick="pruefen()">Prüfen</button>' : '') +
+        (!st.loesungOffen ? '<button class="btn" onclick="zeigeLoesung()">Lösung anzeigen</button>' : '') +
+        (!st.korrekt ? '<button class="btn btn-ghost" onclick="frageZuruecksetzen()">Eingaben zurücksetzen</button>' : '') +
+        (fertig ? weiter : '') +
+      '</div>' +
+      feedback +
+      loesung +
+      artBadges(q.artikel) +
+    '</div>' +
+    '<div class="frage-actions" style="justify-content:space-between">' +
+      (ansicht.frage > 0 ? '<button class="btn" onclick="geheZuFrage(' + (ansicht.frage - 1) + ')">← Vorherige</button>' : '<span></span>') +
+      (ansicht.frage < fs.length - 1 ? '<button class="btn" onclick="geheZuFrage(' + (ansicht.frage + 1) + ')">Nächste →</button>' : '') +
+    '</div>';
+}
+
+function zurUebersicht() { ansicht = { seite: 'home', thema: 1, frage: 0 }; render(); }
+function geheZuFrage(i) { ansicht.frage = i; render(); window.scrollTo(0, 0); }
+
+/* ---------- UI-Bausteine pro Aufgabentyp ---------- */
+function uiMC(q, st) {
+  return '<div class="mc-liste">' + permFuer(st, q.optionen.length).map(i => {
+    const o = q.optionen[i];
+    const cls = ['mc-opt'];
+    if (st.geprueft || st.korrekt) {
+      if (st.korrekt && i === q.richtig) cls.push('mc-ok');
+      else if (!st.korrekt && st.sel === i && i !== q.richtig) cls.push('mc-bad');
+      else if (st.korrekt && i !== q.richtig) cls.push('mc-dim');
+    }
+    return '<label class="' + cls.join(' ') + '"><input type="radio" name="mc" ' + (st.sel === i ? 'checked' : '') + (st.korrekt ? ' disabled' : '') + ' onchange="waehleMC(' + i + ')"><span>' + o + '</span></label>';
+  }).join('') + '</div>';
+}
+function waehleMC(i) { const q = aktuelleFrage(); const st = sess(q); st.sel = i; st.geprueft = false; }
+
+function uiMulti(q, st) {
+  return '<div class="check-grid">' + permFuer(st, q.optionen.length).map(i => {
+    const o = q.optionen[i];
+    const cls = ['check-chip'];
+    if (st.geprueft || st.korrekt) {
+      const soll = q.richtig.includes(i), ist = st.set.has(i);
+      if (ist && soll) cls.push('chip-ok');
+      else if (ist && !soll) cls.push('chip-bad');
+      else if (!ist && soll) cls.push('chip-fehlt');
+    }
+    return '<label class="' + cls.join(' ') + '"><input type="checkbox" ' + (st.set.has(i) ? 'checked' : '') + (st.korrekt ? ' disabled' : '') + ' onchange="toggleMulti(' + i + ')"><span>' + o + '</span></label>';
+  }).join('') + '</div><p class="hint" style="margin:8px 0 0">Alle zutreffenden Antworten anklicken.</p>';
+}
+function toggleMulti(i) { const q = aktuelleFrage(); const st = sess(q); if (st.set.has(i)) st.set.delete(i); else st.set.add(i); st.geprueft = false; }
+
+function uiZuordnen(q, st) {
+  const zeilen = q.zeilen.map((z, i) => {
+    let cls = '';
+    if (st.geprueft || st.korrekt) cls = (st.zuord[i] === z.rechts) ? 'row-ok' : 'row-bad';
+    const opts = ['<option value="">– bitte wählen –</option>'].concat(
+      q.optionen.map(o => '<option value="' + esc(o) + '" ' + (st.zuord[i] === o ? 'selected' : '') + '>' + o + '</option>')
+    ).join('');
+    return '<tr class="' + cls + '"><td class="zeile-links">' + z.links + '</td><td><select ' + (st.korrekt ? 'disabled' : '') + ' onchange="waehleZuord(' + i + ', this.value)">' + opts + '</select></td></tr>';
+  }).join('');
+  return '<table class="aufgabe-tabelle"><thead><tr><th>Sachverhalt / Aussage</th><th>Zuordnung</th></tr></thead><tbody>' + zeilen + '</tbody></table>';
+}
+function waehleZuord(i, v) { const q = aktuelleFrage(); const st = sess(q); st.zuord[i] = v; st.geprueft = false; }
+
+function uiReihenfolge(q, st) {
+  const anzeige = q.anzeige || q.items.map((_, i) => i);
+  return '<p class="hint" style="margin:0 0 10px">Klicke die Einträge in der richtigen Reihenfolge an (1., 2., 3., …). Erneutes Klicken entfernt die Nummer.</p>' +
+    '<div class="reihe-liste">' + anzeige.map(idx => {
+      const pos = st.ordnung.indexOf(idx);
+      const cls = ['reihe-item'];
+      if (pos >= 0) cls.push('gewaehlt');
+      if ((st.geprueft || st.korrekt) && pos >= 0) cls.push(pos === idx ? 'reihe-ok' : 'reihe-bad');
+      return '<button class="' + cls.join(' ') + '" ' + (st.korrekt ? 'disabled' : '') + ' onclick="klickReihe(' + idx + ')"><span class="reihe-num">' + (pos >= 0 ? (pos + 1) + '.' : '') + '</span><span>' + q.items[idx] + '</span></button>';
+    }).join('') + '</div>';
+}
+function klickReihe(idx) {
+  const q = aktuelleFrage(); const st = sess(q);
+  const pos = st.ordnung.indexOf(idx);
+  if (pos >= 0) st.ordnung.splice(pos, 1); else st.ordnung.push(idx);
+  st.geprueft = false;
+  render();
+}
+
+function aktuelleFrage() { return fragenZu(ansicht.thema)[ansicht.frage]; }
+
+/* ---------- Prüfen & Lösung ---------- */
+function pruefen() {
+  const q = aktuelleFrage(); const st = sess(q);
+  let ok = false;
+
+  if (q.typ === 'mc') {
+    if (st.sel === null) { st.fbText = 'wähle zuerst eine Antwort aus.'; st.geprueft = true; render(); return; }
+    ok = st.sel === q.richtig;
+    st.fbText = 'die gewählte Antwort stimmt nicht. Überlege nochmals oder schau die Lösung an.';
+  } else if (q.typ === 'multi') {
+    const soll = new Set(q.richtig);
+    const richtigGewaehlt = [...st.set].filter(i => soll.has(i)).length;
+    const falschGewaehlt = [...st.set].filter(i => !soll.has(i)).length;
+    ok = richtigGewaehlt === soll.size && falschGewaehlt === 0;
+    st.fbText = richtigGewaehlt + ' von ' + soll.size + ' richtigen Antworten gewählt' + (falschGewaehlt ? ', ' + falschGewaehlt + ' falsche dabei' : '') + '.';
+  } else if (q.typ === 'zuordnen') {
+    const treffer = q.zeilen.filter((z, i) => st.zuord[i] === z.rechts).length;
+    ok = treffer === q.zeilen.length;
+    st.fbText = treffer + ' von ' + q.zeilen.length + ' Zuordnungen stimmen.';
+  } else if (q.typ === 'reihenfolge') {
+    if (st.ordnung.length < q.items.length) { st.fbText = 'nummeriere zuerst alle Einträge (' + st.ordnung.length + ' von ' + q.items.length + ').'; st.geprueft = true; render(); return; }
+    const treffer = st.ordnung.filter((idx, pos) => idx === pos).length;
+    ok = treffer === q.items.length;
+    st.fbText = treffer + ' von ' + q.items.length + ' Positionen stimmen.';
+  }
+
+  st.geprueft = true;
+  if (ok) {
+    st.korrekt = true;
+    const neu = st.hilfe ? 'hilfe' : 'geloest';
+    if (store.status[q.id] !== 'geloest' || neu === 'geloest') store.status[q.id] = neu;
+    speichern();
+  }
+  render();
+}
+
+function zeigeLoesung() {
+  const q = aktuelleFrage(); const st = sess(q);
+  if (!st.korrekt) st.hilfe = true;
+  st.loesungOffen = true;
+  render();
+}
+
+function loesungsInhalt(q) {
+  if (q.typ === 'mc') return '<p><b>Richtige Antwort:</b> ' + q.optionen[q.richtig] + '</p>';
+  if (q.typ === 'multi') return '<p><b>Richtige Antworten:</b></p><ul>' + q.richtig.map(i => '<li>' + q.optionen[i] + '</li>').join('') + '</ul>';
+  if (q.typ === 'zuordnen') return '<p><b>Richtige Zuordnung:</b></p><ul>' + q.zeilen.map(z => '<li>' + z.links + ' → <b>' + z.rechts + '</b></li>').join('') + '</ul>';
+  if (q.typ === 'reihenfolge') return '<p><b>Richtige Reihenfolge:</b></p><ol>' + q.items.map(t => '<li>' + t + '</li>').join('') + '</ol>';
+  return '';
+}
+
+function frageZuruecksetzen() {
+  const q = aktuelleFrage();
+  delete session[q.id];
+  render();
+}
+
+/* ---------- Spickzettel ---------- */
+function zeigeSpick() {
+  document.getElementById('modal').innerHTML =
+    '<div class="modal-hg" onclick="if(event.target===this)schliesseSpick()">' +
+      '<div class="modal-box">' +
+        '<button class="btn modal-schliessen" onclick="schliesseSpick()">✕ Schliessen</button>' +
+        '<h2>📋 Spickzettel Verwaltungsrecht I</h2>' + SPICK_HTML +
+      '</div>' +
+    '</div>';
+  document.body.style.overflow = 'hidden';
+}
+function schliesseSpick() {
+  document.getElementById('modal').innerHTML = '';
+  document.body.style.overflow = '';
+}
+
+const SPICK_HTML =
+  '<h3>Verwaltungsaufgaben (Zweck)</h3>' +
+  '<table class="spick-tabelle"><tr><th>Kategorie</th><th>Zweck</th><th>Beispiele</th></tr>' +
+  '<tr><td>Ordnungsaufgaben</td><td>Zustände aufrechterhalten oder gegen Störungen abschirmen (häufig polizeilich)</td><td>Betriebsbewilligung Bahn, Nacht- und Sonntagsfahrverbot, Ausfuhrverbot Kriegsmaterial, Enteignung</td></tr>' +
+  '<tr><td>Sozialpolitische Aufgaben</td><td>Ausgleich gesellschaftlicher und wirtschaftlicher Ungleichheiten</td><td>Ruhezeiten im ArG, Bildungsmassnahmen ALV, Krankenkassenobligatorium</td></tr>' +
+  '<tr><td>Lenkungsaufgaben</td><td>Anzustrebende Zustände fördern — Anreize statt Verbote</td><td>Zigarettensteuer, Direktzahlungen, E-Tankstellen-Netz</td></tr>' +
+  '<tr><td>Infrastrukturaufgaben</td><td>Bereitstellung öffentlicher Dienste (Service public)</td><td>Kantonalbank, Büromaterial, Personal des Bundes</td></tr></table>' +
+  '<p class="hint">Mehrfachzuordnungen sind möglich: Nachtfahrverbot = Ordnung + Lenkung · ALV-Bildung = Lenkung + Sozialpolitik · E-Tankstellen = Infrastruktur + Lenkung.</p>' +
+
+  '<h3>Arten der Aufgabenerfüllung</h3>' +
+  '<table class="spick-tabelle"><tr><th>Verwaltungsart</th><th>Kernmerkmal</th><th>Beispiel</th></tr>' +
+  '<tr><td>Eingriffsverwaltung</td><td>Eingriff in Rechte und Freiheiten; i. d. R. hoheitlich («macht das Leben schwerer»)</td><td>Enteignung, Demonstrationsverbot</td></tr>' +
+  '<tr><td>Leistungsverwaltung</td><td>Vermittlung staatlicher Leistungen; hoheitlich oder nicht hoheitlich («macht das Leben einfacher»)</td><td>AHV, Stipendien, Prämienverbilligung</td></tr>' +
+  '<tr><td>Bedarfsverwaltung</td><td>Bereitstellung von Sach-/Personalmitteln; nur mittelbar, keine Aussenwirkung</td><td>Büromaterial, Schneepflug</td></tr>' +
+  '<tr><td>Gewährleistungsverwaltung</td><td>Aufgabenerfüllung durch Private, Staat beaufsichtigt</td><td>Grundversicherung KVG, Wettbewerbsaufsicht</td></tr>' +
+  '<tr><td>Wirtschaftende Verwaltung</td><td>Marktauftritt zur Gewinnerzielung, ohne Bezug zu Staatsaufgaben</td><td>Hotel, Mietobjekte</td></tr>' +
+  '<tr><td>Erfüllungsverwaltung</td><td>Staat erfüllt die Aufgabe selbst durch eigene Organe</td><td>AHV-Ausgleichskasse, Kantonsschule</td></tr></table>' +
+
+  '<h3>Verfassungsgrundsätze — geprüfte Fundstellen</h3>' +
+  '<table class="spick-tabelle"><tr><th>Grundsatz</th><th>Artikel</th></tr>' +
+  '<tr><td>Gesetzmässigkeit der Verwaltung</td><td>Art. 5 Abs. 1 BV</td></tr>' +
+  '<tr><td>Öffentliches Interesse und Verhältnismässigkeit</td><td>Art. 5 Abs. 2 BV</td></tr>' +
+  '<tr><td>Treu und Glauben</td><td>Art. 5 Abs. 3 BV und Art. 9 BV</td></tr>' +
+  '<tr><td>Rechtsgleichheit</td><td>Art. 8 BV</td></tr>' +
+  '<tr><td>Willkürverbot</td><td>Art. 9 BV</td></tr>' +
+  '<tr><td>Allgemeine Verfahrensgarantien (rechtliches Gehör)</td><td>Art. 29 BV</td></tr>' +
+  '<tr><td>Garantien im gerichtlichen Verfahren</td><td>Art. 30 BV</td></tr>' +
+  '<tr><td>Grundrechtsbeschränkung</td><td>Art. 36 BV</td></tr></table>' +
+
+  '<h3>Rechtsquellenkatalog</h3>' +
+  '<p>Verfassung · Gesetze (formell / materiell) · Verordnungen (Vollziehungs- und gesetzesvertretende) · autonome Satzungen · völkerrechtliche Verträge (self-executing / non-self-executing) · Konkordate (Art. 48 BV) · allgemeine Rechtsgrundsätze · Gewohnheitsrecht (langjährige Praxis + opinio iuris + Raum im Gesetz) · Richterrecht · Notrecht (Art. 185 BV) und polizeiliche Generalklausel (Art. 36 Abs. 1 Satz 3 BV).</p>' +
+
+  '<h3>Ermessen und unbestimmter Rechtsbegriff</h3>' +
+  '<table class="spick-tabelle"><tr><th>Ermessensart</th><th>Frage</th><th>Formulierung</th></tr>' +
+  '<tr><td>Entschliessungsermessen</td><td>Ob gehandelt wird</td><td>«kann»</td></tr>' +
+  '<tr><td>Auswahlermessen</td><td>Welche Massnahme</td><td>Massnahmenkatalog</td></tr>' +
+  '<tr><td>Tatbestandsermessen</td><td>Ob die Voraussetzungen erfüllt sind</td><td>ausdrücklicher Beurteilungsspielraum</td></tr></table>' +
+  '<p class="hint">Ermessensfehler: Überschreitung (Ermessen ohne Grundlage) · Unterschreitung (Verzicht auf das Ermessen) · Missbrauch (sachfremde Motive). Blosse Unangemessenheit ist kein Rechtsfehler. Faustregel: offene Voraussetzung ⇒ unbestimmter Rechtsbegriff.</p>' +
+
+  '<h3>Verhältnismässigkeit und Art. 36 BV</h3>' +
+  '<table class="spick-tabelle"><tr><th>Schritt</th><th>Inhalt</th></tr>' +
+  '<tr><td>1. Gesetzliche Grundlage</td><td>Art. 36 Abs. 1 BV; schwerwiegende Eingriffe im formellen Gesetz selbst; Ausnahme: polizeiliche Generalklausel (ernste, unmittelbare, nicht anders abwendbare Gefahr)</td></tr>' +
+  '<tr><td>2. Öffentliches Interesse</td><td>Art. 36 Abs. 2 BV; polizeilich · planerisch · sozial · rechtsstaatlich · Staatsaufgaben · fiskalisch (allein nicht genügend)</td></tr>' +
+  '<tr><td>3. Verhältnismässigkeit</td><td>Art. 36 Abs. 3 BV: Geeignetheit → Erforderlichkeit (mildestes Mittel: sachlich, räumlich, zeitlich, personell) → Zumutbarkeit</td></tr>' +
+  '<tr><td>4. Kerngehalt</td><td>Art. 36 Abs. 4 BV; absolut geschützt, keine Abwägung</td></tr></table>' +
+
+  '<h3>Vertrauensschutz — Prüfungsreihenfolge</h3>' +
+  '<table class="spick-tabelle"><tr><th>Schritt</th><th>Inhalt</th></tr>' +
+  '<tr><td>1. Vertrauensgrundlage</td><td>Verfügung, Vertrag, Praxis, Auskunft, Plan — genügend individualisiert und bestimmt</td></tr>' +
+  '<tr><td>2. Gutgläubigkeit</td><td>Unrichtigkeit nach Treu und Glauben nicht erkennbar</td></tr>' +
+  '<tr><td>3. Vertrauensbetätigung</td><td>nachteilige Disposition, nicht ohne Nachteil rückgängig zu machen</td></tr>' +
+  '<tr><td>4. Interessenabwägung</td><td>Vertrauensschutz gegen richtige Rechtsanwendung (Legalitätsprinzip)</td></tr></table>' +
+  '<p class="hint">Unrichtige Auskunft — zusätzlich: Eignung der Auskunft · Zuständigkeit der Behörde · nachteilige Disposition · keine Änderung der Sach- oder Rechtslage · Interessenabwägung. Folgen: Bestandesschutz · Fristwiederherstellung · Übergangsregelung · Entschädigung (nur subsidiär).</p>' +
+
+  '<h3>Handlungsformen — das Raster</h3>' +
+  '<table class="spick-tabelle"><tr><th></th><th>Generell (offener Adressatenkreis)</th><th>Individuell (bestimmte Adressaten)</th></tr>' +
+  '<tr><td><b>Abstrakt</b></td><td>Rechtsverordnung (Rechtssatz)</td><td>—</td></tr>' +
+  '<tr><td><b>Konkret</b></td><td>Plan / Allgemeinverfügung</td><td>Verfügung / verwaltungsrechtlicher Vertrag</td></tr></table>' +
+  '<p class="hint">Weitere Formen: Realakt (Taterfolg, formlos) · Verwaltungsverordnung (Weisung nach innen, kein Anfechtungsobjekt) · Dienstbefehl (Sonderstatusverhältnis) · zivilrechtlicher Vertrag.</p>' +
+
+  '<h3>Aufbau einer Verfügung</h3>' +
+  '<p>Verfügungskopf (Behörde, Adressat, Ort, Datum) → Verfügungstitel → Sachverhalt → Gesetzliche Grundlagen → Erwägungen (Subsumtion) → Dispositiv (Anordnung, Kosten, Mitteilung) → Rechtsmittelbelehrung → Mitteilungssatz und Unterschrift.</p>' +
+  '<p class="hint">Art. 34 f. VwVG (Bund) bzw. § 10 VRG ZH. Begründungsverzicht nur, wenn dem Begehren vollumfänglich entsprochen wird (§ 10a VRG ZH). Aus mangelhafter Eröffnung darf kein Nachteil erwachsen (Art. 38 VwVG).</p>' +
+
+  '<h3>Nebenbestimmungen</h3>' +
+  '<table class="spick-tabelle"><tr><th>Art</th><th>Wirkung</th><th>Beispiel</th></tr>' +
+  '<tr><td>Auflage</td><td>zwingt, suspendiert nicht — Verfügung bleibt gültig, Auflage ist separat vollstreckbar (Ersatzvornahme, Art. 292 StGB)</td><td>Brillenvermerk im Führerausweis, wöchentliche Strassenreinigung</td></tr>' +
+  '<tr><td>Aufschiebende Bedingung</td><td>Verfügung wird erst mit Eintritt des Ereignisses gültig</td><td>Baubewilligung erst bei Kanalisationsanschluss; Stipendium bei bestandener Prüfung</td></tr>' +
+  '<tr><td>Auflösende Bedingung</td><td>Verfügung verliert bei Eintritt nachträglich ihre Gültigkeit</td><td>Stipendium entfällt bei Nichtbestehen</td></tr>' +
+  '<tr><td>Befristung</td><td>Sonderform der Resolutivbedingung mit gewissem Endtermin</td><td>Baubewilligung erlischt nach einem Jahr; Anstellung für vier Jahre</td></tr></table>' +
+
+  '<h3>Fehlerhafte Verfügung, Widerruf, Vollstreckung</h3>' +
+  '<p><b>Grundregel:</b> fehlerhaft = grundsätzlich gültig, aber anfechtbar · nichtig = von Anfang an unwirksam, jederzeit und von jedermann geltend zu machen, von Amtes wegen zu beachten.</p>' +
+  '<p><b>Evidenztheorie (kumulativ):</b> besonders schwerer Mangel · offensichtlich oder leicht erkennbar · Rechtssicherheit nicht ernsthaft gefährdet.</p>' +
+  '<p><b>Fehlerhaftigkeit:</b> ursprünglich (Fehler schon beim Erlass) oder nachträglich (nur bei Dauerrechtsverhältnissen).</p>' +
+  '<p><b>Sanktionen:</b> exekutorisch (Ersatzvornahme, unmittelbarer Zwang, Schuldbetreibung nach Art. 38 SchKG) · repressiv (Verwaltungsstrafen, Art. 292 StGB, Disziplinarstrafen).</p>' +
+
+  '<h3>Bewilligung — Konzession — Subvention</h3>' +
+  '<table class="spick-tabelle"><tr><th>Institut</th><th>Kern</th><th>Beispiele</th></tr>' +
+  '<tr><td>Bewilligung</td><td>Verfügung, die eine gesetzlich geregelte Tätigkeit erlaubt; Zweck: präventive Kontrolle</td><td>Baubewilligung, Führerausweis, Aufenthaltsbewilligung</td></tr>' +
+  '<tr><td>Konzession</td><td>Verleihung eines Rechts zur Ausübung einer monopolisierten Tätigkeit oder zur Sondernutzung einer öffentlichen Sache; Konzessionsgebühr</td><td>Wasserkraftnutzung (Monopolkonzession), Bootssteg (Sondernutzung)</td></tr>' +
+  '<tr><td>Subvention</td><td>Nicht rückzahlbare, zweckgebundene Leistung ohne marktübliche Gegenleistung; Verhaltenslenkung</td><td>Direktzahlungen an Landwirte, Forschungsförderung</td></tr></table>' +
+  '<p class="hint">Bewilligungsarten: personenbezogen (nicht übertragbar) · sachbezogen (mit der Sache übertragbar) · mit Rechtsanspruch · Ermessensbewilligung · Dauerbewilligung · Polizeibewilligung · Ausnahmebewilligung (Art. 24 RPG). Monopole: rechtlich (Rechtssatz) oder faktisch (Sachherrschaft). Pflichten des Konzessionärs: Ausübung, Abgabe, Duldung der Aufsicht.</p>' +
+
+  '<h3>Leitentscheide</h3>' +
+  '<table class="spick-tabelle"><tr><th>Entscheid</th><th>Stichwort</th><th>Kernaussage</th></tr>' +
+  '<tr><td>BGE 142 I 49 (2C_121/2015)</td><td>Kopftuchverbot St. Margrethen</td><td>Eingriff in Art. 15 BV; unverhältnismässig, weil nicht erforderlich</td></tr>' +
+  '<tr><td>BGE 140 II 33</td><td>Weihnachtsbeleuchtung Möhlin</td><td>Licht = Einwirkung nach USG; zeitliche Beschränkung verhältnismässig</td></tr>' +
+  '<tr><td>BGE 137 I 69</td><td>Konservatoriums-Diplom</td><td>Widerruf auch nach Rechtskraft möglich; Abwägung objektives Recht vs. Vertrauensschutz</td></tr>' +
+  '<tr><td>BGE 125 I 173</td><td>Basler Numerus clausus</td><td>Zulassungsbeschränkung zulässig; Testgebühr mangels gesetzlicher Grundlage aufgehoben</td></tr>' +
+  '<tr><td>BGE 115 Ia 8</td><td>Fristwahrung mit Zeugen</td><td>Rechtzeitige Postaufgabe darf mit Zeugen bewiesen werden</td></tr>' +
+  '<tr><td>BGE 104 Ia 69</td><td>Unangemeldete Lärmmessung</td><td>Ausnahme vom Teilnahmerecht; nachträgliche Stellungnahme genügt</td></tr>' +
+  '<tr><td>BGE 121 I 225</td><td>Akteneinsicht Prüfungsakten</td><td>Arbeiten anderer Kandidaten gehören nicht zu den einsehbaren Akten</td></tr></table>';
+
+/* ---------- Start ---------- */
+function render() {
+  if (ansicht.seite === 'home') renderHome(); else renderThema();
+}
+render();
+</script>
+</body>
+</html>
