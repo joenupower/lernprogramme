@@ -124,17 +124,11 @@ h4 { font-size: 1rem; color: var(--navy); margin: 16px 0 6px; }
 .art {
   display: inline-block; font-family: inherit; background: var(--blau-hell); color: var(--blau);
   border: 1px solid #c4d8ee; border-radius: 6px; padding: 2px 8px;
-  font-size: .8rem; font-weight: 600; cursor: pointer; white-space: nowrap; margin: 1px 0;
+  font-size: .8rem; font-weight: 600; white-space: nowrap; margin: 1px 0;
 }
 .art:hover { background: #d8e6f5; }
 .art:focus-visible { outline: 2px solid var(--blau); outline-offset: 2px; }
-.art.art-offen { background: var(--navy); border-color: var(--navy); color: #fff; }
 .art-zeile { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 4px; align-items: baseline; }
-.gesetzbox {
-  background: #f4f6f8; border: 1.5px solid var(--rand); border-left: 4px solid var(--blau);
-  border-radius: 8px; padding: 10px 14px; margin-top: 10px; font-size: .9rem;
-}
-.gesetzbox b { color: var(--navy); }
 
 /* Multiple Choice */
 .mc-liste { display: flex; flex-direction: column; gap: 8px; }
@@ -237,6 +231,30 @@ h4 { font-size: 1rem; color: var(--navy); margin: 16px 0 6px; }
   #app { padding: 14px 10px 60px; }
   .home-header { padding: 22px 20px 20px; }
   .frage-card { padding: 16px 16px; }
+}
+
+/* ---------- Bedienung auf dem Handy ---------- */
+html { -webkit-text-size-adjust: 100%; }
+.art { cursor: pointer; }
+.art.art-offen { background: var(--navy); border-color: var(--navy); color: #fff; }
+.gesetz-popup {
+  position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 90;
+  max-width: 640px; margin: 0 auto; max-height: 45vh; overflow-y: auto;
+  background: #fff; border: 1.5px solid var(--rand); border-left: 5px solid var(--blau);
+  border-radius: 12px; padding: 14px 46px 14px 16px;
+  box-shadow: 0 6px 28px rgba(18, 40, 63, .28); font-size: .93rem; line-height: 1.5;
+}
+.gesetz-popup b { display: block; color: var(--navy); margin-bottom: 4px; }
+.gesetz-popup-zu {
+  position: absolute; top: 7px; right: 8px; border: none; background: transparent;
+  font: inherit; font-size: 1.15rem; line-height: 1; color: var(--grau);
+  cursor: pointer; padding: 6px 8px;
+}
+.gesetz-popup-zu:hover { color: var(--navy); }
+.modal-box, .spick, .solution-box { overflow-x: auto; }
+@media (max-width: 640px) {
+  select, .aufgabe-tabelle select { font-size: 16px; }
+  .art { padding: 5px 10px; font-size: .82rem; }
 }
 </style>
 </head>
@@ -1832,22 +1850,8 @@ function maxStufe(nr) { return fragenZu(nr).reduce((m, f) => Math.max(m, f.stufe
 
 function artBadges(liste) {
   if (!liste || !liste.length) return '';
-  const b = liste.map(a => '<button type="button" class="art" title="' + esc(GESETZ[a] || '') + '" onclick="zeigeGesetz(this, &quot;' + a + '&quot;)">' + a + '</button>').join(' ');
-  return '<div class="art-zeile"><span class="hint">Rechtsgrundlagen und Entscheide (antippen für den Text):</span> ' + b + '</div>' +
-    '<div class="gesetzbox" id="gesetzbox" style="display:none"></div>';
-}
-
-/* Gesetzestext ein-/ausblenden — funktioniert auch auf dem Touchscreen */
-function zeigeGesetz(el, key) {
-  const box = document.getElementById('gesetzbox');
-  if (!box) return;
-  const offen = box.getAttribute('data-key') === key && box.style.display !== 'none';
-  document.querySelectorAll('.art').forEach(a => a.classList.remove('art-offen'));
-  if (offen) { box.style.display = 'none'; box.setAttribute('data-key', ''); return; }
-  box.innerHTML = '<b>' + key + '</b><br>' + esc(GESETZ[key] || 'Kein Text hinterlegt.');
-  box.setAttribute('data-key', key);
-  box.style.display = 'block';
-  el.classList.add('art-offen');
+  const b = liste.map(a => '<span class="art" title="' + esc(GESETZ[a] || '') + '">' + a + '</span>').join(' ');
+  return '<div class="art-zeile"><span class="hint">Rechtsgrundlagen und Entscheide (antippen bzw. mit der Maus darüberfahren):</span> ' + b + '</div>';
 }
 
 /* Schwierigkeit: 5 Sterne, skaliert auf die Fragenzahl des Themas */
@@ -2237,6 +2241,59 @@ function render() {
   if (ansicht.seite === 'home') renderHome(); else renderThema();
 }
 render();
+
+/* ---------- Bedienung auf dem Handy: Gesetzestext antippen ---------- */
+(function () {
+  var popup = null, aktiv = null;
+
+  function zu() {
+    if (popup) popup.hidden = true;
+    if (aktiv) aktiv.classList.remove('art-offen');
+    aktiv = null;
+  }
+
+  function holePopup() {
+    if (!popup) {
+      popup = document.createElement('div');
+      popup.className = 'gesetz-popup';
+      popup.hidden = true;
+      popup.innerHTML = '<button type="button" class="gesetz-popup-zu" aria-label="Schliessen">&#10005;</button><b></b><div></div>';
+      popup.querySelector('.gesetz-popup-zu').addEventListener('click', zu);
+      document.body.appendChild(popup);
+    }
+    return popup;
+  }
+
+  /* Text entweder aus dem title-Attribut oder aus dem Gesetzesverzeichnis des Programms */
+  function textVon(el) {
+    var t = el.getAttribute('title');
+    if (t) return t;
+    var k = el.textContent.trim();
+    try { if (typeof gesetzText === 'function') return gesetzText(k) || ''; } catch (e) {}
+    try { if (typeof GESETZ === 'object' && GESETZ) return GESETZ[k] || ''; } catch (e) {}
+    return '';
+  }
+
+  document.addEventListener('click', function (e) {
+    if (!e.target || !e.target.closest) return;
+    var el = e.target.closest('.art');
+    var text = el ? textVon(el) : '';
+    if (!el || !text) {
+      if (!e.target.closest('.gesetz-popup')) zu();
+      return;
+    }
+    if (el === aktiv) { zu(); return; }
+    zu();
+    var p = holePopup();
+    p.querySelector('b').textContent = el.textContent.trim();
+    p.querySelector('div').textContent = text;
+    p.hidden = false;
+    el.classList.add('art-offen');
+    aktiv = el;
+  });
+
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') zu(); });
+})();
 </script>
 </body>
 </html>

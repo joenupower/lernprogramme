@@ -265,6 +265,30 @@ dialog#spick-dialog::backdrop { background: rgba(18, 40, 63, .5); }
   .step-label { display: none; }
 }
 
+
+/* ---------- Bedienung auf dem Handy ---------- */
+html { -webkit-text-size-adjust: 100%; }
+.art { cursor: pointer; }
+.art.art-offen { background: var(--navy); border-color: var(--navy); color: #fff; }
+.gesetz-popup {
+  position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 90;
+  max-width: 640px; margin: 0 auto; max-height: 45vh; overflow-y: auto;
+  background: #fff; border: 1.5px solid var(--rand); border-left: 5px solid var(--blau);
+  border-radius: 12px; padding: 14px 46px 14px 16px;
+  box-shadow: 0 6px 28px rgba(18, 40, 63, .28); font-size: .93rem; line-height: 1.5;
+}
+.gesetz-popup b { display: block; color: var(--navy); margin-bottom: 4px; }
+.gesetz-popup-zu {
+  position: absolute; top: 7px; right: 8px; border: none; background: transparent;
+  font: inherit; font-size: 1.15rem; line-height: 1; color: var(--grau);
+  cursor: pointer; padding: 6px 8px;
+}
+.gesetz-popup-zu:hover { color: var(--navy); }
+.modal-box, .spick, .solution-box { overflow-x: auto; }
+@media (max-width: 640px) {
+  select, .aufgabe-tabelle select { font-size: 16px; }
+  .art { padding: 5px 10px; font-size: .82rem; }
+}
 </style>
 </head>
 <body>
@@ -1281,6 +1305,8 @@ const P2_STD_OPTS = [
 ];
 
 const GESETZ = {
+  'Art. 205 f.': 'Rücknahme von Vermögenswerten und Regelung der Schulden bei Auflösung des Güterstandes: Jeder Ehegatte nimmt seine Vermögenswerte zurück, die sich im Besitz des anderen befinden (Art. 205 Abs. 1). Steht Miteigentum fest und weist ein Ehegatte ein überwiegendes Interesse nach, kann er die ungeteilte Zuweisung gegen Entschädigung verlangen (Abs. 2). Fällige Schulden zwischen den Ehegatten werden geregelt (Abs. 3). Dazu Art. 206: Anteil am Mehrwert, wenn ein Ehegatte zum Erwerb, zur Verbesserung oder zur Erhaltung eines Vermögensgegenstands des anderen ohne Gegenleistung beigetragen hat.',
+  'Art. 209': 'Ersatzforderungen zwischen Errungenschaft und Eigengut: Sind Schulden der einen Masse aus Mitteln der anderen bezahlt worden, besteht eine Ersatzforderung (Abs. 1). Eine Schuld belastet die Masse, mit der sie sachlich zusammenhängt, im Zweifel die Errungenschaft (Abs. 2). Hat eine Masse zum Erwerb, zur Verbesserung oder zur Erhaltung von Vermögensgegenständen der anderen beigetragen, ist die Ersatzforderung beim Mehr- oder Minderwert entsprechend anzupassen (Abs. 3).',
   'Art. 197 Abs. 1': 'Errungenschaft sind die Vermögenswerte, die ein Ehegatte während der Dauer des Güterstandes entgeltlich erwirbt.',
   'Art. 197 Abs. 2 Ziff. 1': 'Zur Errungenschaft gehört insbesondere der Arbeitserwerb (Lohn, Honorar, Bonus).',
   'Art. 197 Abs. 2 Ziff. 2': 'Zur Errungenschaft gehören die Leistungen von Personalfürsorge-, Sozialversicherungs- und Sozialfürsorgeeinrichtungen.',
@@ -2008,6 +2034,59 @@ function renderAbschluss() {
 /* ---------- Start ---------- */
 renderHome();
 
+
+/* ---------- Bedienung auf dem Handy: Gesetzestext antippen ---------- */
+(function () {
+  var popup = null, aktiv = null;
+
+  function zu() {
+    if (popup) popup.hidden = true;
+    if (aktiv) aktiv.classList.remove('art-offen');
+    aktiv = null;
+  }
+
+  function holePopup() {
+    if (!popup) {
+      popup = document.createElement('div');
+      popup.className = 'gesetz-popup';
+      popup.hidden = true;
+      popup.innerHTML = '<button type="button" class="gesetz-popup-zu" aria-label="Schliessen">&#10005;</button><b></b><div></div>';
+      popup.querySelector('.gesetz-popup-zu').addEventListener('click', zu);
+      document.body.appendChild(popup);
+    }
+    return popup;
+  }
+
+  /* Text entweder aus dem title-Attribut oder aus dem Gesetzesverzeichnis des Programms */
+  function textVon(el) {
+    var t = el.getAttribute('title');
+    if (t) return t;
+    var k = el.textContent.trim();
+    try { if (typeof gesetzText === 'function') return gesetzText(k) || ''; } catch (e) {}
+    try { if (typeof GESETZ === 'object' && GESETZ) return GESETZ[k] || ''; } catch (e) {}
+    return '';
+  }
+
+  document.addEventListener('click', function (e) {
+    if (!e.target || !e.target.closest) return;
+    var el = e.target.closest('.art');
+    var text = el ? textVon(el) : '';
+    if (!el || !text) {
+      if (!e.target.closest('.gesetz-popup')) zu();
+      return;
+    }
+    if (el === aktiv) { zu(); return; }
+    zu();
+    var p = holePopup();
+    p.querySelector('b').textContent = el.textContent.trim();
+    p.querySelector('div').textContent = text;
+    p.hidden = false;
+    el.classList.add('art-offen');
+    aktiv = el;
+  });
+
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') zu(); });
+})();
 </script>
 </body>
 </html>

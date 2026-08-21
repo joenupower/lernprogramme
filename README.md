@@ -15,6 +15,21 @@ Einstiegspunkt ist [`index.html`](index.html) — eine Startseite, die alle vier
 | [`programme/erwachsenenschutzrecht.html`](programme/erwachsenenschutzrecht.html) | Erwachsenenschutzrecht | 77 Fragen in 11 Themen |
 | [`programme/gueterrecht.html`](programme/gueterrecht.html) | Güterrechtliche Auseinandersetzung | 20 Fälle in 6 Phasen |
 
+## Auf dem Handy
+
+Jedes Programm ist zusätzlich als private Seite veröffentlicht. Im mobilen Browser öffnen,
+dann «Zum Home-Bildschirm» — damit startet es wie eine App im Vollbild.
+
+| Programm | Link |
+|---|---|
+| Verwaltungsrecht I | https://claude.ai/code/artifact/439a30cf-7780-43e4-9545-3f67b4ac4ff2 |
+| Erbrecht | https://claude.ai/code/artifact/fbb6690f-fdc0-4cb7-83cb-9d2425504f9b |
+| Erwachsenenschutzrecht | https://claude.ai/code/artifact/9f95f9fd-e099-46f9-9d80-3284e0406f90 |
+| Güterrecht | https://claude.ai/code/artifact/60f9e1a9-e023-44a4-9c27-f3bb06c8bb5f |
+
+Die Seiten sind privat und nur im angemeldeten Zustand sichtbar. Der Fortschritt wird pro
+Gerät und Browser gespeichert; Handy und Computer zählen also getrennt.
+
 ## Aufbau der Programme
 
 Alle vier folgen demselben Muster: eine einzige HTML-Datei mit CSS und JavaScript
