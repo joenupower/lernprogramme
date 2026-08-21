@@ -1,0 +1,943 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mietrecht-Falltrainer — 50 Fälle</title>
+</head>
+<body>
+<style>
+  html{-webkit-text-size-adjust:100%}
+:root{
+    --paper:#F4F6F8;
+    --card:#FFFFFF;
+    --ink:#1C2B3A;
+    --ink-soft:#54626F;
+    --navy:#24456B;
+    --navy-deep:#182F4A;
+    --line:#D9DFE6;
+    --ok:#2E7D4F; --ok-bg:#E8F3EC;
+    --bad:#B3392E; --bad-bg:#F9ECEA;
+    --gold:#96762A; --gold-bg:#F6F0E1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper)}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    color:var(--ink);line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .serif{font-family:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif}
+
+  header{background:var(--navy-deep);color:#fff;padding:0 20px}
+  .head-in{max-width:820px;margin:0 auto;display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:18px 0 14px;flex-wrap:wrap}
+  .head-in h1{font-size:1.15rem;font-weight:600;letter-spacing:.01em}
+  .head-in h1 span{font-family:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;font-style:italic;font-weight:400;opacity:.75;margin-left:8px;font-size:.95rem}
+  #score-pill{font-size:.85rem;opacity:.85;font-variant-numeric:tabular-nums}
+
+  #bar{height:4px;background:var(--navy-deep)}
+  #bar div{height:100%;background:#7FA8D9;width:0;transition:width .3s ease}
+  @media (prefers-reduced-motion:reduce){#bar div{transition:none}}
+
+  main{max-width:820px;margin:0 auto;padding:28px 20px 72px}
+
+  .eyebrow{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft);font-weight:600}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:28px;box-shadow:0 1px 2px rgba(28,43,58,.05)}
+
+  /* Start */
+  #start .card{padding:36px}
+  #start h2{font-size:1.65rem;margin:10px 0 14px;text-wrap:balance}
+  #start p{max-width:64ch;color:var(--ink-soft);margin-bottom:10px}
+  .topics{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 26px}
+  .topics span{font-size:.78rem;background:var(--paper);border:1px solid var(--line);border-radius:99px;padding:3px 11px;color:var(--ink-soft)}
+  .btn{
+    background:var(--navy);color:#fff;border:none;border-radius:6px;
+    font:inherit;font-size:1rem;font-weight:600;padding:12px 28px;cursor:pointer;
+  }
+  .btn:hover{background:var(--navy-deep)}
+  .btn.ghost{background:none;color:var(--navy);border:1px solid var(--line)}
+  .btn.ghost:hover{background:#EDF1F5}
+  .btn:focus-visible,button:focus-visible{outline:2px solid #7FA8D9;outline-offset:2px}
+  .start-row{display:flex;gap:12px;flex-wrap:wrap}
+
+  /* Fall */
+  .q-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;gap:10px;flex-wrap:wrap}
+  .q-count{font-variant-numeric:tabular-nums;font-size:.85rem;color:var(--ink-soft)}
+  .badge{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--navy);background:#E9F0F7;border-radius:4px;padding:2px 9px}
+  .fall-title{font-family:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;font-size:1.45rem;line-height:1.25;margin:8px 0 14px}
+  .sv{
+    font-family:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;
+    font-size:1.04rem;border-left:3px solid var(--navy);
+    padding:6px 0 6px 18px;margin:0 0 18px;max-width:68ch;
+  }
+  .frage{font-weight:600;margin-bottom:16px;max-width:68ch}
+
+  .answers{display:grid;grid-template-columns:1fr;gap:10px}
+  .answers button{
+    font:inherit;font-size:.96rem;text-align:left;cursor:pointer;
+    padding:12px 16px;border-radius:6px;background:var(--card);
+    border:1.5px solid var(--line);color:var(--ink);display:flex;gap:10px;align-items:baseline;
+  }
+  .answers button:hover:not(:disabled){border-color:var(--navy)}
+  .answers button:disabled{cursor:default;opacity:.55}
+  .answers button.picked-ok{background:var(--ok-bg);border-color:var(--ok);opacity:1}
+  .answers button.picked-bad{background:var(--bad-bg);border-color:var(--bad);opacity:1}
+  .answers button.reveal{background:var(--ok-bg);border-color:var(--ok);opacity:1}
+  kbd{
+    font-family:inherit;font-size:.72rem;color:var(--ink-soft);flex:0 0 auto;
+    border:1px solid var(--line);border-radius:3px;padding:0 6px;
+    background:var(--paper);font-weight:400;
+  }
+
+  #feedback{margin-top:18px;border-radius:6px;padding:16px 18px;display:none}
+  #feedback.show{display:block}
+  #feedback.good{background:var(--ok-bg);border:1px solid var(--ok)}
+  #feedback.wrong{background:var(--bad-bg);border:1px solid var(--bad)}
+  #feedback .verdict{font-weight:700;margin-bottom:6px}
+  #feedback.good .verdict{color:var(--ok)}
+  #feedback.wrong .verdict{color:var(--bad)}
+  #feedback p{font-size:.93rem;max-width:70ch;margin-bottom:8px}
+  .prinzip{
+    margin-top:12px;background:var(--gold-bg);border:1px solid var(--gold);
+    border-radius:6px;padding:10px 14px;font-size:.9rem;max-width:70ch;
+  }
+  .prinzip b{color:var(--gold)}
+  .art-chips{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+  .art-chips span{font-size:.78rem;background:#fff;border:1px solid var(--line);border-radius:4px;padding:2px 8px;color:var(--navy);font-weight:600}
+  #next-row{margin-top:18px;display:none;justify-content:flex-end;gap:10px}
+  #next-row.show{display:flex}
+
+  /* Ende */
+  #ende h2{font-size:1.6rem;margin:8px 0 6px}
+  #ende .big{font-size:2.6rem;font-weight:700;font-variant-numeric:tabular-nums;margin:10px 0 4px}
+  #ende p{color:var(--ink-soft);max-width:60ch}
+  table{border-collapse:collapse;width:100%;margin:20px 0;font-size:.92rem}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+  th{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft)}
+  td.num{font-variant-numeric:tabular-nums;text-align:right}
+  .wrong-list{margin:14px 0 22px;padding-left:0;list-style:none;font-size:.92rem}
+  .wrong-list li{padding:7px 0;border-bottom:1px solid var(--line);color:var(--ink-soft)}
+  .wrong-list b{color:var(--ink)}
+
+  .hidden{display:none}
+  footer{max-width:820px;margin:0 auto;padding:0 20px 40px;font-size:.78rem;color:var(--ink-soft)}
+</style>
+
+<header>
+  <div class="head-in">
+    <h1>Mietrecht-Falltrainer<span>50 Fälle · OR 253–274</span></h1>
+    <div id="score-pill"></div>
+  </div>
+</header>
+<div id="bar"><div></div></div>
+
+<main>
+  <!-- START -->
+  <section id="start">
+    <div class="card">
+      <div class="eyebrow">Rechtsfachmann HF · OR BT · Gebrauchsüberlassung</div>
+      <h2>50 praktische Fälle zum Schweizer Mietrecht</h2>
+      <p>Jeder Fall drillt ein Grundprinzip: Sachverhalt lesen, entscheiden, dann die ausführliche Lösung mit Gesetzesartikeln und Merksatz studieren. Empfohlen: Gesetzestext (OR) daneben legen und die Artikel jeweils nachschlagen.</p>
+      <div class="topics" id="topic-chips"></div>
+      <div class="start-row">
+        <button class="btn" id="btn-seq">Start (Fall 1–50)</button>
+        <button class="btn ghost" id="btn-shuffle">Gemischte Reihenfolge</button>
+        <button class="btn ghost hidden" id="btn-resume">Weiterfahren</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FALL -->
+  <section id="quiz" class="hidden">
+    <div class="card">
+      <div class="q-head">
+        <span class="badge" id="q-topic"></span>
+        <span class="q-count" id="q-count"></span>
+      </div>
+      <div class="fall-title" id="q-title"></div>
+      <div class="sv" id="q-sv"></div>
+      <div class="frage" id="q-frage"></div>
+      <div class="answers" id="answers"></div>
+      <div id="feedback">
+        <div class="verdict"></div>
+        <p class="exp"></p>
+        <div class="prinzip"></div>
+        <div class="art-chips"></div>
+      </div>
+      <div id="next-row">
+        <button class="btn ghost" id="btn-abort">Abbrechen</button>
+        <button class="btn" id="btn-next">Weiter <kbd style="background:rgba(255,255,255,.2);border-color:transparent;color:#fff">⏎</kbd></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ENDE -->
+  <section id="ende" class="hidden">
+    <div class="card">
+      <div class="eyebrow">Auswertung</div>
+      <h2 id="ende-titel"></h2>
+      <div class="big" id="ende-score"></div>
+      <p id="ende-text"></p>
+      <table id="topic-table"><thead><tr><th>Thema</th><th style="text-align:right">Richtig</th></tr></thead><tbody></tbody></table>
+      <div id="wrong-wrap">
+        <div class="eyebrow" style="margin-bottom:6px">Falsch beantwortete Fälle</div>
+        <ul class="wrong-list" id="wrong-list"></ul>
+      </div>
+      <div class="start-row">
+        <button class="btn" id="btn-retry-wrong">Nur falsche Fälle wiederholen</button>
+        <button class="btn ghost" id="btn-restart">Von vorne beginnen</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Erstellt aus «OR Mietrecht Zusammenfassung» und «Prüfschema Vermieterkündigung» · Ohne Gewähr — Artikel im Zweifel im Gesetzestext nachschlagen (fedlex.admin.ch). Stand: Juli 2026.
+</footer>
+
+<script>
+"use strict";
+/* ================= DATEN: 50 FÄLLE =================
+   Struktur: th=Thema, ti=Titel, sv=Sachverhalt, q=Frage,
+   a=Antworten (ok:true = richtig), exp=Lösung, pr=Prinzip/Merksatz, art=Artikel */
+const CASES = [
+
+/* ---------- A. Abgrenzung der Vertragstypen (1–5) ---------- */
+{th:"Abgrenzung", ti:"Das Pedalo am See",
+sv:"Luca übernimmt am Zürichsee für zwei Stunden ein Pedalo. Beim Bootsverleih zahlt er dafür CHF 30. Sein Kollege Timo leiht ihm gleichentags gratis sein Stand-up-Paddle.",
+q:"Welche Verträge liegen vor?",
+a:[{t:"Pedalo: Mietvertrag — Paddle: Gebrauchsleihe",ok:true},
+{t:"Pedalo: Gebrauchsleihe — Paddle: Mietvertrag"},
+{t:"Beides Mietverträge, da beide Sachen zurückgegeben werden müssen"},
+{t:"Pedalo: Pachtvertrag, da Luca das Boot wirtschaftlich nutzt"}],
+exp:"Das Pedalo wird gegen Entgelt zum Gebrauch überlassen: Mietvertrag (Art. 253 OR) — auch die Miete beweglicher Sachen ist Miete, und sie ist formfrei gültig (Art. 11 Abs. 1 OR). Das Paddle wird unentgeltlich überlassen: Gebrauchsleihe (Art. 305 OR). Beiden gemeinsam ist, dass dieselbe Sache zurückzugeben ist — das entscheidende Abgrenzungskriterium ist die Entgeltlichkeit.",
+pr:"Miete = Gebrauch gegen Entgelt. Gebrauchsleihe = Gebrauch gratis. Beide: identische Sache zurück.",
+art:["Art. 253 OR","Art. 305 OR","Art. 11 Abs. 1 OR"]},
+
+{th:"Abgrenzung", ti:"Die Kiesgrube",
+sv:"Bauer Brunner überlässt der Kies AG gegen ein jährliches Entgelt von CHF 80'000 eine Kiesgrube zur Ausbeutung. Die Kies AG baut den Kies ab und verkauft ihn.",
+q:"Welcher Vertrag liegt vor?",
+a:[{t:"Mietvertrag — die Grube wird gegen Entgelt gebraucht"},
+{t:"Pachtvertrag — die Kies AG zieht Erträgnisse aus der Sache",ok:true},
+{t:"Kaufvertrag über den Kies"},
+{t:"Werkvertrag, da die Kies AG Arbeit leistet"}],
+exp:"Die Kies AG gebraucht die Grube nicht nur, sie nutzt sie: Sie zieht die Früchte bzw. Erträgnisse (den Kies) aus der Sache. Überlassung einer nutzbaren Sache zum Gebrauch und Fruchtbezug gegen Entgelt ist Pacht (Art. 275 OR). Bei der Miete (Art. 253 OR) wird die Sache dagegen nur zum Gebrauch überlassen.",
+pr:"«Gebrauchen» = benutzen. «Nutzen» = benutzen + ernten. Fliesst der Ertrag aus der Sache selbst → Pacht.",
+art:["Art. 275 OR","Art. 253 OR"]},
+
+{th:"Abgrenzung", ti:"Zwei Restaurants",
+sv:"Frau Rossi übernimmt gegen monatliches Entgelt ein komplett eingerichtetes, laufendes Restaurant samt Inventar und Kundschaft. Herr Kunz übernimmt gegen Entgelt ein leeres Lokal und richtet es auf eigene Kosten als Restaurant ein.",
+q:"Wie sind die beiden Verträge zu qualifizieren?",
+a:[{t:"Beides Mietverträge — es geht um Räume"},
+{t:"Beides Pachtverträge — es geht um Restaurants"},
+{t:"Rossi: Pacht — Kunz: Miete",ok:true},
+{t:"Rossi: Miete — Kunz: Pacht"}],
+exp:"Bei Frau Rossi ist der Ertrag Folge der Benutzung eines existierenden, gänzlich eingerichteten Unternehmens — sie nutzt einen ertragsfähigen Betrieb: Pacht (Art. 275 OR). Herr Kunz erhält nur leere Räume und stattet sie selbst so aus, dass sie Erträge abwerfen — der Ertrag ist Folge seiner eigenen unternehmerischen Tätigkeit: Miete (Art. 253 OR).",
+pr:"Eingerichtetes Restaurant übernehmen = Pacht. Leeres Lokal übernehmen und selbst einrichten = Miete.",
+art:["Art. 275 OR","Art. 253 OR"]},
+
+{th:"Abgrenzung", ti:"Der Benzinkanister",
+sv:"Ihr Nachbar bittet Sie um einen vollen Benzinkanister für seinen Rasenmäher. Er verspricht, Ihnen «in den nächsten Tagen wieder einen vollen Kanister» zurückzubringen. Drei Wochen später verlangt er zudem von Ihnen keinen Zins — Sie von ihm aber auch nicht.",
+q:"Welcher Vertrag liegt bezüglich des Benzins vor?",
+a:[{t:"Gebrauchsleihe — das Benzin wird gratis überlassen"},
+{t:"Darlehen — zurückzugeben ist nicht dasselbe Benzin, sondern gleiche Art und Menge",ok:true},
+{t:"Schenkung mit Gegengeschenk"},
+{t:"Kaufvertrag mit Zahlungsaufschub"}],
+exp:"Benzin ist eine verbrauchbare, vertretbare Sache: Der Nachbar gibt nicht denselben Treibstoff zurück, sondern Sachen der nämlichen Art in gleicher Menge und Güte — das ist ein Darlehen (Art. 312 OR). Die Gebrauchsleihe (Art. 305 OR) scheidet aus, weil dort die identische Sache zurückzugeben ist. Zins ist im gewöhnlichen Verkehr nur geschuldet, wenn er verabredet wurde (Art. 313 Abs. 1 OR); ohne Rückgabeabrede wäre ein Darlehen innert sechs Wochen ab erster Aufforderung zurückzuerstatten (Art. 318 OR).",
+pr:"Leihe: identische Sache zurück. Darlehen: gleiche Art/Menge/Güte zurück. Zins nur bei Abrede (gewöhnlicher Verkehr).",
+art:["Art. 312 OR","Art. 305 OR","Art. 313 Abs. 1 OR","Art. 318 OR"]},
+
+{th:"Abgrenzung", ti:"Das geleaste Auto",
+sv:"Sandra «least» als Privatperson einen Neuwagen: feste Vertragsdauer von 48 Monaten, Anzahlung, monatliche Rate, die auch die Amortisation des Fahrzeugs abdeckt. Sie fragt sich, ob das einfach ein Mietvertrag ist.",
+q:"Wie ist der Leasingvertrag rechtlich einzuordnen?",
+a:[{t:"Es ist ein gewöhnlicher Mietvertrag nach Art. 253 ff. OR"},
+{t:"Es ist ein Kaufvertrag mit Ratenzahlung"},
+{t:"Innominatvertrag mit Miet- und Kaufelementen; beim privaten Konsumgüterleasing greifen zudem die Schutzbestimmungen des KKG",ok:true},
+{t:"Es ist eine Pacht, weil Sandra das Auto wirtschaftlich nutzt"}],
+exp:"Das Leasing ist im OR nicht geregelt (Innominatvertrag). Es mischt Elemente von Miete (Gebrauchsüberlassung auf Zeit gegen Rate) und Kauf (Amortisation, oft Übernahmeoption). Die Rate enthält Amortisation, Zins-, Verwaltungskosten und Gewinn. Beim Konsumgüterleasing an Private greift das Konsumkreditgesetz mit seinen Schutzbestimmungen (u.a. Schriftlichkeit und Mindestinhalt, Art. 11 KKG; Kreditfähigkeitsprüfung, Art. 29 i.V.m. Art. 28 KKG).",
+pr:"Leasing = Innominatvertrag (Miete + Kauf). Konsumgüterleasing an Private → KKG-Schutz.",
+art:["Art. 253 OR (Abgrenzung)","Art. 11 KKG","Art. 29 KKG"]},
+
+/* ---------- B. Koppelungsgeschäfte (6–7) ---------- */
+{th:"Koppelung", ti:"Schlüsselgeld an der Bahnhofstrasse",
+sv:"Sie möchten an der Zürcher Bahnhofstrasse einen Laden eröffnen. Der Vermieter ist zum Vertragsschluss nur bereit, wenn Sie ihm CHF 500'000 «Schlüsselgeld» für die Übernahme des Mietobjekts zahlen. Sie zahlen — und überlegen es sich später anders.",
+q:"Wie ist die Rechtslage?",
+a:[{t:"Die Abrede ist gültig — Vertragsfreiheit bei Geschäftsräumen"},
+{t:"Der ganze Mietvertrag ist nichtig"},
+{t:"Die Schlüsselgeld-Abrede ist nichtig, der Mietvertrag bleibt gültig; das Geld kann nach Bereicherungsrecht zurückgefordert werden",ok:true},
+{t:"Die Abrede ist bloss anfechtbar innert 30 Tagen"}],
+exp:"Das Schlüsselgeld hängt nicht unmittelbar mit dem Gebrauch der Mietsache zusammen. Es liegt ein unzulässiges Koppelungsgeschäft vor: Die Abrede ist nichtig (Art. 254 OR). Nichtig ist aber nur das Koppelungsgeschäft — der Mietvertrag selbst bleibt gültig. Bereits bezahltes Schlüsselgeld kann nach den Regeln der ungerechtfertigten Bereicherung zurückgefordert werden (Art. 62 ff. OR).",
+pr:"Art. 254 OR trifft nur die Koppelungsabrede — der Mietvertrag überlebt.",
+art:["Art. 254 OR","Art. 62 ff. OR"]},
+
+{th:"Koppelung", ti:"Möbel oder keine Wohnung",
+sv:"Ein Vermieter, der auch ein Möbelgeschäft betreibt, schliesst den Wohnungsmietvertrag nur ab, wenn die Mieterin in seinem Geschäft Möbel für mindestens CHF 10'000 kauft. Die Mieterin unterschreibt beides.",
+q:"Wie ist die Möbelkauf-Verpflichtung zu beurteilen?",
+a:[{t:"Gültig — die Möbel stehen ja in der gemieteten Wohnung"},
+{t:"Nichtiges Koppelungsgeschäft: Der Möbelkauf hängt nicht unmittelbar mit dem Gebrauch der Wohnung zusammen",ok:true},
+{t:"Gültig, aber innert 30 Tagen bei der Schlichtungsbehörde anfechtbar"},
+{t:"Der Mietvertrag ist nichtig, der Möbelkauf gültig"}],
+exp:"Der Abschluss des Mietvertrags wird davon abhängig gemacht, dass die Mieterin eine Verpflichtung übernimmt, die nicht unmittelbar mit dem Gebrauch der Mietsache zusammenhängt — ein verbotenes Koppelungsgeschäft (Art. 254 OR). Art. 3 VMWG nennt die Pflicht, Möbel zu kaufen, ausdrücklich als Beispiel. Der Möbelkaufvertrag ist nichtig, der Mietvertrag bleibt gültig. (Zulässig wäre nach der Praxis dagegen z.B. die Koppelung mit der Übernahme der Hauswartstelle in derselben Liegenschaft.)",
+pr:"Möbelkauf, Aktienkauf, Versicherungsabschluss als Mietbedingung = klassische verbotene Koppelung (Art. 3 VMWG).",
+art:["Art. 254 OR","Art. 3 VMWG"]},
+
+/* ---------- C. Pflichten des Mieters (8–12) ---------- */
+{th:"Mieterpflichten", ti:"Die überrissene Kaution",
+sv:"Für eine 3-Zimmer-Wohnung (Mietzins CHF 2'000) verlangt die Vermieterin eine Kaution von CHF 10'000. Den Betrag will sie «der Einfachheit halber» auf ihr eigenes Privatkonto überweisen lassen.",
+q:"Was gilt für diese Kaution?",
+a:[{t:"Beides zulässig — die Kautionshöhe ist Verhandlungssache"},
+{t:"Zulässig sind höchstens CHF 6'000 (drei Monatszinse), und das Geld gehört auf ein Sparkonto/Depot bei einer Bank, das auf den Namen des Mieters lautet",ok:true},
+{t:"Kautionen sind bei Wohnräumen generell verboten"},
+{t:"Die Höhe ist frei, aber das Konto muss auf den Namen des Mieters lauten"}],
+exp:"Bei der Miete von Wohnräumen darf der Vermieter höchstens drei Monatszinse als Sicherheit verlangen (Art. 257e Abs. 2 OR) — hier also CHF 6'000. Zudem muss er Geld oder Wertpapiere bei einer Bank auf einem Sparkonto oder Depot hinterlegen, das auf den Namen des Mieters lautet (Art. 257e Abs. 1 OR); das eigene Privatkonto ist unzulässig. Merke: Einen gesetzlichen Anspruch auf eine Kaution gibt es nicht — sie muss vertraglich vereinbart sein; für Geschäftsräume gilt keine gesetzliche Obergrenze.",
+pr:"Wohnräume: max. 3 Monatszinse, Bankkonto auf den Namen des Mieters. Geschäftsräume: keine Obergrenze.",
+art:["Art. 257e Abs. 1 OR","Art. 257e Abs. 2 OR"]},
+
+{th:"Mieterpflichten", ti:"Rotwein auf dem Spannteppich",
+sv:"Beim Auszug muss der Spannteppich (angenommene Lebensdauer: 10 Jahre) ersetzt werden, weil der Mieter ihn durch groben Umgang — grossflächige Rotwein- und Brandflecken — ruiniert hat. Der Teppich war beim Auszug 8 Jahre alt und kostet neu CHF 3'000. Zusätzlich verlangt der Vermieter CHF 200 für einen kleinen Kratzer im Parkett.",
+q:"Was muss der Mieter maximal bezahlen?",
+a:[{t:"CHF 3'200 — er hat beides zu verantworten"},
+{t:"CHF 3'000 für den Teppich, nichts für den Kratzer"},
+{t:"CHF 600 für den Teppich (20 % Restwert), nichts für den kleinen Kratzer",ok:true},
+{t:"Nichts — Abnützung ist mit dem Mietzins abgegolten"}],
+exp:"Bei unsorgfältigem Gebrauch haftet der Mieter für den Schaden (Art. 257f Abs. 1 OR) — aber nur für den Zeitwert gemäss Lebensdauertabelle: Nach 8 von 10 Jahren beträgt der Restwert noch 2/10 = 20 %, also CHF 600. Wäre die Lebensdauer bereits abgelaufen, wäre nichts geschuldet. Der kleine Kratzer im Parkett ist dagegen normale Abnützung — sie ist mit dem Mietzins abgegolten, dafür haftet der Mieter nicht. Bei der Rückgabe gilt: Der Mieter schuldet den Zustand, der sich aus vertragsgemässem Gebrauch ergibt (Art. 267 Abs. 1 OR).",
+pr:"Haftung nur für Schäden aus unsorgfältigem Gebrauch — und nur zum Restwert nach Lebensdauertabelle. Normale Abnützung: gratis.",
+art:["Art. 257f Abs. 1 OR","Art. 267 Abs. 1 OR"]},
+
+{th:"Mieterpflichten", ti:"Freitagabend-Partys",
+sv:"Die Nachbarn beklagen sich beim Vermieter: Mieter Dario feiert jeden Freitag bis nach Mitternacht mit lauter Musik. Der Vermieter will Dario «sofort und ohne Umschweife» aus der Wohnung haben. Dario feiert unbeirrt weiter.",
+q:"Wie muss der Vermieter korrekt vorgehen?",
+a:[{t:"Er kann sofort fristlos kündigen — Ruhestörung ist ein wichtiger Grund"},
+{t:"Zuerst schriftlich abmahnen; setzt Dario die Störungen fort und ist die Fortsetzung unzumutbar, Kündigung mit Frist von mind. 30 Tagen auf ein Monatsende (amtliches Formular)",ok:true},
+{t:"Er kann nur ordentlich mit 3 Monaten auf den ortsüblichen Termin kündigen"},
+{t:"Er muss zuerst die Schlichtungsbehörde anrufen"}],
+exp:"Der Mieter muss auf Hausbewohner und Nachbarn Rücksicht nehmen (Art. 257f Abs. 2 OR). Verletzt er die Pflicht trotz schriftlicher Mahnung weiter, so dass die Fortsetzung des Mietverhältnisses unzumutbar ist, kann der Vermieter bei Wohnräumen mit einer Frist von mindestens 30 Tagen auf Ende eines Monats kündigen (Art. 257f Abs. 3 OR) — nicht fristlos. Die Kündigung braucht das amtliche Formular (Art. 266l Abs. 2 OR), bei einer Familienwohnung separate Zustellung an beide Ehegatten (Art. 266n OR). Ohne vorgängige schriftliche Abmahnung ist die Kündigung unwirksam.",
+pr:"257f Abs. 3: erst schriftlich abmahnen, dann 30 Tage auf Monatsende. Fristlos nur bei vorsätzlicher schwerer Schädigung (Abs. 4).",
+art:["Art. 257f Abs. 2 OR","Art. 257f Abs. 3 OR","Art. 266l OR","Art. 266n OR"]},
+
+{th:"Mieterpflichten", ti:"Mit der Axt gegen die Türen",
+sv:"Nach einem Streit mit der Verwaltung schlägt Mieter Bruno aus Wut sämtliche Innentüren der Wohnung mit einer Axt in Stücke und zerstört die Einbauküche. Der Vermieter erfährt es am selben Tag.",
+q:"Kann der Vermieter fristlos kündigen — ohne vorherige Abmahnung?",
+a:[{t:"Nein, auch hier braucht es zuerst eine schriftliche Abmahnung"},
+{t:"Nein, es gilt immer die Frist von 30 Tagen auf ein Monatsende"},
+{t:"Ja — bei vorsätzlicher schwerer Schädigung der Sache ist die fristlose Kündigung ohne Abmahnung zulässig",ok:true},
+{t:"Nein, er kann nur Schadenersatz verlangen"}],
+exp:"Fügt der Mieter der Sache vorsätzlich schweren Schaden zu, kann der Vermieter von Wohn- oder Geschäftsräumen fristlos kündigen (Art. 257f Abs. 4 OR) — eine Abmahnung ist hier nicht nötig. Das ist die Ausnahme zum Grundsatz von Abs. 3 (Abmahnung + 30 Tage auf Monatsende). Daneben haftet Bruno selbstverständlich für den Schaden (Art. 257f Abs. 1 OR). Formell braucht auch diese Kündigung das amtliche Formular (Art. 266l Abs. 2 OR).",
+pr:"Vorsätzliche schwere Schädigung = einziger 257f-Fall ohne Abmahnung und ohne Frist.",
+art:["Art. 257f Abs. 4 OR","Art. 257f Abs. 3 OR","Art. 266l OR"]},
+
+{th:"Mieterpflichten", ti:"«Ich habe ja einen Schlüssel»",
+sv:"Im Mietvertrag steht: «Der Vermieter ist berechtigt, die Wohnung jederzeit und ohne Voranmeldung zu betreten und zu besichtigen.» Der Vermieter steht eines Abends unangemeldet in der Wohnung, «um nach dem Rechten zu sehen».",
+q:"Ist diese Vertragsklausel bzw. dieses Verhalten zulässig?",
+a:[{t:"Ja — was im Vertrag steht, gilt"},
+{t:"Nein: Der Mieter muss Besichtigungen nur gestatten, soweit sie für Unterhalt, Verkauf oder Wiedervermietung nötig sind, und der Vermieter muss sie rechtzeitig anzeigen",ok:true},
+{t:"Ja, aber nur tagsüber"},
+{t:"Nein — der Vermieter darf die Wohnung während der Mietdauer gar nie betreten"}],
+exp:"Der Mieter muss dem Vermieter die Besichtigung nur gestatten, soweit dies für den Unterhalt, den Verkauf oder die Wiedervermietung notwendig ist (Art. 257h Abs. 2 OR). Der Vermieter muss Arbeiten und Besichtigungen rechtzeitig anzeigen und auf die Interessen des Mieters Rücksicht nehmen (Art. 257h Abs. 3 OR). Ein vertragliches «Jederzeit-Zutrittsrecht» widerspricht dieser Ordnung; der unangemeldete Besuch ist unzulässig. Ganz ausgeschlossen ist der Zutritt aber nicht — bei notwendigem Anlass und rechtzeitiger Anzeige besteht eine Duldungspflicht.",
+pr:"Zutritt nur bei Bedarf (Unterhalt, Verkauf, Wiedervermietung) und nach rechtzeitiger Anzeige.",
+art:["Art. 257h Abs. 2 OR","Art. 257h Abs. 3 OR"]},
+
+/* ---------- D. Zahlungsverzug (13–15) ---------- */
+{th:"Zahlungsverzug", ti:"Annas Septembermiete",
+sv:"Am 14. Oktober 2021 stellt die Vermieterin fest, dass Anna die fällige Septembermiete nicht bezahlt hat. Sie setzt ihr per Einschreiben eine Zahlungsfrist von 30 Tagen und droht die Kündigung an. Anna erhält den Brief am 15. Oktober 2021 — und zahlt nie.",
+q:"Auf welchen Termin kann die Vermieterin das Mietverhältnis frühestens auflösen?",
+a:[{t:"Per sofort nach Ablauf der Zahlungsfrist (fristlos)"},
+{t:"Auf den 30. November 2021"},
+{t:"Auf den 31. Dezember 2021",ok:true},
+{t:"Auf den nächsten ortsüblichen Termin (31. März 2022)"}],
+exp:"Vorgehen nach Art. 257d OR in zwei Schritten: 1. Schriftliche Zahlungsfrist von mindestens 30 Tagen (Wohnräume) mit Kündigungsandrohung — hier gültig erfolgt. Fristenlauf ab Empfang: Zugang 15. Oktober, Fristbeginn 16. Oktober, Ablauf 14. November. 2. Nach unbenütztem Ablauf Kündigung mit einer Frist von mindestens 30 Tagen auf Ende eines Monats (Art. 257d Abs. 2 OR): Frühestens am 15. November ausgesprochen, reichen 30 Tage nicht mehr auf den 30. November — frühestmöglicher Termin ist der 31. Dezember 2021. Form: amtliches Formular (Art. 266l Abs. 2 OR). Fristlos ist die Verzugskündigung nur bei anderen Sachen als Wohn-/Geschäftsräumen.",
+pr:"30 Tage zahlen + 30 Tage kündigen auf Monatsende — bei Wohn- und Geschäftsräumen nie fristlos.",
+art:["Art. 257d Abs. 1 OR","Art. 257d Abs. 2 OR","Art. 266l OR"]},
+
+{th:"Zahlungsverzug", ti:"Die 10-Tage-Frist",
+sv:"Ein Vermieter setzt seinem Wohnungsmieter wegen Zahlungsrückstands schriftlich eine Zahlungsfrist von 10 Tagen mit Kündigungsandrohung. Nach fruchtlosem Ablauf kündigt er mit 30 Tagen auf ein Monatsende (amtliches Formular).",
+q:"Ist die Kündigung wirksam?",
+a:[{t:"Ja — 10 Tage sind die gesetzliche Mindestfrist"},
+{t:"Nein: Bei Wohn- und Geschäftsräumen beträgt die Zahlungsfrist mindestens 30 Tage; die darauf gestützte Kündigung ist unwirksam",ok:true},
+{t:"Ja, aber die Kündigung wirkt erst auf den nächsten ortsüblichen Termin"},
+{t:"Nein, weil der Vermieter zuerst betreiben müsste"}],
+exp:"Die Zahlungsfrist beträgt mindestens 10 Tage, bei Wohn- und Geschäftsräumen aber mindestens 30 Tage (Art. 257d Abs. 1 OR). Die 10-tägige Frist genügt hier nicht — die Verfahrensvoraussetzung der ausserordentlichen Kündigung fehlt, die Kündigung ist unwirksam und das Mietverhältnis läuft weiter. Die 10-Tage-Frist gilt nur für andere Mietsachen (z.B. ein gemietetes Auto). Beachte zudem: Die Zahlungsfristansetzung ist bei einer Familienwohnung dem Ehegatten separat zuzustellen (Art. 266n OR).",
+pr:"10 Tage gelten nur für bewegliche Sachen — Wohn-/Geschäftsräume: immer 30 Tage.",
+art:["Art. 257d Abs. 1 OR","Art. 266n OR"]},
+
+{th:"Zahlungsverzug", ti:"«Dann zahle ich halt weniger»",
+sv:"Wegen eines defekten Geschirrspülers, den die Verwaltung seit Wochen nicht repariert, überweist Mieterin Petra kurzerhand nur noch 80 % des Mietzinses — «bis das Ding läuft». Eine Hinterlegung hat sie nie angekündigt.",
+q:"Welches Risiko geht Petra ein?",
+a:[{t:"Keines — bei Mängeln darf der Mietzins anteilig gekürzt werden"},
+{t:"Sie gerät in Zahlungsrückstand: Die Vermieterin kann nach Art. 257d OR vorgehen und ihr letztlich kündigen",ok:true},
+{t:"Die Vermieterin kann nur den Fehlbetrag einklagen, mehr nicht"},
+{t:"Sie verliert lediglich ihre Mängelrechte"}],
+exp:"Eine eigenmächtige Herabsetzung des Mietzinses ist unzulässig — Petra gerät damit in Zahlungsrückstand, und die Vermieterin kann das Verzugsverfahren nach Art. 257d OR einleiten (30-tägige Zahlungsfrist mit Kündigungsandrohung, dann Kündigung). Richtig wäre: Beseitigung verlangen, schriftlich Frist setzen und die Hinterlegung künftiger Mietzinse androhen (Art. 259g OR) — hinterlegte Zinse gelten als bezahlt. Daneben kann sie eine Herabsetzung nach Art. 259d OR verlangen, aber auf dem Rechtsweg, nicht durch eigenmächtigen Abzug.",
+pr:"Nie eigenmächtig kürzen — Mängel-Druckmittel ist die angekündigte Hinterlegung (Art. 259g OR).",
+art:["Art. 257d OR","Art. 259g OR","Art. 259d OR"]},
+
+/* ---------- E. Retentionsrecht (16) ---------- */
+{th:"Mieterpflichten", ti:"Retention an der Wohnzimmer-Stereoanlage?",
+sv:"Wohnungsmieter Elmar ist mit drei Monatsmieten im Rückstand. Der Vermieter will kurzerhand Elmars Stereoanlage und den Fernseher «als Pfand» zurückbehalten, bis bezahlt ist. Er beruft sich auf sein «gesetzliches Retentionsrecht als Vermieter».",
+q:"Hat der Vermieter dieses Recht?",
+a:[{t:"Ja — jeder Vermieter hat ein Retentionsrecht für verfallene Mietzinse"},
+{t:"Nein: Das Retentionsrecht besteht nur bei der Miete von Geschäftsräumen",ok:true},
+{t:"Ja, aber nur für maximal einen Monatszins"},
+{t:"Nein, ein Retentionsrecht gibt es im Mietrecht überhaupt nicht"}],
+exp:"Das Retentionsrecht steht nur dem Vermieter von Geschäftsräumen zu: für einen verfallenen Jahreszins und den laufenden Halbjahreszins, an den beweglichen Sachen, die sich in den vermieteten Räumen befinden und zu deren Einrichtung oder Benutzung gehören (Art. 268 Abs. 1 OR). Der Vermieter von Wohnräumen hat kein Retentionsrecht — er muss auf dem Betreibungsweg vorgehen und kann nach Art. 257d OR kündigen. Bei Geschäftsräumen kann zur Sicherung über das Betreibungsamt ein Retentionsverzeichnis aufgenommen werden.",
+pr:"Retentionsrecht = nur Geschäftsräume, verfallener Jahreszins + laufender Halbjahreszins.",
+art:["Art. 268 Abs. 1 OR","Art. 257d OR"]},
+
+/* ---------- F. Mängel (17–21) ---------- */
+{th:"Mängelrechte", ti:"Heizungsausfall im Dezember",
+sv:"Bei Anna Keller fällt im Dezember die Heizung komplett aus; die Wohnungstemperatur sinkt tagelang unter 12 Grad. Anna meldet den Mangel sofort schriftlich und verlangt rasche Reparatur. Der Vermieter bestätigt den Mangel, unternimmt aber zwei Wochen nichts, obwohl die Heizungsfirma kurzfristig könnte; Heizgeräte oder eine Ersatzunterkunft bietet er auch nicht an. Anna kündigt schriftlich fristlos.",
+q:"Ist Annas fristlose Kündigung zulässig?",
+a:[{t:"Nein — fristlos kündigen kann nur der Vermieter"},
+{t:"Nein, sie hätte zuerst die Schlichtungsbehörde anrufen müssen"},
+{t:"Ja: schwerer Mangel, Kenntnis des Vermieters, keine Behebung innert angemessener Frist, kein Ersatz — die Voraussetzungen sind erfüllt",ok:true},
+{t:"Nein, sie kann nur eine Mietzinsherabsetzung verlangen"}],
+exp:"Kennt der Vermieter einen Mangel, der die Tauglichkeit einer unbeweglichen Sache zum vorausgesetzten Gebrauch ausschliesst oder erheblich beeinträchtigt, und beseitigt er ihn nicht innert angemessener Frist, kann der Mieter fristlos kündigen (Art. 259b lit. a OR). Der komplette Heizungsausfall im Winter ist ein solcher schwerer Mangel (vitale Interessen). Anna hat sofort gemeldet und Frist eingeräumt; der Vermieter blieb zwei Wochen untätig und stellte auch keinen vollwertigen Ersatz (Art. 259c OR). Die fristlose Kündigung ist zulässig. Achtung: Sind die Voraussetzungen nicht erfüllt, ist eine solche Kündigung nichtig.",
+pr:"Fristlose Mieterkündigung nur bei schwerem Mangel + Fristansetzung + Untätigkeit + kein Ersatz.",
+art:["Art. 259b lit. a OR","Art. 259c OR"]},
+
+{th:"Mängelrechte", ti:"Der verstopfte WC-Abfluss",
+sv:"Der WC-Abfluss einer Mietwohnung ist verstopft. Der Sanitär stellt fest: Nötig ist eine Rohrreinigung für ca. CHF 300. Der Mieter hat die Verstopfung nicht verschuldet und meldet den Mangel dem Vermieter.",
+q:"Wer trägt die Kosten — und was wäre bei Kosten von nur CHF 80?",
+a:[{t:"Immer der Mieter — Abflüsse gehören zum kleinen Unterhalt"},
+{t:"CHF 300 trägt der Vermieter; ca. CHF 80 wären kleiner Unterhalt und damit Sache des Mieters",ok:true},
+{t:"Immer der Vermieter — er muss die Sache in Stand halten, egal was es kostet"},
+{t:"Die Kosten werden hälftig geteilt"}],
+exp:"Der Mieter muss nur Mängel beseitigen, die durch kleine, für den gewöhnlichen Unterhalt erforderliche Reinigungen oder Ausbesserungen behoben werden können (Art. 259 OR) — Faustregel: bis ca. CHF 150. Die Rohrreinigung für CHF 300 übersteigt das klar: Sie ist Sache des Vermieters (Instandhaltungspflicht, Art. 256 Abs. 1 OR). Anders bei ca. CHF 80: kleiner Unterhalt, Mieter zahlt. Hätte der Mieter die Verstopfung selbst verschuldet, würde er aus Verletzung der Sorgfaltspflicht haften (Art. 257f Abs. 1 OR). Bleibt der Vermieter untätig: Frist setzen und Hinterlegung androhen (Art. 259g OR).",
+pr:"Kleiner Unterhalt ≈ bis CHF 150 → Mieter. Darüber → Vermieter (ausser Selbstverschulden).",
+art:["Art. 259 OR","Art. 256 Abs. 1 OR","Art. 257f Abs. 1 OR","Art. 259g OR"]},
+
+{th:"Mängelrechte", ti:"Schimmel und die Hinterlegung",
+sv:"Familie Suter hat Schimmel in der Wohnung. Die Vermieterin unternimmt trotz Meldung wochenlang nichts. Die Suters wollen jetzt Druck machen und den Mietzins hinterlegen. Sie fragen sich, wie sie korrekt vorgehen müssen — und was mit dem hinterlegten Geld geschieht.",
+q:"Wie läuft die Hinterlegung korrekt ab?",
+a:[{t:"Einfach den Mietzins auf ein eigenes Sperrkonto zahlen und abwarten"},
+{t:"Schriftlich Frist zur Beseitigung setzen, Hinterlegung androhen, künftige Zinse bei der kantonalen Stelle hinterlegen — und die Ansprüche innert 30 Tagen bei der Schlichtungsbehörde geltend machen",ok:true},
+{t:"Den Mietzins direkt der Schlichtungsbehörde überweisen, weiter braucht es nichts"},
+{t:"Hinterlegen darf man erst nach einem verlorenen Gerichtsverfahren"}],
+exp:"Ablauf nach Art. 259g OR: Der Mieter einer unbeweglichen Sache setzt dem Vermieter schriftlich eine angemessene Frist zur Mängelbeseitigung und droht an, dass er bei unbenütztem Ablauf künftig fällig werdende Mietzinse bei der vom Kanton bezeichneten Stelle hinterlegt; die Hinterlegung ist schriftlich anzukündigen. Hinterlegte Zinse gelten als bezahlt (Art. 259g Abs. 2 OR) — kein Verzugsrisiko. Aber: Der Mieter muss seine Ansprüche innert 30 Tagen seit Fälligkeit des ersten hinterlegten Zinses bei der Schlichtungsbehörde geltend machen, sonst fällt das Geld dem Vermieter zu (Art. 259h Abs. 1 OR). Nur künftige Zinse können hinterlegt werden, keine bereits bezahlten.",
+pr:"Hinterlegung = schriftlich Frist + Androhung + kantonale Stelle + 30 Tage zur Schlichtungsbehörde.",
+art:["Art. 259g OR","Art. 259h Abs. 1 OR"]},
+
+{th:"Mängelrechte", ti:"Grossbaustelle vor dem Schlafzimmer",
+sv:"Direkt neben Milas Wohnung entsteht ein Neubau. Monatelang dröhnen ab 7 Uhr Presslufthämmer; Staub dringt in die Wohnung, der Balkon ist unbenutzbar. Der Vermieter sagt: «Dafür kann ich nichts, das ist nicht meine Baustelle.»",
+q:"Kann Mila trotzdem etwas verlangen?",
+a:[{t:"Nein — der Vermieter hat den Lärm nicht zu vertreten, also gibt es keine Rechte"},
+{t:"Ja: Herabsetzung des Mietzinses für die Dauer der Beeinträchtigung — ein Verschulden des Vermieters ist dafür nicht nötig",ok:true},
+{t:"Nur Schadenersatz, kein Herabsetzungsanspruch"},
+{t:"Sie kann nur fristlos kündigen"}],
+exp:"Wird die Tauglichkeit der Sache zum vorausgesetzten Gebrauch beeinträchtigt oder vermindert, kann der Mieter vom Vermieter verlangen, dass er den Mietzins entsprechend herabsetzt — vom Zeitpunkt der Kenntnis bis zur Behebung (Art. 259d OR). Die Herabsetzung ist verschuldensunabhängig: Auch Immissionen von aussen (Baustelle des Nachbarn) sind ein Mangel im mietrechtlichen Sinn. Schadenersatz gäbe es dagegen nur, wenn der Vermieter den Mangel zu vertreten hätte (Art. 259e OR). Für die fristlose Kündigung (Art. 259b lit. a OR) müsste die Tauglichkeit ausgeschlossen oder erheblich beeinträchtigt sein.",
+pr:"Herabsetzung (259d) ist verschuldensunabhängig — Schadenersatz (259e) setzt Vertretenmüssen voraus.",
+art:["Art. 259d OR","Art. 259e OR"]},
+
+{th:"Mängelrechte", ti:"Blitzschlag vor der Übergabe",
+sv:"Peter Meier hat ab 1. Juni eine Wohnung in Basel gemietet; der Vertrag ist unterschrieben. Zwei Wochen vor der Übergabe brennt das Haus nach einem Blitzschlag vollständig ab. Den Vermieter trifft kein Verschulden. Peter verlangt Schadenersatz für die teurere Ersatzwohnung.",
+q:"Wie ist die Rechtslage?",
+a:[{t:"Der Vermieter schuldet Schadenersatz aus Vertragsverletzung"},
+{t:"Der Vertrag fällt wegen unverschuldeter nachträglicher Unmöglichkeit dahin — Peter erhält keinen Schadenersatz, schuldet aber auch keinen Mietzins",ok:true},
+{t:"Peter kann nach Art. 259b OR fristlos kündigen"},
+{t:"Der Vermieter muss Peter eine gleichwertige Ersatzwohnung beschaffen"}],
+exp:"Die Übergabe ist objektiv und dauerhaft unmöglich geworden, ohne dass der Vermieter dies verschuldet hat: Die Forderung auf Gebrauchsüberlassung geht unter und der Vertrag fällt dahin (Art. 119 OR); auch die Mietzinsforderung entfällt. Kein Schadenersatz. Variante: Hätte der Vermieter den Brand verschuldet (z.B. trotz Warnungen defekte Elektroinstallation nicht repariert), würde er nach Art. 97 OR auf Schadenersatz haften — etwa für die Mehrkosten der Ersatzwohnung. Die Mängelrechte (Art. 258, 259a ff. OR) setzen dagegen voraus, dass eine Übergabe überhaupt noch möglich ist.",
+pr:"Unmöglich ohne Verschulden → Art. 119 OR, Vertrag fällt dahin. Mit Verschulden → Art. 97 OR, Schadenersatz.",
+art:["Art. 119 OR","Art. 97 OR","Art. 258 OR"]},
+
+/* ---------- G. Veränderungen an der Mietsache (22–23) ---------- */
+{th:"Veränderungen", ti:"Zwei Wochen Baulärm wegen der Wasserleitungen",
+sv:"Der Vermieter muss die maroden Wasserleitungen dringend ersetzen, um einen grösseren Wasserschaden zu verhindern. Die Arbeiten dauern zwei Wochen und sind tagsüber sehr laut. Herr Meier will die Handwerker nicht in die Wohnung lassen: «Ich habe ein Recht auf ungestörtes Wohnen.»",
+q:"Muss Herr Meier die Arbeiten dulden?",
+a:[{t:"Nein — ohne seine Zustimmung darf der Vermieter nichts umbauen"},
+{t:"Ja, notwendige Arbeiten muss er dulden; er kann aber Mietzinsherabsetzung und ggf. Schadenersatz verlangen",ok:true},
+{t:"Ja, und zwar entschädigungslos"},
+{t:"Nur wenn der Vermieter ihm ein Hotel bezahlt"}],
+exp:"Arbeiten, die zur Beseitigung von Mängeln oder zur Behebung oder Vermeidung von Schäden notwendig sind, muss der Mieter dulden (Art. 257h Abs. 1 OR) — ein Verweigerungsrecht besteht nicht, auch im gekündigten Verhältnis. Der Vermieter muss die Arbeiten rechtzeitig anzeigen und Rücksicht nehmen (Art. 257h Abs. 3 OR). Für die Beeinträchtigung kann der Mieter eine Herabsetzung (Art. 259d OR) und bei Verschulden Schadenersatz (Art. 259e OR) verlangen. Abzugrenzen: Nicht notwendige Erneuerungen/Änderungen (Komfort-Sanierungen) richten sich nach Art. 260 OR — sie sind nur zulässig, wenn zumutbar und das Verhältnis nicht gekündigt ist.",
+pr:"Notwendige Arbeiten: immer dulden (257h). Nicht notwendige Erneuerungen: nur wenn zumutbar und ungekündigt (260).",
+art:["Art. 257h Abs. 1 OR","Art. 260 OR","Art. 259d OR","Art. 259e OR"]},
+
+{th:"Veränderungen", ti:"Die eigenmächtigen Einbauschränke",
+sv:"Frau Keller lässt ohne Wissen des Vermieters neue Einbauschränke in die Küche montieren und entsorgt die alten Möbel. Beim Auszug verlangt der Vermieter die Wiederherstellung des ursprünglichen Zustands. Frau Keller kontert: «Wiederherstellung kann man nur verlangen, wenn das schriftlich vereinbart wurde.»",
+q:"Wer hat Recht?",
+a:[{t:"Frau Keller — ohne schriftliche Wiederherstellungsabrede schuldet sie nichts"},
+{t:"Der Vermieter: Die Schriftlichkeits-Regel schützt nur bei bewilligten Änderungen; eigenmächtige Änderungen muss sie rückgängig machen",ok:true},
+{t:"Frau Keller — Einbauten mit Mehrwert darf der Mieter immer vornehmen"},
+{t:"Niemand — der Vermieter muss die Schränke gegen Entschädigung übernehmen"}],
+exp:"Der Mieter darf Erneuerungen und Änderungen nur mit schriftlicher Zustimmung des Vermieters vornehmen (Art. 260a Abs. 1 OR). Hat der Vermieter zugestimmt, kann er die Wiederherstellung nur verlangen, wenn dies schriftlich vereinbart wurde (Art. 260a Abs. 2 OR) — diese Einschränkung gilt aber nur für bewilligte Änderungen. Frau Keller hat eigenmächtig gehandelt: Der Vermieter kann die Wiederherstellung des vertragsgemässen Zustands verlangen (vgl. Art. 267 Abs. 1 OR). Der gesetzliche Entschädigungsanspruch für erheblichen Mehrwert (Art. 260a Abs. 3 OR) setzt ebenfalls eine bewilligte Änderung voraus.",
+pr:"Mieteränderungen brauchen schriftliche Zustimmung — sonst droht Rückbau auf eigene Kosten.",
+art:["Art. 260a Abs. 1 OR","Art. 260a Abs. 2 OR","Art. 260a Abs. 3 OR","Art. 267 OR"]},
+
+/* ---------- H. Eigentümerwechsel (24–26) ---------- */
+{th:"Eigentümerwechsel", ti:"Das Haus ist verkauft",
+sv:"Familie Odermatt wohnt seit Jahren zur Miete. Nun verkauft ihr Vermieter das Mehrfamilienhaus an eine Immobilien-AG. Die Odermatts befürchten, ihr Mietvertrag sei mit dem Verkauf «weg» und sie müssten neu verhandeln.",
+q:"Was geschieht mit dem Mietvertrag beim Verkauf?",
+a:[{t:"Er erlischt — die Odermatts müssen mit der AG neu abschliessen"},
+{t:"Er geht von Gesetzes wegen mit dem Eigentum auf die Erwerberin über («Kauf bricht Miete nicht»)",ok:true},
+{t:"Er bleibt beim alten Eigentümer bestehen, die AG hat damit nichts zu tun"},
+{t:"Er wandelt sich automatisch in einen befristeten Vertrag um"}],
+exp:"Veräussert der Vermieter die Sache nach Abschluss des Mietvertrags, geht das Mietverhältnis mit dem Eigentum an der Sache auf den Erwerber über (Art. 261 Abs. 1 OR) — der Grundsatz «Kauf bricht Miete nicht». Dasselbe gilt, wenn dem Vermieter die Sache in einem Schuldbetreibungs- oder Konkursverfahren entzogen wird. Die Erwerberin tritt in den bestehenden Vertrag ein; einzig bei dringendem Eigenbedarf hat sie ein ausserordentliches Kündigungsrecht (Art. 261 Abs. 2 lit. a OR).",
+pr:"Kauf bricht Miete nicht — der Erwerber tritt von Gesetzes wegen in den Mietvertrag ein.",
+art:["Art. 261 Abs. 1 OR","Art. 261 Abs. 2 lit. a OR"]},
+
+{th:"Eigentümerwechsel", ti:"Der neue Eigentümer will selbst einziehen",
+sv:"2019 mietete Max Geschäftsräume in Zürich; kündbar erstmals auf den 31. März 2029. Im Februar 2021 verkauft der Eigentümer das Haus an Karl. Karl will die Räume dringend selbst nutzen und kündigt Max am 21. Februar 2021 «auf den nächstmöglichen Termin». Ortsübliche Termine in Zürich: Ende März und Ende September.",
+q:"Auf wann wirkt Karls Kündigung frühestens — trotz Vertragsbindung bis 2029?",
+a:[{t:"Gar nicht — der Vertrag bindet Karl bis am 31. März 2029"},
+{t:"Auf den 31. März 2021"},
+{t:"Auf den 30. September 2021",ok:true},
+{t:"Per sofort — Eigenbedarf erlaubt die fristlose Kündigung"}],
+exp:"Der Vertrag ging mit dem Eigentum auf Karl über (Art. 261 Abs. 1 OR). Bei dringendem Eigenbedarf für sich, nahe Verwandte oder Verschwägerte kann der Erwerber aber mit der gesetzlichen Frist auf den nächsten gesetzlichen Termin kündigen (Art. 261 Abs. 2 lit. a OR) — die lange Vertragsdauer wird durchbrochen. Gesetzliche Frist für Geschäftsräume: 6 Monate (Art. 266d OR). Ab 21. Februar 2021 reichen 6 Monate nicht mehr auf den 31. März → frühestens 30. September 2021. Max kann anfechten bzw. Erstreckung verlangen (30 Tage, Art. 273 OR); zudem haftet der frühere Vermieter für den Schaden aus der vorzeitigen Beendigung (Art. 261 Abs. 3 OR).",
+pr:"Eigenbedarf des Erwerbers: gesetzliche Frist auf den nächsten gesetzlichen Termin — der Veräusserer haftet für den Schaden.",
+art:["Art. 261 Abs. 2 lit. a OR","Art. 266d OR","Art. 261 Abs. 3 OR","Art. 273 OR"]},
+
+{th:"Eigentümerwechsel", ti:"Die Vormerkung im Grundbuch",
+sv:"Die Beta AG will langfristig in gemietete Geschäftsräume investieren. Sie fürchtet aber, dass ein späterer Käufer der Liegenschaft den Vertrag wegen Eigenbedarfs vorzeitig kündigen könnte. Sie fragt ihren Rechtsdienst, wie sie sich beim Vertragsabschluss absichern kann.",
+q:"Welche Vorkehrung schützt die Beta AG?",
+a:[{t:"Eine Konventionalstrafe im Mietvertrag"},
+{t:"Die Vormerkung des Mietverhältnisses im Grundbuch — dann muss jeder neue Eigentümer den Gebrauch gemäss Mietvertrag gestatten",ok:true},
+{t:"Ein Vorkaufsrecht an der Liegenschaft"},
+{t:"Es gibt keine Absicherung — das Kündigungsrecht des Erwerbers ist zwingend"}],
+exp:"Bei der Miete an einem Grundstück kann verabredet werden, dass das Mietverhältnis im Grundbuch vorgemerkt wird (Art. 261b Abs. 1 OR). Die Vormerkung bewirkt, dass jeder neue Eigentümer dem Mieter gestatten muss, das Grundstück entsprechend dem Mietvertrag zu gebrauchen (Art. 261b Abs. 2 OR) — die vorzeitige Eigenbedarfskündigung nach Art. 261 Abs. 2 lit. a OR ist damit ausgeschlossen. Gerade bei langfristigen Geschäftsraummieten mit hohen Investitionen ist die Vormerkung das zentrale Absicherungsinstrument.",
+pr:"Vormerkung im Grundbuch = Schutzschild gegen die Eigenbedarfskündigung des Erwerbers.",
+art:["Art. 261b Abs. 1 OR","Art. 261b Abs. 2 OR","Art. 261 Abs. 2 lit. a OR"]},
+
+/* ---------- I. Untermiete (27–29) ---------- */
+{th:"Untermiete", ti:"«Untermiete ist verboten»",
+sv:"In Selinas Mietvertrag steht: «Jede Untervermietung der Wohnung ist untersagt.» Selina möchte während eines sechsmonatigen Auslandaufenthalts ihre Wohnung zum selben Zins untervermieten und fragt den Vermieter an. Dieser verweist auf die Vertragsklausel.",
+q:"Kann sich der Vermieter auf das vertragliche Untermietverbot berufen?",
+a:[{t:"Ja — der Vertrag geht vor"},
+{t:"Nein: Der Vermieter darf die Zustimmung nur aus den drei gesetzlichen Gründen verweigern; ein generelles Verbot ist unwirksam",ok:true},
+{t:"Ja, aber nur bei möblierten Wohnungen"},
+{t:"Nein, die Untermiete ist gar nie zustimmungsbedürftig"}],
+exp:"Der Mieter kann die Sache mit Zustimmung des Vermieters ganz oder teilweise untervermieten (Art. 262 Abs. 1 OR). Der Vermieter kann die Zustimmung nur verweigern, wenn (a) der Mieter die Bedingungen nicht bekannt gibt, (b) die Bedingungen im Vergleich zum Hauptvertrag missbräuchlich sind oder (c) ihm wesentliche Nachteile entstehen (Art. 262 Abs. 2 OR). Diese Regelung ist einseitig zwingend — der Mieter kann auf den Schutz nicht im Voraus verzichten, ein generelles vertragliches Untermietverbot ist deshalb unwirksam. Selinas Untermiete zum selben Zins erfüllt keinen Verweigerungsgrund.",
+pr:"Untermiete: Zustimmung nötig, aber Verweigerung nur aus den drei Gründen von Art. 262 Abs. 2 OR.",
+art:["Art. 262 Abs. 1 OR","Art. 262 Abs. 2 OR"]},
+
+{th:"Untermiete", ti:"Airbnb im Niederdorf",
+sv:"Ein Mieter zahlt für seine städtische 2-Zimmer-Wohnung im Zürcher Niederdorf CHF 1'400. Ohne die Stadt zu fragen, vermietet er sie dauerhaft für über CHF 100 pro Nacht an Touristen auf Airbnb. Die Stadt entdeckt das Inserat.",
+q:"Wie ist die Rechtslage?",
+a:[{t:"Kurzzeitvermietung ist keine Untermiete — der Mieter darf das"},
+{t:"Die Stadt kann nur den Mietvertrag sofort fristlos auflösen"},
+{t:"Zustimmungspflichtige Untermiete: Die Stadt kann die Zustimmung verweigern (übermässiger Gewinn, wesentliche Nachteile), den Übergewinn abschöpfen und nach Abmahnung nach Art. 257f Abs. 3 OR kündigen",ok:true},
+{t:"Die Stadt kann nur den Mietzins erhöhen"}],
+exp:"Die kommerzielle Kurzzeitvermietung ist eine Untervermietung und braucht die Zustimmung der Vermieterin (Art. 262 Abs. 1 OR). Verweigerungsgründe liegen vor: missbräuchliche Bedingungen — der Untermietzins übersteigt die Hauptmiete massiv (Faustregel: mehr als ca. 20 % Aufschlag = übermässiger Gewinn, Art. 262 Abs. 2 lit. b OR) — und wesentliche Nachteile durch intensivere, völlig andere Nutzung (lit. c). Den hinter dem Rücken der Vermieterin erzielten Übergewinn kann sie samt Zins rückwirkend abschöpfen (BGer 4A_594/2012). Setzt der Mieter die unbewilligte Untervermietung trotz schriftlicher Abmahnung fort, kann sie nach Art. 257f Abs. 3 OR vorzeitig kündigen.",
+pr:"Unbewilligte, überteuerte Untermiete: Zustimmung verweigern + Gewinn abschöpfen + nach Abmahnung kündigen.",
+art:["Art. 262 OR","Art. 257f Abs. 3 OR","BGer 4A_594/2012"]},
+
+{th:"Untermiete", ti:"Wem kündigt der Vermieter?",
+sv:"Nicole hat ihre 2.5-Zimmer-Wohnung in Zürich mit Zustimmung des Vermieters an Petra untervermietet und wohnt selbst im Ausland. Der Vermieter will das Mietverhältnis nun ordentlich beenden.",
+q:"Wem muss er die Kündigung zustellen?",
+a:[{t:"Petra — sie wohnt schliesslich in der Wohnung"},
+{t:"Nicole und Petra je separat, wie bei der Familienwohnung"},
+{t:"Nicole, der Hauptmieterin — mit Petra besteht kein Vertragsverhältnis",ok:true},
+{t:"Der Schlichtungsbehörde zuhanden beider"}],
+exp:"Die Untermiete verbindet nur Nicole und Petra (Art. 262 OR); zwischen Vermieter und Untermieterin besteht kein Vertrag. Die Kündigung ist deshalb der Hauptmieterin Nicole zuzustellen — schriftlich und mit dem amtlichen Formular (Art. 266l OR). Endet die Hauptmiete, verliert die Untermiete ihre Grundlage. Die separate Zustellung an zwei Personen ist nur bei der Familienwohnung vorgeschrieben (Art. 266n OR) — Untermiete ist kein solcher Fall.",
+pr:"Kündigung immer an den Vertragspartner: Untermieter sind Dritte.",
+art:["Art. 262 OR","Art. 266l OR"]},
+
+/* ---------- J. Vorzeitige Rückgabe (30–31) ---------- */
+{th:"Vorzeitige Rückgabe", ti:"Herr K. zieht nach Kanada",
+sv:"Herr K. (unbefristete Wohnung in Basel, 3 Monate Kündigungsfrist, Mietzins CHF 1'500) will per Ende Mai ausziehen — ausserhalb von Frist und Termin. Am 20. April meldet er dies schriftlich und schlägt Frau L. als Nachmieterin vor: Nettolohn CHF 4'800, übernahmebereit zu gleichen Bedingungen per 1. Juni. Der Vermieter lehnt am 5. Mai ab — er «hätte lieber eine Familie» — und verlangt Miete bis Ende Juli.",
+q:"Muss Herr K. bis Ende Juli zahlen?",
+a:[{t:"Ja — ohne Einhaltung der Kündigungsfrist bleibt er verpflichtet"},
+{t:"Nein: Frau L. ist zumutbar, zahlungsfähig und übernahmebereit — Herr K. wird per Ende Mai frei",ok:true},
+{t:"Ja, aber nur bis Ende Juni"},
+{t:"Nein, er schuldet gar nie mehr Miete, sobald er die Schlüssel abgibt"}],
+exp:"Gibt der Mieter die Sache ohne Einhaltung von Frist oder Termin zurück, wird er frei, wenn er einen zumutbaren, zahlungsfähigen und übernahmebereiten Ersatzmieter vorschlägt (Art. 264 Abs. 1 OR — drei kumulative Voraussetzungen). Frau L. erfüllt alle: CHF 1'500 sind ≈ 31 % von CHF 4'800 (Faustregel: max. ⅓ des Nettoeinkommens), sie übernimmt zu gleichen Bedingungen, und der blosse Wunsch nach einer Familie ist kein wichtiger Grund gegen die Zumutbarkeit. Die Prüffrist des Vermieters (bei Wohnungen ca. 10–20 Tage) wurde eingehalten, ändert aber nichts: Lehnt der Vermieter einen tauglichen Nachmieter ab, trägt er das Risiko selbst — Herr K. schuldet ab 1. Juni keinen Mietzins mehr.",
+pr:"Tauglicher Ersatzmieter = zumutbar + zahlungsfähig (⅓-Regel) + übernahmebereit zu gleichen Bedingungen → Mieter wird frei.",
+art:["Art. 264 Abs. 1 OR"]},
+
+{th:"Vorzeitige Rückgabe", ti:"Der Vermieter will lieber seinen Bekannten",
+sv:"Hans teilt dem Vermieter am 13. Januar 2022 mit, dass er per 31. Januar 2022 ausserterminlich ausziehen will, und stellt einen Ersatzmieter vor, der auf diesen Zeitpunkt einträte. Der Vermieter findet den Ersatzmieter selbst zumutbar — will die Wohnung aber lieber einem Bekannten geben, der erst per 1. April einziehen kann.",
+q:"Bis wann schuldet Hans den Mietzins?",
+a:[{t:"Bis zum 31. März — der Bekannte zieht erst am 1. April ein"},
+{t:"Bis zum 31. Januar 2022: Die Ablehnung eines tauglichen Ersatzmieters geht zulasten des Vermieters",ok:true},
+{t:"Bis zum nächsten ordentlichen Kündigungstermin"},
+{t:"Bis der Vermieter irgendeinen neuen Mieter gefunden hat"}],
+exp:"Der vorgeschlagene Ersatzmieter ist zumutbar, zahlungsfähig und übernahmebereit — Hans wird nach Art. 264 Abs. 1 OR auf den Zeitpunkt frei, auf den der Ersatzmieter eingetreten wäre: 31. Januar 2022. Dass der Vermieter lieber seinem Bekannten vermieten will, ist unbeachtlich; die Ablehnung geht zu seinen Lasten. Für Februar und März schuldet Hans nichts. Ohne tauglichen Nachmieter würde Hans dagegen bis zum nächsten ordentlichen Termin haften (Art. 264 Abs. 2 OR), wobei sich der Vermieter ersparte Auslagen und anderweitige Nutzung anrechnen lassen muss (Art. 264 Abs. 3 OR). Eine Konventionalstrafe für die vorzeitige Rückgabe wäre nichtig.",
+pr:"Wer einen tauglichen Nachmieter ablehnt, trägt die Mietzinsfolgen selbst.",
+art:["Art. 264 Abs. 1 OR","Art. 264 Abs. 2 OR","Art. 264 Abs. 3 OR"]},
+
+/* ---------- K. Verrechnung (32) ---------- */
+{th:"Verrechnung", ti:"Der Verrechnungsverzicht im Kleingedruckten",
+sv:"In Herrn Schmids Mietvertrag steht: «Der Mieter verzichtet auf die Verrechnung von Forderungen aus dem Mietverhältnis mit dem Mietzins.» Nach einem Wasserschaden, den die Vermieterin zu vertreten hat, lässt Herr Schmid berechtigterweise auf eigene Kosten reparieren und will die Kosten mit dem nächsten Mietzins verrechnen. Die Vermieterin beruft sich auf die Klausel.",
+q:"Darf Herr Schmid verrechnen?",
+a:[{t:"Nein — der vertragliche Verzicht ist gültig"},
+{t:"Ja: Auf die Verrechnung von Forderungen aus dem Mietverhältnis kann nicht im Voraus verzichtet werden — die Klausel ist unwirksam",ok:true},
+{t:"Nur mit Zustimmung der Schlichtungsbehörde"},
+{t:"Nein, verrechnen kann man Mietzinse grundsätzlich nie"}],
+exp:"Der Mieter und der Vermieter können nicht im Voraus auf die Verrechnung von Forderungen aus dem Mietverhältnis verzichten (Art. 265 OR) — die Vertragsklausel ist unwirksam. Herr Schmid kann seine berechtigte Gegenforderung nach den allgemeinen Regeln (Art. 120 ff. OR) mit dem Mietzins verrechnen. Praktischer Hinweis: Sicherer wäre das Vorgehen über Fristansetzung und Hinterlegung (Art. 259g OR) gewesen — bei der Verrechnung trägt der Mieter das Risiko, dass seine Gegenforderung nicht (in dieser Höhe) besteht und er in Zahlungsrückstand gerät.",
+pr:"Vorausverzicht auf Verrechnung im Mietrecht = unwirksam (Art. 265 OR).",
+art:["Art. 265 OR","Art. 120 ff. OR","Art. 259g OR"]},
+
+/* ---------- L. Mietzins & Erhöhung (33–36) ---------- */
+{th:"Mietzins", ti:"Erhöhung per Brief — mit Drohung",
+sv:"Frau T. erhält per gewöhnlichem Brief die Mitteilung, ihr Mietzins werde per 1. Mai um CHF 150 erhöht — ohne Begründung, ohne kantonales Formular. Im Brief steht zudem: «Falls Sie nicht einverstanden sind, können wir nicht garantieren, dass Sie in der Wohnung bleiben können.»",
+q:"Wie ist diese Mietzinserhöhung zu beurteilen?",
+a:[{t:"Gültig, wenn Frau T. nicht innert 30 Tagen anficht"},
+{t:"Nichtig — kein Formular, keine Begründung und Kündigungsandrohung: Frau T. muss die Erhöhung nicht bezahlen",ok:true},
+{t:"Gültig, aber erst auf den nächsten Kündigungstermin"},
+{t:"Anfechtbar nur, wenn die Erhöhung mehr als 10 % beträgt"}],
+exp:"Die Mietzinserhöhung ist nichtig, wenn der Vermieter sie nicht mit dem vom Kanton genehmigten Formular mitteilt, sie nicht begründet oder mit der Mitteilung die Kündigung androht oder ausspricht (Art. 269d Abs. 2 OR). Hier sind gleich alle drei Nichtigkeitsgründe erfüllt. Die Nichtigkeit wirkt von selbst und kann jederzeit geltend gemacht werden — Frau T. muss nicht innert Frist anfechten und schuldet den bisherigen Zins. Wiederholt der Vermieter die Erhöhung formgültig, kann sie diese innert 30 Tagen als missbräuchlich anfechten (Art. 270b OR). Kündigt der Vermieter danach aus Rache, wäre die Kündigung anfechtbar (Art. 271a Abs. 1 lit. a OR).",
+pr:"Erhöhung ohne Formular / ohne Begründung / mit Kündigungsdrohung = nichtig, nicht bloss anfechtbar.",
+art:["Art. 269d Abs. 1 OR","Art. 269d Abs. 2 OR","Art. 270b OR"]},
+
+{th:"Mietzins", ti:"Zehn Tage zu spät",
+sv:"Kündigungstermine eines Mietverhältnisses sind der 30. September und der 31. März; die Kündigungsfrist beträgt drei Monate. Am 25. Juni geht dem Mieter auf dem amtlichen Formular eine begründete Mietzinserhöhung zu, «wirksam ab 1. Oktober».",
+q:"Kann die Erhöhung per 1. Oktober wirken?",
+a:[{t:"Ja — Formular und Begründung liegen ja vor"},
+{t:"Nein, sie ist nichtig und muss komplett wiederholt werden"},
+{t:"Nein: Sie kam weniger als 10 Tage vor Beginn der Kündigungsfrist an und wirkt darum erst auf den nächsten Termin, d.h. per 1. April",ok:true},
+{t:"Ja, aber nur zur Hälfte"}],
+exp:"Der Vermieter muss die Erhöhung mindestens zehn Tage vor Beginn der Kündigungsfrist mitteilen (Art. 269d Abs. 1 OR) — der Mieter soll Bedenkzeit für eine Kündigung haben. Die dreimonatige Frist für den Termin 30. September beginnt am 1. Juli; der Zugang müsste also spätestens um den 20./21. Juni erfolgen. Der 25. Juni ist zu spät. Da Formular und Begründung vorliegen, ist die Erhöhung nicht nichtig — sie verschiebt sich einfach auf den nächstmöglichen Kündigungstermin und wirkt per 1. April (nach dem Termin 31. März).",
+pr:"Verspätete, aber formgültige Erhöhung: nicht nichtig, sondern auf den nächsten Termin verschoben.",
+art:["Art. 269d Abs. 1 OR","Art. 269d Abs. 2 OR"]},
+
+{th:"Mietzins", ti:"Der gesunkene Referenzzinssatz",
+sv:"Der hypothekarische Referenzzinssatz ist seit der letzten Mietzinsfestsetzung von 1.75 % auf 1.25 % gesunken. Mieterin Carla fragt sich, ob sie davon profitieren kann — ihr Vermieter hat sich nie gemeldet.",
+q:"Was kann Carla tun?",
+a:[{t:"Nichts — Mietzinssenkungen erfolgen automatisch"},
+{t:"Sie kann vom Vermieter schriftlich eine Herabsetzung auf den nächsten Kündigungstermin verlangen; lehnt er ab oder schweigt er 30 Tage, kann sie innert 30 Tagen die Schlichtungsbehörde anrufen",ok:true},
+{t:"Sie kann den Mietzins ab sofort selbst um 6 % kürzen"},
+{t:"Sie muss bis zur nächsten Erhöhung warten und dann verrechnen"}],
+exp:"Sinkt der Referenzzinssatz, kann der Mieter eine Herabsetzung des Mietzinses auf den nächsten Kündigungstermin verlangen, wenn der Vermieter wegen der veränderten Berechnungsgrundlagen einen übersetzten Ertrag erzielt (Art. 270a Abs. 1 OR). Ablauf: schriftliches Herabsetzungsbegehren an den Vermieter; dieser muss innert 30 Tagen Stellung nehmen; lehnt er ab oder antwortet er nicht, kann Carla innert 30 Tagen die Schlichtungsbehörde anrufen (Art. 270a Abs. 2 OR). Automatisch passiert nichts, und eigenmächtiges Kürzen wäre Zahlungsrückstand (Art. 257d OR!). Massgebend ist die relative Methode: Veränderung seit der letzten Festsetzung, wobei gegenläufige Faktoren (Teuerung, Kostensteigerungen) verrechnet werden. Faustregel bei Sätzen unter 5 %: ¼ Prozentpunkt = 3 % Mietzins.",
+pr:"Senkung gibt's nur auf Begehren — Vermieter 30 Tage, dann 30 Tage zur Schlichtungsbehörde.",
+art:["Art. 270a Abs. 1 OR","Art. 270a Abs. 2 OR"]},
+
+{th:"Mietzins", ti:"Der Vormieter zahlte CHF 600 weniger",
+sv:"K. Meier bezieht am 1. Oktober eine 4.5-Zimmer-Wohnung in einem älteren Haus in Wettingen AG für CHF 2'200. Am 15. Januar erfährt er zufällig, dass der Vormieter nur CHF 1'600 zahlte. Der Kanton Aargau kennt keine Formularpflicht für den Anfangsmietzins. Meier will den Anfangsmietzins jetzt anfechten.",
+q:"Hat er damit Erfolg?",
+a:[{t:"Ja — eine Erhöhung um über 10 % gegenüber der Vormiete ist immer anfechtbar"},
+{t:"Nein: Die Anfechtung des Anfangsmietzinses war nur innert 30 Tagen nach Übernahme der Wohnung möglich — die Frist ist verpasst",ok:true},
+{t:"Ja, denn ohne amtliches Formular läuft gar keine Frist"},
+{t:"Nein, Anfangsmietzinse kann man grundsätzlich nie anfechten"}],
+exp:"Der Mieter kann den Anfangsmietzins innert 30 Tagen nach Übernahme der Sache bei der Schlichtungsbehörde anfechten (Art. 270 Abs. 1 OR), wenn er sich wegen einer Notlage oder der Verhältnisse auf dem örtlichen Wohnungsmarkt zum Abschluss gezwungen sah oder wenn der Anfangsmietzins gegenüber der Vormiete erheblich (Praxis: ab ca. 10 %) erhöht wurde. Mitte Januar ist die Frist längst abgelaufen. Anders wäre es in einem Kanton mit Formularpflicht (Art. 270 Abs. 2 OR, z.B. Zürich): Fehlt das vorgeschriebene Formular, ist die Mietzinsvereinbarung insoweit nichtig und die Rückforderung bleibt auch später möglich — im Aargau gilt das nicht. Beachte: Liegt der Anfangszins erheblich über der Vormiete, wird die Missbräuchlichkeit vermutet und der Vermieter muss sie widerlegen (BGE 147 III 431).",
+pr:"Anfangsmietzins: 30 Tage ab Übernahme — ausser der Kanton kennt eine Formularpflicht und das Formular fehlt.",
+art:["Art. 270 Abs. 1 OR","Art. 270 Abs. 2 OR","BGE 147 III 431"]},
+
+/* ---------- M. Ordentliche Kündigung, Fristen & Zugang (37–41) ---------- */
+{th:"Kündigung & Fristen", ti:"Drei Wochen in Italien",
+sv:"Vermieterin Keller schickt die Kündigung der Zürcher Wohnung am 28. Juni 2025 per Einschreiben. Mieter Müller ist drei Wochen in Italien; der Pöstler hinterlässt am 29. Juni eine Abholungseinladung. Müller holt den Brief erst nach der Rückkehr am 22. Juli ab. Ortsübliche Termine: Ende März und Ende September; Frist: 3 Monate.",
+q:"Auf wann wirkt die Kündigung?",
+a:[{t:"Auf den 31. März 2026 — massgebend ist die Abholung am 22. Juli"},
+{t:"Auf den 30. September 2025: Die Kündigung gilt mit der ersten zumutbaren Abholmöglichkeit (ca. 30. Juni) als zugegangen — Ferien ändern daran nichts",ok:true},
+{t:"Sie ist nichtig, weil Müller sie nicht persönlich entgegennahm"},
+{t:"Auf den 30. September 2025, aber nur wenn Müller die Abholung verschuldet verpasste"}],
+exp:"Für Kündigungen gilt die absolute Empfangstheorie: Die Erklärung ist zugegangen, sobald sie in den Machtbereich des Empfängers gelangt und die Kenntnisnahme zumutbarerweise möglich ist — bei einer nicht abgeholten eingeschriebenen Sendung also am ersten Tag der Abholmöglichkeit (BGE 137 III 208), hier um den 30. Juni. Ferienabwesenheit ändert daran nichts: Wer mit Zustellungen rechnen muss, trägt das Zugangsrisiko. Die Kündigung ging damit noch vor Beginn der Kündigungsfrist (1. Juli) zu und wirkt mit der 3-Monats-Frist (Art. 266c OR) auf den 30. September 2025. Bei Zugang erst im Juli wäre sie nicht ungültig, sondern würde auf den nächsten Termin (31. März 2026) verschoben (Art. 266a Abs. 2 OR).",
+pr:"Kündigung: absolute Empfangstheorie — erste zumutbare Abholmöglichkeit zählt, nicht die tatsächliche Abholung.",
+art:["Art. 266c OR","Art. 266a Abs. 2 OR","BGE 137 III 208"]},
+
+{th:"Kündigung & Fristen", ti:"Die Zahlungsfrist im Milchkasten",
+sv:"Die Vermieterin schickt dem säumigen Mieter Rade die Zahlungsfristansetzung mit Kündigungsandrohung (Art. 257d OR) per Einschreiben. Rade ist eine Woche geschäftlich abwesend; die Abholungseinladung liegt ab Dienstag im Briefkasten, abgeholt wird der Brief erst am folgenden Montag, dem letzten Tag der Abholfrist.",
+q:"Wann beginnt die 30-tägige Zahlungsfrist zu laufen?",
+a:[{t:"Am Dienstag — es gilt wie bei der Kündigung die absolute Empfangstheorie"},
+{t:"Mit der tatsächlichen Abholung am Montag, spätestens am letzten Tag der siebentägigen Abholfrist: Für die Zahlungsfristansetzung gilt die relative Empfangstheorie",ok:true},
+{t:"Bereits mit der Aufgabe bei der Post"},
+{t:"Erst wenn Rade den Inhalt tatsächlich gelesen hat, ohne zeitliche Grenze"}],
+exp:"Ausnahmsweise gilt für die Zahlungsfristansetzung nach Art. 257d Abs. 1 OR (und die Abmahnung nach Art. 257f Abs. 3 OR) die relative Empfangstheorie: Zugang erst mit tatsächlicher Kenntnisnahme, spätestens am letzten Tag der siebentägigen postalischen Abholfrist (BGE 119 II 147). Grund: Mit dem Zugang beginnt eine Frist, deren unbenützter Ablauf dem Mieter die Wohnung kosten kann — er soll die volle Frist real nutzen können. Für die Kündigung selbst (Gestaltungserklärung) gilt dagegen die absolute Empfangstheorie. Merkregel: «Gestaltung absolut, Obliegenheit relativ.»",
+pr:"Kündigung/Mietzinserhöhung → absolute Empfangstheorie. Zahlungsfrist (257d) & Abmahnung (257f) → relative.",
+art:["Art. 257d Abs. 1 OR","Art. 257f Abs. 3 OR","BGE 119 II 147"]},
+
+{th:"Kündigung & Fristen", ti:"Der Tiefgaragenplatz",
+sv:"Ein betagter Mieter hat seine 4-Zimmer-Wohnung zusammen mit einem Tiefgaragenplatz in derselben Überbauung gemietet (ein Vertrag). Weil er den Führerausweis abgeben musste, will er am 5. März nur den Parkplatz so rasch wie möglich loswerden. Vertragliche Termine gibt es keine; ortsüblich sind 31. März, 30. Juni und 30. September.",
+q:"Auf wann und wie kann er den Parkplatz kündigen?",
+a:[{t:"Per 31. März mit zwei Wochen Frist — für Parkplätze gilt Art. 266e OR"},
+{t:"Frühestens per 30. Juni mit 3 Monaten Frist — und grundsätzlich nur zusammen mit der Wohnung; die isolierte Kündigung braucht das Einverständnis des Vermieters",ok:true},
+{t:"Jederzeit mit 3 Tagen Frist"},
+{t:"Gar nicht — Parkplätze sind unkündbar mitvermietet"}],
+exp:"Der mitvermietete Parkplatz teilt als zusammen mit der Wohnung überlassene Sache deren rechtliches Schicksal (Art. 253a Abs. 1 OR): Es gelten die Regeln der Wohnungsmiete — Frist 3 Monate auf einen ortsüblichen Termin (Art. 266c OR). Am 5. März ist der 31. März nicht mehr erreichbar, also frühestens per 30. Juni — und grundsätzlich nur zusammen mit der Wohnung; eine Teilkündigung nur des Parkplatzes setzt das Einverständnis des Vermieters voraus. Die kurze Frist von zwei Wochen auf Ende einer einmonatigen Mietdauer (Art. 266e OR) gilt nur für gesondert (separat) vermietete Einstellplätze.",
+pr:"Mitvermietet = Schicksal der Wohnung (253a). Separat gemietet = eigene kurze Frist (266e).",
+art:["Art. 253a Abs. 1 OR","Art. 266c OR","Art. 266e OR"]},
+
+{th:"Kündigung & Fristen", ti:"Geschäftsräume per 17. Juni gekündigt",
+sv:"Die Mieterin von Geschäftsräumen in Rheinfelden AG will raus. Ihre Kündigung geht dem Vermieter am 17. Juni zu. Vertragliche Regelung gibt es keine; ortsübliche Termine sind der 31. März, 30. Juni und 30. September.",
+q:"Auf welchen Termin wirkt die Kündigung frühestens?",
+a:[{t:"Auf den 30. Juni — der nächste Termin nach Zugang"},
+{t:"Auf den 30. September — drei Monate reichen dafür"},
+{t:"Auf den 31. März des Folgejahres: Die 6-Monats-Frist reicht auf keinen früheren ortsüblichen Termin",ok:true},
+{t:"Auf den 17. Dezember — genau sechs Monate nach Zugang"}],
+exp:"Für Geschäftsräume gilt eine Kündigungsfrist von sechs Monaten auf einen ortsüblichen Termin (Art. 266d OR). Ab Zugang am 17. Juni sind sechs Monate erst am 17. Dezember um — der 30. September liegt davor und scheidet aus; gekündigt werden kann nur auf einen ortsüblichen Termin, also frühestens auf den 31. März des Folgejahres. Merke die Fristenleiter: Wohnungen 3 Monate (Art. 266c), Geschäftsräume 6 Monate (Art. 266d), möblierte Zimmer/separate Einstellplätze 2 Wochen (Art. 266e), bewegliche Sachen 3 Tage (Art. 266f). Fristen sind zwingende Mindestdauern (verlängerbar, nicht verkürzbar); Termine sind dispositiv.",
+pr:"Fristenleiter: 3 Tage — 2 Wochen — 3 Monate — 6 Monate. Frist UND Termin müssen beide passen.",
+art:["Art. 266d OR","Art. 266c OR","Art. 266e OR","Art. 266f OR"]},
+
+{th:"Kündigung & Fristen", ti:"Einen Tag zu spät",
+sv:"Für eine Wohnung gelten der 30. September und der 31. März als Kündigungstermine (Frist: 3 Monate). Die formgültige Kündigung des Vermieters geht dem Mieter am 1. Juli zu — für den 30. September einen Tag zu spät. Der Mieter jubelt: «Die Kündigung ist ungültig!»",
+q:"Hat der Mieter Recht?",
+a:[{t:"Ja — eine verspätete Kündigung ist nichtig und muss wiederholt werden"},
+{t:"Ja, sie ist immerhin anfechtbar"},
+{t:"Nein: Die Kündigung ist gültig, wirkt aber erst auf den nächstmöglichen Termin, d.h. den 31. März",ok:true},
+{t:"Nein, sie wirkt trotzdem auf den 30. September"}],
+exp:"Halten die Parteien Frist oder Termin nicht ein, so gilt die Kündigung für den nächstmöglichen Termin (Art. 266a Abs. 2 OR) — sie ist also nicht ungültig, sondern wird von Gesetzes wegen verschoben. Hier wirkt sie auf den 31. März. Unterscheide die drei Rechtsfolge-Schienen: Formfehler → nichtig (Art. 266o OR, passiv bleiben genügt); Frist/Termin verfehlt → verschoben (Art. 266a Abs. 2 OR); Verstoss gegen Treu und Glauben → anfechtbar innert 30 Tagen (Art. 271 ff. OR, aktiv werden!).",
+pr:"Drei Schienen: nichtig (Form) — verschoben (Frist/Termin) — anfechtbar (Missbrauch, 30 Tage).",
+art:["Art. 266a Abs. 2 OR","Art. 266o OR","Art. 271 OR"]},
+
+/* ---------- N. Ausserordentliche Kündigung (42–44) ---------- */
+{th:"Ausserordentliche Kündigung", ti:"Panikattacken nach dem Einbruch",
+sv:"Nach einem Einbruch in ihre Wohnung leidet Mieterin Sofia an Schlafstörungen und panikartigen Angstzuständen; ein Verbleib ist ihr ärztlich attestiert nicht mehr zumutbar. Ihr Vertrag sieht sechs Monate Kündigungsfrist per Ende Juni/Ende Dezember vor. Es ist der 1. Juli — muss sie wirklich bis Ende Juni des nächsten Jahres warten?",
+q:"Welche Möglichkeit hat Sofia?",
+a:[{t:"Keine — der Vertrag geht vor, sie muss die 6 Monate einhalten"},
+{t:"Sie kann aus wichtigem Grund mit der gesetzlichen Frist (3 Monate) auf einen beliebigen Zeitpunkt kündigen",ok:true},
+{t:"Sie kann fristlos und entschädigungslos per sofort kündigen"},
+{t:"Sie kann nur einen Nachmieter nach Art. 264 OR stellen"}],
+exp:"Aus wichtigen Gründen, welche die Vertragserfüllung unzumutbar machen, können die Parteien mit der gesetzlichen Frist auf einen beliebigen Zeitpunkt kündigen (Art. 266g Abs. 1 OR). Panikartige Angstzustände nach einem Einbruch gelten als solcher Grund: nicht voraussehbar, ausserordentlich schwerwiegend. Sofia kündigt also mit der gesetzlichen 3-Monats-Frist (Art. 266c OR) — vertragliche 6-Monats-Frist und feste Termine gelten nicht. Der Richter bestimmt die vermögensrechtlichen Folgen nach Ermessen (Art. 266g Abs. 2 OR). Achtung: Fehlt der wichtige Grund, ist die Kündigung nichtig — sie wird nicht in eine ordentliche umgedeutet. (Alternative wäre der Nachmieter nach Art. 264 OR — einen Anspruch auf vorzeitige Loslösung unabhängig davon, ob ein Ersatzmieter gefunden wird, gibt aber nur Art. 266g OR.)",
+pr:"266g: gesetzliche Frist, beliebiger Zeitpunkt — ohne wichtigen Grund aber nichtig (keine Konversion).",
+art:["Art. 266g Abs. 1 OR","Art. 266g Abs. 2 OR","Art. 266c OR"]},
+
+{th:"Ausserordentliche Kündigung", ti:"Konkurs der Alpha GmbH",
+sv:"Über die Alpha GmbH, Mieterin von Büroräumen, wird am 3. März der Konkurs eröffnet. Die Vermieterin verlangt am 7. März schriftlich von der GmbH und der Konkursverwaltung Sicherheit für die künftigen Mietzinse und setzt Frist bis zum 14. März. Niemand reagiert. Am 15. März kündigt sie mit amtlichem Formular fristlos.",
+q:"Ist die fristlose Kündigung wirksam?",
+a:[{t:"Nein — der Konkurs beendet den Mietvertrag automatisch, eine Kündigung ist überflüssig"},
+{t:"Nein, im Konkurs gilt eine Sperrfrist für Kündigungen"},
+{t:"Ja: Konkurs nach Übernahme, schriftliches Sicherstellungsbegehren an Mieterin und Konkursverwaltung, angemessene Frist, fruchtloser Ablauf — alle Voraussetzungen sind erfüllt",ok:true},
+{t:"Nein, sie hätte 30 Tage auf ein Monatsende einhalten müssen"}],
+exp:"Fällt der Mieter nach Übernahme der Sache in Konkurs, kann der Vermieter für künftige Mietzinse Sicherheit verlangen; dafür setzt er dem Mieter und der Konkursverwaltung schriftlich eine angemessene Frist (Art. 266h Abs. 1 OR). Erhält er innert Frist keine Sicherheit, kann er fristlos kündigen (Art. 266h Abs. 2 OR) — ohne Frist und Termin. Die Konkurseröffnung allein löst den Vertrag nicht auf. Eine Woche Frist gilt bei einfachen Verhältnissen als noch angemessen. Formell braucht die Vermieterkündigung von Geschäftsräumen auch hier das amtliche Formular (Art. 266l Abs. 2 OR) — das ist erfüllt. Die Kündigung ist wirksam.",
+pr:"266h: Sicherheit verlangen → Frist an Mieter UND Konkursverwaltung → ohne Sicherheit fristlos.",
+art:["Art. 266h Abs. 1 OR","Art. 266h Abs. 2 OR","Art. 266l OR"]},
+
+{th:"Ausserordentliche Kündigung", ti:"Die Wohnung des Verstorbenen",
+sv:"Herr Meier stirbt am 10. Februar. Sein unbefristeter Mietvertrag sieht eine Kündigungsfrist von sechs Monaten auf jedes Monatsende vor. Seine beiden Kinder (einzige Erben) beschliessen einstimmig die Kündigung und kündigen am 17. Februar schriftlich «auf den nächsten gesetzlichen Termin». Der Vermieter verlangt Mietzins bis Ende August (6 Monate).",
+q:"Müssen die Erben bis Ende August zahlen?",
+a:[{t:"Ja — sie treten voll in den Vertrag samt 6-Monats-Frist ein"},
+{t:"Nein: Die Erben können mit der gesetzlichen Frist von 3 Monaten auf den nächsten gesetzlichen Termin kündigen — die vertragliche Frist gilt nicht",ok:true},
+{t:"Nein, der Tod beendet den Mietvertrag von selbst"},
+{t:"Ja, aber nur die Hälfte"}],
+exp:"Stirbt der Mieter, können seine Erben mit der gesetzlichen Frist auf den nächsten gesetzlichen Termin kündigen (Art. 266i OR) — ohne Rücksicht auf die vertraglich vereinbarte Dauer oder Frist. Für Wohnungen heisst das: 3 Monate (Art. 266c OR) auf den nächsten ortsüblichen Termin. Mietzins schulden die Erben nur bis zu diesem Termin, keinesfalls bis Ende August. Der Tod beendet den Vertrag nicht automatisch — er geht auf die Erben über, die das Sonderkündigungsrecht ausüben können. Die Kündigung braucht als Mieterkündigung Schriftlichkeit (Art. 266l Abs. 1 OR) und den einstimmigen Beschluss der Erbengemeinschaft (Art. 602 ZGB) — beides liegt vor.",
+pr:"Tod des Mieters: Erben kündigen mit gesetzlicher Frist auf den nächsten gesetzlichen Termin — Vertragfristen gelten nicht.",
+art:["Art. 266i OR","Art. 266c OR","Art. 266l Abs. 1 OR","Art. 602 ZGB"]},
+
+/* ---------- O. Form & Nichtigkeit (45–46) ---------- */
+{th:"Form & Nichtigkeit", ti:"Kündigung per E-Mail",
+sv:"Die Vermieterin kündigt Mieter Jans Wohnung per E-Mail «unter Einhaltung der 3-monatigen Frist». Jan unternimmt nichts — auch nach Ablauf des Kündigungstermins wohnt er einfach weiter. Die Vermieterin verlangt die Räumung: Jan habe die Kündigung ja nie innert 30 Tagen angefochten.",
+q:"Wie ist die Rechtslage?",
+a:[{t:"Jan hat verloren — wer nicht innert 30 Tagen anficht, akzeptiert die Kündigung"},
+{t:"Die Kündigung ist nichtig (kein amtliches Formular): Jan durfte passiv bleiben, das Mietverhältnis besteht weiter",ok:true},
+{t:"Die E-Mail-Kündigung ist gültig, wirkt aber erst auf den nächsten Termin"},
+{t:"Jan muss ausziehen, kann aber Schadenersatz verlangen"}],
+exp:"Der Vermieter von Wohn- und Geschäftsräumen muss mit einem vom Kanton genehmigten Formular kündigen, das den Mieter über Anfechtung und Erstreckung belehrt (Art. 266l Abs. 2 OR). Eine Kündigung, die den Art. 266l–266n OR nicht entspricht, ist nichtig (Art. 266o OR) — sie entfaltet von Anfang an keine Wirkung. Die Nichtigkeit muss nicht innert Frist geltend gemacht werden: Passiv bleiben genügt, die 30-Tage-Frist von Art. 273 OR betrifft nur die Anfechtung missbräuchlicher (aber formgültiger) Kündigungen. Jan wohnt zu Recht weiter; die Vermieterin muss formgültig neu kündigen.",
+pr:"Formfehler = nichtig, jederzeit geltend zu machen. Die 30-Tage-Frist gilt nur für die Anfechtung.",
+art:["Art. 266l Abs. 2 OR","Art. 266o OR","Art. 273 Abs. 1 OR"]},
+
+{th:"Form & Nichtigkeit", ti:"Ein Couvert für das Ehepaar",
+sv:"Der Vermieter kündigt die Familienwohnung des Ehepaars Bättig. Er verwendet das amtliche Formular, adressiert den Brief aber an «Herrn und Frau Bättig» und schickt alles in einem einzigen Couvert. Nur Herr Bättig hat den Mietvertrag unterschrieben; der Vermieter wusste nicht einmal sicher, ob Herr Bättig verheiratet ist.",
+q:"Ist die Kündigung gültig?",
+a:[{t:"Ja — beide haben das Formular ja erhalten"},
+{t:"Nein: Bei der Familienwohnung ist die Kündigung dem Mieter und dem Ehegatten separat (in zwei Sendungen) zuzustellen, sonst ist sie nichtig — das Risiko trägt der Vermieter",ok:true},
+{t:"Ja, denn nur Herr Bättig ist Vertragspartei"},
+{t:"Nein, aber sie wirkt immerhin auf den nächsten Termin"}],
+exp:"Dient die Mietsache als Familienwohnung, muss der Vermieter die Kündigung (und auch die Zahlungsfristansetzung nach Art. 257d OR) dem Mieter und seinem Ehegatten bzw. eingetragenen Partner separat zustellen (Art. 266n OR) — d.h. in zwei getrennten Sendungen. Die gemeinsame Sendung genügt nicht: Die Kündigung ist nichtig (Art. 266o OR). Das Risiko trägt allein der Vermieter, selbst wenn er den Zivilstand nicht kannte. Familienwohnung ist der dauernde räumliche Lebensmittelpunkt der Ehegatten (Begriff wie Art. 169 ZGB); Kinder braucht es nicht, die Ferienwohnung zählt nicht. Spiegelbild: Kündigt der Mieter, braucht er die ausdrückliche Zustimmung des Ehegatten (Art. 266m OR) — sonst ebenfalls nichtig.",
+pr:"Familienwohnung: Vermieter → zwei separate Sendungen; Mieter → ausdrückliche Zustimmung des Partners.",
+art:["Art. 266n OR","Art. 266m OR","Art. 266o OR","Art. 169 ZGB"]},
+
+/* ---------- P. Kündigungsschutz (47–50) ---------- */
+{th:"Kündigungsschutz", ti:"«Dann kündige ich Ihnen eben»",
+sv:"Herr B. lehnt eine Mietzinserhöhung um CHF 300 ab. Kurz darauf erhält er die formgültige Kündigung mit der Begründung, der Zins sei «nicht mehr marktgerecht» — die Wohnung solle teurer neu vermietet werden. Herr B. reicht 13 Tage später ein Begehren bei der Schlichtungsbehörde ein.",
+q:"Hat die Anfechtung Aussicht auf Erfolg?",
+a:[{t:"Nein — der Vermieter darf kündigen, wem er will; die Kündigung ist formgültig"},
+{t:"Ja: Es ist eine Änderungskündigung zur Durchsetzung einer einseitigen Vertragsänderung — missbräuchlich; die 30-Tage-Frist ist gewahrt",ok:true},
+{t:"Nein, denn Herr B. hätte zuerst die Erhöhung akzeptieren müssen"},
+{t:"Ja, aber nur wenn die Wohnung eine Familienwohnung ist"}],
+exp:"Die Kündigung durch den Vermieter ist u.a. anfechtbar, wenn sie ausgesprochen wird, um eine einseitige Vertragsänderung — hier eine Mietzinserhöhung — durchzusetzen (Art. 271a Abs. 1 lit. b OR, Änderungskündigung). Das Begehren ist innert 30 Tagen nach Empfang der Kündigung bei der Schlichtungsbehörde einzureichen (Art. 273 Abs. 1 OR) — mit 13 Tagen gewahrt. Bei Gutheissung wird die Kündigung aufgehoben und es läuft eine neue dreijährige Sperrfrist (Art. 271a Abs. 1 lit. e OR). Verwandter Tatbestand: die Rachekündigung, weil der Mieter Ansprüche aus dem Mietverhältnis in guten Treuen geltend macht (lit. a). Die Begründung muss der Vermieter übrigens nur auf Verlangen liefern (Art. 271 Abs. 2 OR).",
+pr:"Änderungskündigung (lit. b) und Rachekündigung (lit. a) = Kernfälle der missbräuchlichen Kündigung — 30 Tage, aktiv werden!",
+art:["Art. 271a Abs. 1 lit. b OR","Art. 271a Abs. 1 lit. a OR","Art. 273 Abs. 1 OR","Art. 271 Abs. 2 OR"]},
+
+{th:"Kündigungsschutz", ti:"Kündigung in der Sperrfrist",
+sv:"Mieterin Vera gewann vor zwei Jahren ein Schlichtungsverfahren gegen ihren Vermieter (Mietzinsherabsetzung). Nun kündigt er ihr formgültig und ohne besonderen Anlass. Variante: Er kündigt innerhalb derselben zwei Jahre, nachdem Vera trotz korrekter 30-tägiger Zahlungsfrist mit Androhung die Miete nicht bezahlt hat (Art. 257d OR).",
+q:"Wie sind Grundfall und Variante zu beurteilen?",
+a:[{t:"Beide Kündigungen sind zulässig — Sperrfristen kennt das OR nicht"},
+{t:"Grundfall: anfechtbar (3-jährige Sperrfrist nach dem Verfahren). Variante: zulässig — bei Zahlungsverzugskündigungen gilt die Sperrfrist nicht",ok:true},
+{t:"Beide Kündigungen sind nichtig"},
+{t:"Grundfall zulässig, Variante anfechtbar"}],
+exp:"Die Kündigung durch den Vermieter ist anfechtbar, wenn sie vor Ablauf von drei Jahren nach Abschluss eines Schlichtungs- oder Gerichtsverfahrens ausgesprochen wird, in dem der Vermieter zu einem erheblichen Teil unterlegen ist (Art. 271a Abs. 1 lit. e OR) — der Grundfall liegt mitten in der Sperrfrist und ist anfechtbar (30 Tage, Art. 273 Abs. 1 OR). Die Sperrfrist (und lit. d, Kündigung während des Verfahrens) gilt aber nicht bei Kündigungen wegen Zahlungsrückstands (Art. 257d OR) oder schwerer Verletzung der Sorgfalts- und Rücksichtspflicht (Art. 271a Abs. 3 OR) — die Variante ist zulässig. Aber Achtung: Die Generalklausel bleibt immer anwendbar — ausnahmsweise ist selbst eine Verzugskündigung treuwidrig, etwa bei Bagatellrückstand und sachfremdem Motiv (BGE 140 III 591).",
+pr:"«Art. 257d sperrt lit. d, lit. e und die Erstreckung — aber nie Art. 271.»",
+art:["Art. 271a Abs. 1 lit. e OR","Art. 271a Abs. 3 OR","Art. 257d OR","BGE 140 III 591"]},
+
+{th:"Kündigungsschutz", ti:"Das Künstleratelier",
+sv:"Max mietet seit 10 Jahren unbefristet ein Atelier mit Wohnmöglichkeit in Zürich. Im März kündigt die Vermieterin formgültig per Ende Juni: Ihre Tochter soll einziehen (Eigenbedarf). Max ist auf den speziellen Zuschnitt angewiesen und chronisch krank — ein Umzug wäre für ihn sehr schwer. Er will sich wehren.",
+q:"Was ist Max zu raten — und mit welchen Erfolgsaussichten?",
+a:[{t:"Nur Anfechtung — Eigenbedarf ist immer missbräuchlich"},
+{t:"Innert 30 Tagen bei der Schlichtungsbehörde anfechten und eventualiter Erstreckung verlangen: Die Anfechtung dürfte scheitern (Eigenbedarf ist nicht missbräuchlich), die Erstreckung ist aussichtsreich",ok:true},
+{t:"Nichts — gegen formgültige Kündigungen gibt es keine Handhabe"},
+{t:"Einfach wohnen bleiben, die Kündigung ist mangels wichtigen Grundes nichtig"}],
+exp:"Max sollte innert 30 Tagen seit Empfang der Kündigung bei der Schlichtungsbehörde die Anfechtung und eventualiter die Erstreckung beantragen (Art. 273 Abs. 1 und 2 OR). Die Anfechtung (Art. 271 OR) dürfte scheitern: Eigenbedarf ist grundsätzlich kein missbräuchliches Motiv. Aussichtsreich ist die Erstreckung (Art. 272 OR): Die Beendigung müsste für Max eine Härte bedeuten, die durch die Interessen der Vermieterin nicht zu rechtfertigen ist — lange Mietdauer, Krankheit und Objektabhängigkeit sprechen für ihn (Kriterien: Art. 272 Abs. 2 OR). Höchstdauer: Wohnräume 4 Jahre, Geschäftsräume 6 Jahre, in ein oder zwei Erstreckungen (Art. 272b OR). Wichtig: Wird die Anfechtung abgewiesen, prüft die Behörde die Erstreckung von Amtes wegen (Art. 273 Abs. 5 OR); Max sollte seine Suchbemühungen von Anfang an dokumentieren — sie fliessen in die Interessenabwägung ein (Art. 272 Abs. 2 OR) und sind bei einem Begehren um eine zweite Erstreckung ausdrücklich nachzuweisen (Art. 272 Abs. 3 OR).",
+pr:"Immer zweigleisig: Anfechtung UND eventualiter Erstreckung — beides innert 30 Tagen bei der Schlichtungsbehörde.",
+art:["Art. 272 OR","Art. 272b OR","Art. 273 OR","Art. 271 OR"]},
+
+{th:"Kündigungsschutz", ti:"Erstreckung nach Zahlungsverzug?",
+sv:"Ricardo wurde nach korrekt durchgeführtem Verfahren wegen Zahlungsrückstands gekündigt (Art. 257d OR). Er findet auf dem angespannten Wohnungsmarkt nichts und beantragt bei der Schlichtungsbehörde eine Erstreckung von zwei Jahren: Die Wohnungsnot sei eine offensichtliche Härte.",
+q:"Kann Ricardo eine Erstreckung erhalten?",
+a:[{t:"Ja — bei Härte ist die Erstreckung immer möglich"},
+{t:"Ja, aber höchstens ein Jahr"},
+{t:"Nein: Bei einer Kündigung wegen Zahlungsrückstands ist die Erstreckung von Gesetzes wegen ausgeschlossen",ok:true},
+{t:"Nur, wenn er den Rückstand nachträglich bezahlt"}],
+exp:"Die Erstreckung ist ausgeschlossen bei Kündigungen wegen Zahlungsrückstands des Mieters (Art. 257d OR), wegen schwerer Verletzung der Pflicht zu Sorgfalt und Rücksichtnahme (Art. 257f Abs. 3 und 4 OR), wegen Konkurses (Art. 266h OR) sowie wenn der Vertrag im Hinblick auf einen bevorstehenden Umbau oder Abbruch ausdrücklich nur für die beschränkte Zeit bis Baubeginn abgeschlossen wurde (Art. 272a Abs. 1 OR). Ricardos Härte hilft ihm nicht — sein Begehren ist aussichtslos. Merke ausserdem: Bietet der Vermieter ein gleichwertiges Ersatzobjekt an, ist die Erstreckung in der Regel ebenfalls ausgeschlossen (Art. 272a Abs. 2 OR). Dringender Eigenbedarf schliesst die Erstreckung dagegen nicht aus — er fliesst nur in die Interessenabwägung ein (Art. 272 Abs. 2 lit. d OR).",
+pr:"Kein Erstreckungsschutz für den, der selbst schwer vertragsuntreu war: 257d, 257f, 266h, Umbau-Befristung.",
+art:["Art. 272a Abs. 1 OR","Art. 272a Abs. 2 OR","Art. 272 Abs. 2 lit. d OR"]}
+
+];
+
+/* ================= APP-LOGIK ================= */
+const $ = s => document.querySelector(s);
+const LS_KEY = "mietrecht-falltrainer-v1";
+
+let order = [], idx = 0, right = 0, wrong = [], answered = false, statByTopic = {};
+
+function topics(){ return [...new Set(CASES.map(c=>c.th))]; }
+
+function save(){
+  localStorage.setItem(LS_KEY, JSON.stringify({order, idx, right, wrong}));
+}
+function clearSave(){ localStorage.removeItem(LS_KEY); }
+
+function show(id){
+  ["start","quiz","ende"].forEach(s=>$("#"+s).classList.add("hidden"));
+  $("#"+id).classList.remove("hidden");
+}
+
+function begin(newOrder){
+  order = newOrder; idx = 0; right = 0; wrong = [];
+  save(); show("quiz"); render();
+}
+
+function shuffle(a){
+  a = a.slice();
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function render(){
+  answered = false;
+  const c = CASES[order[idx]];
+  $("#q-topic").textContent = c.th;
+  $("#q-count").textContent = `Fall ${idx+1} von ${order.length}`;
+  $("#q-title").textContent = c.ti;
+  $("#q-sv").textContent = c.sv;
+  $("#q-frage").textContent = c.q;
+  $("#bar div").style.width = (idx/order.length*100)+"%";
+  $("#score-pill").textContent = `${right} richtig · ${idx - right} falsch`;
+
+  const box = $("#answers"); box.innerHTML = "";
+  const opts = shuffle(c.a.map((o,i)=>({...o})));
+  opts.forEach((o,i)=>{
+    const b = document.createElement("button");
+    b.innerHTML = `<kbd>${i+1}</kbd><span></span>`;
+    b.querySelector("span").textContent = o.t;
+    b.addEventListener("click", ()=>pick(b, o, opts, box));
+    box.appendChild(b);
+  });
+
+  $("#feedback").className = ""; $("#feedback").classList.remove("show");
+  $("#next-row").classList.remove("show");
+}
+
+function pick(btn, opt, opts, box){
+  if(answered) return;
+  answered = true;
+  const c = CASES[order[idx]];
+  const good = !!opt.ok;
+  if(good){ right++; btn.classList.add("picked-ok"); }
+  else{
+    btn.classList.add("picked-bad");
+    wrong.push(order[idx]);
+    [...box.children].forEach((b,i)=>{ if(opts[i].ok) b.classList.add("reveal"); });
+  }
+  [...box.children].forEach(b=>b.disabled = true);
+
+  const f = $("#feedback");
+  f.classList.add("show", good ? "good" : "wrong");
+  f.querySelector(".verdict").textContent = good ? "Richtig." : "Nicht ganz.";
+  f.querySelector(".exp").textContent = c.exp;
+  f.querySelector(".prinzip").innerHTML = "<b>Prinzip:</b> ";
+  f.querySelector(".prinzip").append(c.pr);
+  const chips = f.querySelector(".art-chips"); chips.innerHTML = "";
+  c.art.forEach(a=>{const s=document.createElement("span");s.textContent=a;chips.appendChild(s);});
+
+  $("#next-row").classList.add("show");
+  $("#score-pill").textContent = `${right} richtig · ${idx+1-right} falsch`;
+  save();
+  $("#btn-next").focus();
+}
+
+function next(){
+  idx++;
+  save();
+  if(idx >= order.length){ finish(); } else { render(); }
+}
+
+function finish(){
+  clearSave();
+  show("ende");
+  $("#bar div").style.width = "100%";
+  const n = order.length;
+  const pct = Math.round(right/n*100);
+  $("#ende-titel").textContent = pct >= 90 ? "Ausgezeichnet!" : pct >= 70 ? "Gut gedrillt." : pct >= 50 ? "Solide Basis — dranbleiben." : "Nochmals durcharbeiten lohnt sich.";
+  $("#ende-score").textContent = `${right} / ${n}`;
+  $("#ende-text").textContent = `${pct} % richtig. ${wrong.length ? "Wiederhole am besten gezielt die falsch beantworteten Fälle." : "Alle Fälle korrekt gelöst — bereit für die Prüfung."}`;
+
+  // Themen-Statistik
+  const stats = {};
+  order.forEach(ci=>{
+    const t = CASES[ci].th;
+    stats[t] = stats[t] || {n:0, r:0};
+    stats[t].n++;
+    if(!wrong.includes(ci)) stats[t].r++;
+  });
+  const tb = $("#topic-table tbody"); tb.innerHTML = "";
+  Object.entries(stats).forEach(([t,s])=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td></td><td class="num">${s.r} / ${s.n}</td>`;
+    tr.querySelector("td").textContent = t;
+    tb.appendChild(tr);
+  });
+
+  const wl = $("#wrong-list"); wl.innerHTML = "";
+  $("#wrong-wrap").style.display = wrong.length ? "" : "none";
+  wrong.forEach(ci=>{
+    const c = CASES[ci];
+    const li = document.createElement("li");
+    li.innerHTML = `<b></b> — <span></span>`;
+    li.querySelector("b").textContent = c.ti;
+    li.querySelector("span").textContent = c.pr;
+    wl.appendChild(li);
+  });
+  $("#btn-retry-wrong").style.display = wrong.length ? "" : "none";
+  $("#score-pill").textContent = "";
+}
+
+/* ---- Events ---- */
+$("#btn-seq").addEventListener("click", ()=>begin(CASES.map((_,i)=>i)));
+$("#btn-shuffle").addEventListener("click", ()=>begin(shuffle(CASES.map((_,i)=>i))));
+$("#btn-next").addEventListener("click", next);
+$("#btn-abort").addEventListener("click", ()=>{ if(confirm("Training abbrechen? Der Stand bleibt gespeichert.")) show("start"); });
+$("#btn-restart").addEventListener("click", ()=>{ clearSave(); show("start"); $("#score-pill").textContent=""; });
+$("#btn-retry-wrong").addEventListener("click", ()=>{ const w=[...new Set(wrong)]; begin(w); });
+
+document.addEventListener("keydown", e=>{
+  if($("#quiz").classList.contains("hidden")) return;
+  if(!answered && ["1","2","3","4"].includes(e.key)){
+    const b = $("#answers").children[+e.key-1];
+    if(b) b.click();
+  } else if(answered && e.key === "Enter"){
+    next();
+  }
+});
+
+/* ---- Resume ---- */
+(function init(){
+  const chips = $("#topic-chips");
+  topics().forEach(t=>{
+    const s = document.createElement("span");
+    const n = CASES.filter(c=>c.th===t).length;
+    s.textContent = `${t} (${n})`;
+    chips.appendChild(s);
+  });
+  try{
+    const st = JSON.parse(localStorage.getItem(LS_KEY));
+    if(st && st.order && st.idx < st.order.length){
+      const b = $("#btn-resume");
+      b.classList.remove("hidden");
+      b.textContent = `Weiterfahren (Fall ${st.idx+1}/${st.order.length})`;
+      b.addEventListener("click", ()=>{
+        order = st.order; idx = st.idx; right = st.right; wrong = st.wrong || [];
+        show("quiz"); render();
+      });
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>

@@ -4,7 +4,7 @@ Interaktive, self-contained HTML-Lernprogramme zum Lehrgang dipl. Rechtsfachmann
 (Semester 3). Jede Datei läuft ohne Installation und ohne
 Internet — Doppelklick genügt, der Fortschritt wird im Browser gespeichert.
 
-Einstiegspunkt ist [`index.html`](index.html) — eine Startseite, die alle sechs Programme verlinkt.
+Einstiegspunkt ist [`index.html`](index.html) — eine Startseite, die alle sieben Programme verlinkt.
 
 ## Inhalt
 
@@ -14,6 +14,7 @@ Einstiegspunkt ist [`index.html`](index.html) — eine Startseite, die alle sech
 | [`programme/erbrecht.html`](programme/erbrecht.html) | Erbrecht (Teil 1 + 2) | 83 Übungen in 11 Stufen |
 | [`programme/erwachsenenschutzrecht.html`](programme/erwachsenenschutzrecht.html) | Erwachsenenschutzrecht | 77 Fragen in 11 Themen |
 | [`programme/gueterrecht.html`](programme/gueterrecht.html) | Güterrechtliche Auseinandersetzung | 20 Fälle in 6 Phasen |
+| [`programme/mietrecht-falltrainer.html`](programme/mietrecht-falltrainer.html) | Mietrecht (OR 253–274) | 50 Fälle in 16 Themenblöcken |
 | [`programme/schkg-fristenberechnung.html`](programme/schkg-fristenberechnung.html) | SchKG — Fristenberechnung | 50 Aufgaben im Kalender |
 | [`programme/schkg-fristarten.html`](programme/schkg-fristarten.html) | SchKG — Fristarten | 34 Artikel, 4 Fristarten |
 
@@ -28,6 +29,7 @@ dann «Zum Home-Bildschirm» — damit startet es wie eine App im Vollbild.
 | Erbrecht | https://claude.ai/code/artifact/fbb6690f-fdc0-4cb7-83cb-9d2425504f9b |
 | Erwachsenenschutzrecht | https://claude.ai/code/artifact/9f95f9fd-e099-46f9-9d80-3284e0406f90 |
 | Güterrecht | https://claude.ai/code/artifact/60f9e1a9-e023-44a4-9c27-f3bb06c8bb5f |
+| Mietrecht | https://claude.ai/code/artifact/e73dcdb5-b10f-499d-b088-8744354a8704 |
 | SchKG — Fristenberechnung | https://claude.ai/code/artifact/73c912a2-537f-48b9-9539-6bb34fbb2486 |
 | SchKG — Fristarten | https://claude.ai/code/artifact/b688e725-ee8e-4f7e-9a41-c4ee0cc6c064 |
 
